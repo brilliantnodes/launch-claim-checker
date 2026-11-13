@@ -76,6 +76,19 @@ genvm-lint check contracts/launch_claim_checker.py
 
 The direct tests cover the rule table at every threshold, the validator agreement rules (including a leader that lies about its own facts), input checks, storage, and a page that tries to close the data block and dictate the answer. The page snapshots under `tests/snapshots` are reconstructions written for testing, not copies of live pages.
 
+## Command line
+
+```bash
+pip install genlayer-py==0.18.0
+python tools/check.py ANNOUNCEMENT_URL EXPLORER_URL DECENTRALIZED_MINING --text "the claim in the project's words"
+```
+
+It sends the check, waits for consensus and prints the recorded result as JSON. No wallet or funds are needed on Studio: a throwaway key is made for the run unless `LCC_PRIVATE_KEY` is set. `LCC_ADDRESS` points it at another deployment, which is how a team keeps its own working record separate from the public demo contract.
+
+## Monitoring
+
+The verdicts depend on how the validators' models read a page, and models change. [`tools/canary.py`](tools/canary.py) reruns the four fictional examples, whose pages never change, and fails if any verdict or rule differs from the expected one. A [scheduled workflow](.github/workflows/canary.yml) runs it every Monday.
+
 ## Live runs on GenLayer Studio
 
 Run on 14 Nov 2026 against the deployed contract, with the Studio validators' models fetching the pages themselves. The examples use two fictional coins whose announcement and explorer pages are test pages hosted with the site: Examplecoin's claims fail and Controlcoin's hold. No real project is used as an example.
