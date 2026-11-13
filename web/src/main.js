@@ -53,15 +53,30 @@ $("btn-mm").addEventListener("click", async () => {
     return;
   }
   try {
-    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-    if (!accounts || !accounts.length) throw new Error("The wallet returned no account.");
+    // Order matters. MetaMask only lets an account send on a network it was
+    // approved for, so the Studio network is added first and the account is
+    // approved after that.
     await useStudioNetwork();
+    const accounts = await requestAccounts();
+    if (!accounts || !accounts.length) throw new Error("The wallet returned no account.");
     const client = createClient({ chain: studionet, account: accounts[0] });
     setWallet({ client, address: accounts[0], kind: "MetaMask" });
   } catch (e) {
     showFormError(`The wallet did not connect: ${short(e)}`);
   }
 });
+
+// Ask for a fresh account approval, so it covers the Studio network even if
+// this site was approved earlier on other networks only.
+async function requestAccounts() {
+  try {
+    await window.ethereum.request({ method: "wallet_requestPermissions", params: [{ eth_accounts: {} }] });
+    return await window.ethereum.request({ method: "eth_accounts" });
+  } catch (e) {
+    if (e && e.code === 4001) throw e; // the user said no
+    return await window.ethereum.request({ method: "eth_requestAccounts" });
+  }
+}
 
 // Ask the wallet to add the Studio network and switch to it. Nothing else
 // is requested from the wallet: no extra permissions and no add-ons.
@@ -211,7 +226,10 @@ async function runCheck(args) {
       value: 0n,
     });
   } catch (e) {
-    $("life-note").textContent = `The transaction was not sent: ${short(e)}`;
+    $("life-note").textContent =
+      e && e.code === 4100
+        ? "Your wallet has not approved this account for the Studio network. Click Connect MetaMask again, approve the account, and run the check again."
+        : `The transaction was not sent: ${short(e)}`;
     drawSteps("SENT", true);
     btn.disabled = false;
     return;
