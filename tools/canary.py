@@ -11,7 +11,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from check import DEFAULT_ADDRESS, run_check  # noqa: E402
 
-SITE = "https://brilliantnodes.github.io/launch-claim-checker/examples"
+SITE = "https://checker.brilliantnodes.com/examples"
 CASES = [
     ("examplecoin", "mining", "DECENTRALIZED_MINING", "contradicted", "M1_TOP_MINER_ABOVE_HALF"),
     ("examplecoin", "block1", "NO_FOUNDER_REWARD", "contradicted", "P1_EARLY_ALLOCATION_FOUND"),

@@ -4,7 +4,7 @@ A GenLayer Intelligent Contract that checks a crypto launch claim against two pu
 
 New coins routinely launch with claims such as "no premine", "no founder reward" or "decentralized mining". The chain usually shows whether that is true, but someone has to look. This contract makes the look repeatable and puts the result on record: validators each read the pages themselves, and a verdict is stored only if a majority reach it independently.
 
-- **Live site:** https://brilliantnodes.github.io/launch-claim-checker/
+- **Live site:** https://checker.brilliantnodes.com/
 - **Demo video (50 seconds):** https://youtu.be/CT43rmc5cAA
 - **Contract (GenLayer Studio, studionet):** [`0x81351f3e6e7c9CFC41573Ca9962b17f70C9AFFB8`](https://explorer-studio.genlayer.com/address/0x81351f3e6e7c9CFC41573Ca9962b17f70C9AFFB8)
 - **Source:** [`contracts/launch_claim_checker.py`](contracts/launch_claim_checker.py)

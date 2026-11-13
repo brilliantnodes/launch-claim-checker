@@ -89,7 +89,7 @@ async function useStudioNetwork() {
 
 // ------------------------------------------------------------------- form
 
-const SITE = "https://brilliantnodes.github.io/launch-claim-checker";
+const SITE = "https://checker.brilliantnodes.com";
 // Examplecoin and Controlcoin are fictional. Their pages are test pages
 // hosted with this site: Examplecoin's claims fail, Controlcoin's hold.
 const ex = (coin, page, ctype, ctext) => ({
