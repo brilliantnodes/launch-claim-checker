@@ -1,0 +1,8 @@
+Examplecoin Explorer - Mining summary
+Window: last 145 blocks
+Address                          Blocks   Share
+exm1qa7...00001                 126      86.9%
+exm1qb2...00002                 9        6.2%
+exm1qc9...00003                 6        4.1%
+other (3 addresses)              4        2.8%
+Total blocks in window: 145

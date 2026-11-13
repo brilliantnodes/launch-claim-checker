@@ -1,0 +1,2 @@
+[ANN] Samplecoin (SMP) - CPU mineable.
+No founder reward. No dev tax. 100% of every block goes to miners.

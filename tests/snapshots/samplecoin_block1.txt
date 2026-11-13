@@ -1,0 +1,7 @@
+Samplecoin Explorer - Block #1
+Height: 1
+Transactions: 1
+Coinbase transaction outputs:
+  1,000,000.00000000 SMP -> founder reward address
+  50.00000000 SMP -> miner
+Block reward (ordinary): 50 SMP

@@ -1,0 +1,3 @@
+[ANN] Controlcoin (CTL) - mainnet is live
+Fair launch. No premine. No founder reward and no developer tax.
+Coins are created only by mining and paid to the miner of each block.

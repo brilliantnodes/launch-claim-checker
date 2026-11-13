@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Launch Claim Checker</title>
+    <meta name="description" content="Check a crypto launch claim against the announcement and a block explorer page. Verdicts are agreed by GenLayer validators and stored on chain." />
+    <link rel="icon" href="./logo.svg" type="image/svg+xml" />
+    <script type="module" crossorigin src="./assets/index-C6UPNMOr.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DgL4tcOd.css">
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand">
+        <img src="./logo.svg" alt="" width="40" height="40" />
+        <div>
+          <h1>Launch Claim Checker</h1>
+          <p class="sub">Does the chain agree with what the launch page says?</p>
+        </div>
+      </div>
+      <div class="net" id="net"></div>
+    </header>
+
+    <main>
+      <section class="card intro">
+        <p>
+          A new coin says <em>"no premine"</em> or <em>"decentralized mining"</em>. This tool checks that claim against two public pages:
+          the project's announcement and a block explorer page. GenLayer validators each read the pages on their own, extract a few facts,
+          and must agree before a verdict is stored on chain.
+        </p>
+        <p class="small">
+          A verdict describes what the two pages you supply show at the time of the check. It is not a proof about anything outside those pages.
+        </p>
+      </section>
+
+      <section class="card" aria-labelledby="demo-h">
+        <h2 id="demo-h">Watch a check (50 seconds)</h2>
+        <video controls preload="metadata" playsinline width="100%" poster="./demo-poster.jpg" aria-label="A real check on GenLayer Studio, with the waiting time cut. The video has on-screen captions and no sound.">
+          <source src="./demo.mp4" type="video/mp4" />
+        </video>
+        <p class="small">A real check on GenLayer Studio with the waiting time cut, using a fictional test coin. Captions are on screen. There is no sound. Also on <a href="https://youtu.be/CT43rmc5cAA" target="_blank" rel="noopener noreferrer">YouTube</a>.</p>
+      </section>
+
+      <section class="card" aria-labelledby="new-h">
+        <h2 id="new-h">Run a check</h2>
+
+        <div class="wallet" id="wallet">
+          <span id="wallet-state">No account connected.</span>
+          <span class="wallet-actions">
+            <button type="button" id="btn-temp" class="secondary">Use a temporary Studio account</button>
+            <button type="button" id="btn-mm" class="secondary">Connect MetaMask</button>
+          </span>
+        </div>
+        <p class="small" id="wallet-help">
+          A temporary account is created in this browser tab only. It needs no wallet and holds nothing of value. It is enough to try the checker on Studio.
+        </p>
+
+        <form id="form" novalidate>
+          <label for="ann">Announcement page</label>
+          <input id="ann" name="ann" type="url" inputmode="url" placeholder="https://project.example/launch" required maxlength="300" />
+
+          <label for="exp">Block explorer page</label>
+          <input id="exp" name="exp" type="url" inputmode="url" placeholder="https://explorer.example/mining-summary" required maxlength="300" />
+          <p class="small">Pick the explorer page that shows the evidence: the first blocks for a premine claim, or the miner breakdown for a mining claim.</p>
+
+          <label for="ctype">Claim</label>
+          <select id="ctype" name="ctype">
+            <option value="NO_PREMINE">No premine</option>
+            <option value="NO_FOUNDER_REWARD">No founder reward</option>
+            <option value="FAIR_LAUNCH">Fair launch</option>
+            <option value="DECENTRALIZED_MINING">Decentralized mining</option>
+            <option value="CUSTOM">Other claim (write it below)</option>
+          </select>
+
+          <label for="ctext">Claim in the project's words <span class="opt" id="ctext-opt">(optional)</span></label>
+          <input id="ctext" name="ctext" type="text" maxlength="400" placeholder="e.g. 100% of every block goes to miners" />
+
+          <div class="examples">
+            <span class="small">Try an example:</span>
+            <button type="button" class="link" data-example="exmMining">Examplecoin, decentralized mining</button>
+            <button type="button" class="link" data-example="exmFounder">Examplecoin, no founder reward</button>
+            <button type="button" class="link" data-example="ctlFounder">Controlcoin, no founder reward</button>
+            <button type="button" class="link" data-example="ctlMining">Controlcoin, decentralized mining</button>
+          </div>
+          <p class="small">Examplecoin and Controlcoin are fictional. Their pages are test pages hosted with this site: Examplecoin's claims fail and Controlcoin's hold.</p>
+
+          <p class="error" id="form-error" role="alert" hidden></p>
+          <button type="submit" id="submit">Run check</button>
+        </form>
+      </section>
+
+      <section class="card" id="life" aria-labelledby="life-h" hidden>
+        <h2 id="life-h">Transaction progress</h2>
+        <ol class="steps" id="steps"></ol>
+        <p id="life-note" class="small" aria-live="polite"></p>
+        <p class="small" id="life-hash"></p>
+        <div id="life-result"></div>
+      </section>
+
+      <section class="card" aria-labelledby="recent-h">
+        <div class="row">
+          <h2 id="recent-h">Recorded checks</h2>
+          <button type="button" id="refresh" class="secondary">Refresh</button>
+        </div>
+        <p class="small" id="recent-state" aria-live="polite">Loading…</p>
+        <div id="recent"></div>
+      </section>
+
+      <section class="card" aria-labelledby="how-h">
+        <h2 id="how-h">How a verdict is decided</h2>
+        <ol class="how">
+          <li><strong>Read.</strong> Each validator fetches both pages itself.</li>
+          <li><strong>Extract.</strong> Its language model fills in a short fixed form: does each page support or contradict the claim, the top miner's share of blocks, how many blocks that covers, and whether the earliest blocks show an extra allocation. The model never picks the verdict.</li>
+          <li><strong>Decide.</strong> A fixed rule table in plain code turns those facts into <em>supported</em>, <em>contradicted</em> or <em>undetermined</em>.</li>
+          <li><strong>Agree.</strong> Validators accept the result only if they reach the same verdict by the same rule, and their numbers match within the tolerance. If they do not agree, nothing is recorded.</li>
+        </ol>
+        <table class="rules" id="rules"></table>
+        <h3>Why these thresholds</h3>
+        <ul class="how">
+          <li><strong>Above 50%.</strong> A miner with most of the hash power can out-build everyone else and rewrite recent blocks. No reading of "decentralized" survives that.</li>
+          <li><strong>At or below 33%.</strong> Above a third, withholding blocks pays for a miner however poorly connected it is (Eyal and Sirer, 2014). At or below a third the largest miner is under that bound.</li>
+          <li><strong>Between the two.</strong> The claim is neither clearly true nor clearly false, so the verdict is undetermined.</li>
+          <li><strong>At least 50 blocks.</strong> With fewer, a miner holding a third of the hash power is too likely to show a majority by luck. At 50 blocks that chance is under 1%.</li>
+        </ul>
+        <p class="small">
+          The project's own page can never produce "supported" by itself. That always needs explorer evidence.
+          The notes shown with each check are written by one validator and are not verified by the others.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span id="foot-contract"></span>
+      <span><a id="foot-repo" href="#">Source code</a></span>
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,6 @@
+Controlcoin Explorer - Block #1
+Height: 1
+Transactions: 1
+Coinbase transaction outputs:
+  50.00000000 CTL -> miner
+Block reward: 50 CTL
