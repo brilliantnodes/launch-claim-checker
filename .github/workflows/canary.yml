@@ -1,10 +1,10 @@
 name: Canary
 
-# Runs the four fictional examples against the deployed contract every week
+# Runs the four fictional examples against the deployed contract every day
 # and fails if a verdict changes. Can also be started by hand.
 on:
   schedule:
-    - cron: "17 6 * * 1"
+    - cron: "17 6 * * *"
   workflow_dispatch:
 
 permissions:

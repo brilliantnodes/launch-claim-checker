@@ -87,7 +87,7 @@ It sends the check, waits for consensus and prints the recorded result as JSON. 
 
 ## Monitoring
 
-The verdicts depend on how the validators' models read a page, and models change. [`tools/canary.py`](tools/canary.py) reruns the four fictional examples, whose pages never change, and fails if any verdict or rule differs from the expected one. A [scheduled workflow](.github/workflows/canary.yml) runs it every Monday.
+The verdicts depend on how the validators' models read a page, and models change. [`tools/canary.py`](tools/canary.py) reruns the four fictional examples, whose pages never change, and fails if any verdict or rule differs from the expected one. A [scheduled workflow](.github/workflows/canary.yml) runs it every day.
 
 ## Live runs on GenLayer Studio
 
@@ -117,7 +117,12 @@ The checker was built by Brilliant Nodes, a small desk that mines new proof-of-w
 
 `web/` is a small static site (Vite, `genlayer-js`). It reads the contract, lets a visitor run a check with a browser wallet or with a temporary in-browser Studio account, follows the transaction through every consensus stage, and explains the outcome when validators do not agree or the check could not be carried out. The built site is committed under `docs/` for GitHub Pages. A 50-second demo video is on the site and on [YouTube](https://youtu.be/fFNq9PY1vSI).
 
-Both account paths were tested end to end against the live contract in headless Chrome: the temporary account, and the wallet path with a stand-in EIP-1193 provider that signs with a throwaway key (connect, add and switch to the Studio network, send, follow to Accepted, show the recorded card). The wallet is only asked for accounts, the network and the transaction. It is not asked to install anything.
+Both account paths were tested end to end against the live contract on the live site.
+
+- **Wallet path:** the real MetaMask extension (13.56.0) in Chrome 153: connect, add and switch to the Studio network, approve the account, confirm the transaction, follow it to Accepted, show the recorded card. MetaMask shows no site warning for `checker.brilliantnodes.com`. The site adds the network before it asks for the account, because MetaMask refuses to send from an account that was approved before the network existed. The wallet is only asked for accounts, the network and the transaction. It is not asked to install anything.
+- **Temporary account path:** Chrome 153, Firefox 155 and WebKit 26.6 (the Safari engine) on desktop, plus an iPhone 15 profile in WebKit and a Pixel 7 profile in Chrome. Every run reached Accepted and showed its card. The phone runs are device profiles in desktop engines, not physical phones.
+- **Layout:** no sideways scrolling at 320, 393 and 810 pixels wide, with every section open.
+- **Dropped connection:** if the send fails on a network error, a temporary account retries once on its own. A wallet is never asked twice. This was tested by cutting the first send.
 
 ```bash
 cd web && npm install && npm run dev     # local

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Weekly canary: run the four fictional examples against the deployed
+"""Daily canary: run the four fictional examples against the deployed
 contract and fail if any verdict differs from the expected one.
 
 The pages are fixed, so a changed verdict means the validators' models or

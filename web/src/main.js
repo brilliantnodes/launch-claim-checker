@@ -217,19 +217,39 @@ async function runCheck(args) {
     before = await read("get_count");
   } catch {}
 
-  let hash;
-  try {
-    hash = await writer.client.writeContract({
+  const send = () =>
+    writer.client.writeContract({
       address: CONTRACT_ADDRESS,
       functionName: "check_claim",
       args,
       value: 0n,
     });
+
+  let hash;
+  let sendError = null;
+  try {
+    hash = await send();
   } catch (e) {
+    sendError = e;
+  }
+  // A temporary account signs in the page, so a send that failed on a brief
+  // network error can be repeated without asking anyone to confirm again.
+  // A wallet is never asked twice: its owner decides whether to try again.
+  if (sendError && writer.kind === "Temporary account") {
+    $("life-note").textContent = "The network did not answer. Trying once more…";
+    await new Promise((r) => setTimeout(r, 2500));
+    try {
+      hash = await send();
+      sendError = null;
+    } catch (e) {
+      sendError = e;
+    }
+  }
+  if (sendError) {
     $("life-note").textContent =
-      e && e.code === 4100
+      sendError.code === 4100
         ? "Your wallet has not approved this account for the Studio network. Click Connect MetaMask again, approve the account, and run the check again."
-        : `The transaction was not sent: ${short(e)}`;
+        : `The transaction was not sent: ${short(sendError)} Please run the check again.`;
     drawSteps("SENT", true);
     btn.disabled = false;
     return;
