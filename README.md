@@ -5,7 +5,7 @@ A GenLayer Intelligent Contract that checks a crypto launch claim against two pu
 New coins routinely launch with claims such as "no premine", "no founder reward" or "decentralized mining". The chain usually shows whether that is true, but someone has to look. This contract makes the look repeatable and puts the result on record: validators each read the pages themselves, and a verdict is stored only if a majority reach it independently.
 
 - **Live site:** https://checker.brilliantnodes.com/
-- **Demo video (50 seconds):** https://youtu.be/CT43rmc5cAA
+- **Demo video (50 seconds):** https://youtu.be/fFNq9PY1vSI
 - **Contract (GenLayer Studio, studionet):** [`0x81351f3e6e7c9CFC41573Ca9962b17f70C9AFFB8`](https://explorer-studio.genlayer.com/address/0x81351f3e6e7c9CFC41573Ca9962b17f70C9AFFB8)
 - **Source:** [`contracts/launch_claim_checker.py`](contracts/launch_claim_checker.py)
 
@@ -115,7 +115,7 @@ The checker was built by Brilliant Nodes, a small desk that mines new proof-of-w
 
 ## Front end
 
-`web/` is a small static site (Vite, `genlayer-js`). It reads the contract, lets a visitor run a check with a browser wallet or with a temporary in-browser Studio account, follows the transaction through every consensus stage, and explains the outcome when validators do not agree or the check could not be carried out. The built site is committed under `docs/` for GitHub Pages. A 50-second demo video is on the site and on [YouTube](https://youtu.be/CT43rmc5cAA).
+`web/` is a small static site (Vite, `genlayer-js`). It reads the contract, lets a visitor run a check with a browser wallet or with a temporary in-browser Studio account, follows the transaction through every consensus stage, and explains the outcome when validators do not agree or the check could not be carried out. The built site is committed under `docs/` for GitHub Pages. A 50-second demo video is on the site and on [YouTube](https://youtu.be/fFNq9PY1vSI).
 
 Both account paths were tested end to end against the live contract in headless Chrome: the temporary account, and the wallet path with a stand-in EIP-1193 provider that signs with a throwaway key (connect, add and switch to the Studio network, send, follow to Accepted, show the recorded card). The wallet is only asked for accounts, the network and the transaction. It is not asked to install anything.
 
