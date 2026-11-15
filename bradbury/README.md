@@ -21,4 +21,4 @@ All four match the expected verdicts (the same cases the daily Canary runs on St
 
 **Recorded as it happened:** the first attempt at the Controlcoin "no founder reward" check finalized with **NO_MAJORITY** (the validators did not agree) and stored nothing ([0x651b…a27a](https://scan.bradbury.genlayer.com/tx/0x651b35b7e6dcc12eeea1f34dde96eff3123560d085df4e07aeb7ff28bc68a27a)); the retry above was accepted 5 of 5. That is the design: without agreement, no verdict is recorded.
 
-The website at checker.brilliantnodes.com stays on GenLayer Studio, where anyone can try it with Studio's free test accounts.
+The website reads these checks at [checker.brilliantnodes.com/?net=bradbury](https://checker.brilliantnodes.com/?net=bradbury) and can run a new one with MetaMask and Bradbury test GEN. A free try with a temporary account stays on GenLayer Studio.
