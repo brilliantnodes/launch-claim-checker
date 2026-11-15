@@ -257,13 +257,15 @@ async function runCheck(args) {
 
   $("life-hash").replaceChildren(el("span", null, "Transaction: "), el("code", null, hash));
   drawSteps("SENT", false);
-  $("life-note").textContent = "Sent. A check usually takes one to three minutes, longer when the network is busy.";
+  const waitNote = "A check usually takes one to three minutes, longer when the network is busy.";
+  $("life-note").textContent = `Sent. ${waitNote}`;
 
   let last = "SENT";
   let final = null;
   const started = Date.now();
   while (Date.now() - started < 6 * 60 * 1000) {
     await new Promise((r) => setTimeout(r, 3000));
+    $("life-note").textContent = `Sent ${Math.round((Date.now() - started) / 1000)} s ago. ${waitNote}`;
     let tx;
     try {
       tx = await reader.getTransaction({ hash });
