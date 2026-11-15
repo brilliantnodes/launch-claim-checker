@@ -1,0 +1,130 @@
+{
+  "network": "testnet-bradbury-phase-2",
+  "chain_id": 4221,
+  "build": "launch_claim_checker.py (GenVM v0.6)",
+  "checks": [
+    {
+      "tx": "0x247aaa917692074610915e3758594aad43ccd4641b1bab625ac4c7e920bea6f2",
+      "result": "MAJORITY_AGREE",
+      "execution": "FINISHED_WITH_RETURN",
+      "votes_revealed": "5",
+      "validators": "5",
+      "secs": 59,
+      "error": null,
+      "coin": "examplecoin",
+      "claim": "DECENTRALIZED_MINING",
+      "check_id": "1",
+      "verdict": "contradicted",
+      "rule": "M1_TOP_MINER_ABOVE_HALF",
+      "want": "contradicted/M1_TOP_MINER_ABOVE_HALF",
+      "ok": true,
+      "facts": {
+        "ann_direction": "supports",
+        "announcement_read": true,
+        "blocks_inspected": 200,
+        "early_allocation_found": "not_shown",
+        "ev_direction": "contradicts",
+        "top_miner_share_bp": 8400
+      }
+    },
+    {
+      "tx": "0x990eb7a1aa430ae77d3d7d6c06f7f6528fbe332ce5f2ebcb3bebd5e37d4a45fc",
+      "result": "MAJORITY_AGREE",
+      "execution": "FINISHED_WITH_RETURN",
+      "votes_revealed": "5",
+      "validators": "5",
+      "secs": 119,
+      "error": null,
+      "coin": "examplecoin",
+      "claim": "NO_FOUNDER_REWARD",
+      "check_id": "2",
+      "verdict": "contradicted",
+      "rule": "P1_EARLY_ALLOCATION_FOUND",
+      "want": "contradicted/P1_EARLY_ALLOCATION_FOUND",
+      "ok": true,
+      "facts": {
+        "ann_direction": "supports",
+        "announcement_read": true,
+        "blocks_inspected": 1,
+        "early_allocation_found": "yes",
+        "ev_direction": "contradicts",
+        "top_miner_share_bp": 10000
+      }
+    },
+    {
+      "tx": "0xc8fac0ee8b36fff4f8494afd602e27ae229f8907eefe2baf14bc7e153af58d5b",
+      "result": "MAJORITY_AGREE",
+      "execution": "FINISHED_WITH_RETURN",
+      "votes_revealed": "5",
+      "validators": "5",
+      "secs": 74,
+      "error": null,
+      "coin": "controlcoin",
+      "claim": "NO_FOUNDER_REWARD",
+      "check_id": "3",
+      "verdict": "supported",
+      "rule": "P2_EARLY_BLOCKS_SHOWN_CLEAN",
+      "want": "supported/P2_EARLY_BLOCKS_SHOWN_CLEAN",
+      "ok": true,
+      "facts": {
+        "ann_direction": "supports",
+        "announcement_read": true,
+        "blocks_inspected": 5,
+        "early_allocation_found": "no",
+        "ev_direction": "supports",
+        "top_miner_share_bp": 4000
+      }
+    },
+    {
+      "tx": "0x1b9260cdfabe2f1cb000bbd4e12cb9941da452303be09c94ca1fc7c006789c63",
+      "result": "MAJORITY_AGREE",
+      "execution": "FINISHED_WITH_RETURN",
+      "votes_revealed": "5",
+      "validators": "5",
+      "secs": 99,
+      "error": null,
+      "coin": "controlcoin",
+      "claim": "DECENTRALIZED_MINING",
+      "check_id": "4",
+      "verdict": "supported",
+      "rule": "M2_TOP_MINER_AT_OR_BELOW_THIRD",
+      "want": "supported/M2_TOP_MINER_AT_OR_BELOW_THIRD",
+      "ok": true,
+      "facts": {
+        "ann_direction": "supports",
+        "announcement_read": true,
+        "blocks_inspected": 200,
+        "early_allocation_found": "not_shown",
+        "ev_direction": "supports",
+        "top_miner_share_bp": 1800
+      }
+    }
+  ],
+  "extra_attempts": [
+    {
+      "tx": "0x651b35b7e6dcc12eeea1f34dde96eff3123560d085df4e07aeb7ff28bc68a27a",
+      "result": "IDLE",
+      "execution": "NOT_VOTED",
+      "votes_revealed": "0",
+      "validators": "5",
+      "secs": 25,
+      "error": null,
+      "coin": "controlcoin",
+      "claim": "NO_FOUNDER_REWARD",
+      "note": "nothing stored; retried",
+      "final_status": "FINALIZED, NO_MAJORITY (validators did not agree; nothing stored)"
+    }
+  ],
+  "address": "0x963920f38a46c0Dc9592889a4B783FFAaEc6dA9C",
+  "deploy": {
+    "tx": "0xf7773f5e225ff998ef130a05a9c24a8e4d44945b35188f5454f9c08466e5162c",
+    "result": "MAJORITY_AGREE",
+    "execution": "FINISHED_WITH_RETURN",
+    "votes_revealed": "5",
+    "validators": "5",
+    "secs": 35,
+    "error": null,
+    "address": "0x963920f38a46c0Dc9592889a4B783FFAaEc6dA9C"
+  },
+  "count": 4
+}
