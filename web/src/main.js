@@ -1,6 +1,15 @@
 import { createClient, createAccount, generatePrivateKey } from "genlayer-js";
 import { studionet } from "genlayer-js/chains";
-import { CONTRACT_ADDRESS, NETWORK_NAME, EXPLORER_BASE, REPO_URL } from "./config.js";
+import { NET, NETWORKS, CONTRACT_ADDRESS, NETWORK_NAME, EXPLORER_BASE, REPO_URL } from "./config.js";
+
+const BRADBURY = NET.key === "bradbury";
+// Bradbury Phase 2 needs genlayer-js 2 (new consensus contracts, fee deposits);
+// Studio stays on genlayer-js 1, which Studio's RPC supports. Loaded only when used.
+const v2 = BRADBURY ? await import("genlayer-js-v2") : null;
+const v2chains = BRADBURY ? await import("genlayer-js-v2/chains") : null;
+const CHAIN = BRADBURY ? v2chains.testnetBradbury : studionet;
+const makeClient = (account) =>
+  BRADBURY ? v2.createClient({ chain: CHAIN, endpoint: NET.rpc, ...(account && { account }) }) : createClient({ chain: studionet, ...(account && { account }) });
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => {
@@ -12,7 +21,7 @@ const el = (tag, cls, text) => {
 
 // ---------------------------------------------------------------- clients
 
-const reader = createClient({ chain: studionet });
+const reader = makeClient();
 let writer = null; // { client, address, kind }
 
 // GenLayer returns maps and big integers. Turn them into plain values.
@@ -39,7 +48,7 @@ function setWallet(next) {
 $("btn-temp").addEventListener("click", () => {
   const account = createAccount(generatePrivateKey());
   setWallet({
-    client: createClient({ chain: studionet, account }),
+    client: makeClient(account),
     address: account.address,
     kind: "Temporary account",
   });
@@ -56,10 +65,10 @@ $("btn-mm").addEventListener("click", async () => {
     // Order matters. MetaMask only lets an account send on a network it was
     // approved for, so the Studio network is added first and the account is
     // approved after that.
-    await useStudioNetwork();
+    await useNetwork();
     const accounts = await requestAccounts();
     if (!accounts || !accounts.length) throw new Error("The wallet returned no account.");
-    const client = createClient({ chain: studionet, account: accounts[0] });
+    const client = makeClient(accounts[0]);
     setWallet({ client, address: accounts[0], kind: "MetaMask" });
   } catch (e) {
     showFormError(`The wallet did not connect: ${short(e)}`);
@@ -78,10 +87,10 @@ async function requestAccounts() {
   }
 }
 
-// Ask the wallet to add the Studio network and switch to it. Nothing else
+// Ask the wallet to add the selected network and switch to it. Nothing else
 // is requested from the wallet: no extra permissions and no add-ons.
-async function useStudioNetwork() {
-  const chainId = `0x${studionet.id.toString(16)}`;
+async function useNetwork() {
+  const chainId = `0x${CHAIN.id.toString(16)}`;
   const current = await window.ethereum.request({ method: "eth_chainId" });
   if (String(current).toLowerCase() === chainId) return;
   try {
@@ -92,9 +101,9 @@ async function useStudioNetwork() {
       params: [
         {
           chainId,
-          chainName: studionet.name,
-          rpcUrls: studionet.rpcUrls.default.http,
-          nativeCurrency: studionet.nativeCurrency,
+          chainName: BRADBURY ? "GenLayer Bradbury Phase 2" : studionet.name,
+          rpcUrls: BRADBURY ? [NET.rpc] : studionet.rpcUrls.default.http,
+          nativeCurrency: CHAIN.nativeCurrency,
         },
       ],
     });
@@ -217,12 +226,19 @@ async function runCheck(args) {
     before = await read("get_count");
   } catch {}
 
-  const send = () =>
+  // Bradbury Phase 2 takes a fee deposit with every transaction; the unused part is refunded.
+  const fees = async () => {
+    if (!BRADBURY) return undefined;
+    const e = await writer.client.estimateTransactionFees();
+    return { distribution: e.distribution, feeValue: e.feeValue };
+  };
+  const send = async () =>
     writer.client.writeContract({
       address: CONTRACT_ADDRESS,
       functionName: "check_claim",
       args,
       value: 0n,
+      ...(BRADBURY && { fees: await fees() }),
     });
 
   let hash;
@@ -248,7 +264,7 @@ async function runCheck(args) {
   if (sendError) {
     $("life-note").textContent =
       sendError.code === 4100
-        ? "Your wallet has not approved this account for the Studio network. Click Connect MetaMask again, approve the account, and run the check again."
+        ? `Your wallet has not approved this account for the ${BRADBURY ? "Bradbury" : "Studio"} network. Click Connect MetaMask again, approve the account, and run the check again.`
         : `The transaction was not sent: ${short(sendError)} Please run the check again.`;
     drawSteps("SENT", true);
     btn.disabled = false;
@@ -277,6 +293,11 @@ async function runCheck(args) {
     if (st !== last && (ORDER.includes(st) || st === "FINALIZED")) {
       last = st;
       drawSteps(st, false);
+    }
+    const verdictless = ["NO_MAJORITY", "MAJORITY_DISAGREE", "MAJORITY_TIMEOUT", "DETERMINISTIC_VIOLATION"].includes(String(tx?.resultName ?? "").toUpperCase());
+    if ((st === "ACCEPTED" || st === "FINALIZED") && verdictless) {
+      final = { ok: false, st: "UNDETERMINED", tx };
+      break;
     }
     if (st === "ACCEPTED" || st === "FINALIZED") {
       final = { ok: true, tx };
@@ -318,6 +339,8 @@ async function runCheck(args) {
   }
   btn.disabled = false;
   loadRecent();
+  // Bradbury's read nodes can trail the newest record by a few seconds.
+  if (BRADBURY) setTimeout(loadRecent, 12000);
 }
 
 // ----------------------------------------------------------------- render
@@ -440,7 +463,38 @@ async function loadRules() {
 
 // ------------------------------------------------------------------- boot
 
-$("net").append(el("span", "dot"), el("span", null, NETWORK_NAME));
+// Network switch: one network per page load, chosen with ?net=studio or ?net=bradbury.
+const net = $("net");
+net.append(el("span", "dot"));
+Object.values(NETWORKS).forEach((n) => {
+  if (n.key === NET.key) {
+    const cur = el("strong", null, n.label);
+    cur.setAttribute("aria-current", "true");
+    net.append(cur);
+  } else {
+    const a = el("a", null, n.label);
+    a.href = `?net=${n.key}`;
+    a.title = `Switch to ${n.name}`;
+    net.append(a);
+  }
+});
+if (BRADBURY) {
+  $("btn-temp").hidden = true;
+  $("wallet-help").replaceChildren(
+    el("span", null, "Bradbury has no free in-browser accounts. To run a check here, connect MetaMask with Bradbury test GEN from the "),
+    Object.assign(el("a", null, "GenLayer faucet"), { href: NET.faucet, target: "_blank", rel: "noopener noreferrer" }),
+    el("span", null, ". To try it with no wallet, "),
+    Object.assign(el("a", null, "switch to Studio"), { href: "?net=studio" }),
+    el("span", null, "."),
+  );
+  const b = $("net-banner");
+  b.hidden = false;
+  b.replaceChildren(
+    el("strong", null, "Testnet Bradbury Phase 2. "),
+    el("span", null, "GenLayer's public testnet, where validators use real models and real web access. The recorded checks below were decided there by a majority of independent validators. "),
+    Object.assign(el("a", null, "Try it free on Studio"), { href: "?net=studio" }),
+  );
+}
 const fc = $("foot-contract");
 fc.append(el("span", null, "Contract: "));
 const ca = el("a", null, CONTRACT_ADDRESS);

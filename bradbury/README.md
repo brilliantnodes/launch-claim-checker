@@ -1,5 +1,7 @@
 # Launch Claim Checker on Testnet Bradbury Phase 2
 
+On the website: [checker.brilliantnodes.com/?net=bradbury](https://checker.brilliantnodes.com/?net=bradbury) lists these checks and can run a new one with MetaMask. Check #5 was run through the site itself on 15 Nov 2026 (transaction [0x4147…378a](https://scan.bradbury.genlayer.com/tx/0x414702a821ef4d9d310d12b95ed06f87046f3137d5ff4c2eec55f9bb834a378a), accepted in about 90 seconds).
+
 The contract also runs on **GenLayer Testnet Bradbury Phase 2** (chain 4221), whose validators use real models and real web access. Recorded 15 Nov 2026 with a throwaway account holding faucet GEN; fictional coins only.
 
 - Contract: [`0x963920f38a46c0Dc9592889a4B783FFAaEc6dA9C`](https://scan.bradbury.genlayer.com/address/0x963920f38a46c0Dc9592889a4B783FFAaEc6dA9C) (deploy [0xf777…162c](https://scan.bradbury.genlayer.com/tx/0xf7773f5e225ff998ef130a05a9c24a8e4d44945b35188f5454f9c08466e5162c), 5 of 5 validators).

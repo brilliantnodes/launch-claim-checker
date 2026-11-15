@@ -1,0 +1,1 @@
+function r(c){const n={formatters:void 0,fees:void 0,serializers:void 0,...c};function t(i){return e=>{const o=typeof e=="function"?e(i):e,s={...i,...o};return Object.assign(s,{extend:t(s)})}}return Object.assign(n,{extend:t(n)})}export{r as d};

@@ -93,6 +93,8 @@ The verdicts depend on how the validators' models read a page, and models change
 
 The same contract (GenVM v0.6 build, unchanged tests passing) is live on Bradbury Phase 2 at [`0x9639…dA9C`](https://scan.bradbury.genlayer.com/address/0x963920f38a46c0Dc9592889a4B783FFAaEc6dA9C). The four canary cases gave the expected verdicts there, each decided by 5 validators: Examplecoin contradicted twice, Controlcoin supported twice. Details and transaction links: [`bradbury/README.md`](bradbury/README.md).
 
+The website runs on both networks: switch to **Bradbury testnet** at the top of the page, or open [checker.brilliantnodes.com/?net=bradbury](https://checker.brilliantnodes.com/?net=bradbury). Recorded checks load at once with no wallet; a new check there needs MetaMask with Bradbury test GEN. Studio keeps the free temporary account.
+
 ## Live runs on GenLayer Studio
 
 Run on 14 Nov 2026 against the deployed contract, with the Studio validators' models fetching the pages themselves. The examples use two fictional coins whose announcement and explorer pages are test pages hosted with the site: Examplecoin's claims fail and Controlcoin's hold. No real project is used as an example.
