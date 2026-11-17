@@ -9,8 +9,10 @@
 2. The code carried by the recorded deployment transaction is that build,
    byte for byte, and it made the recorded contract.
 3. Every recorded transaction exists on Bradbury, went to the recorded
-   contract from the recorded sender, and has the recorded consensus result
-   and execution result.
+   contract from the recorded sender, calls the recorded method with the
+   recorded arguments (decoded from the call data on the chain), and has the
+   recorded consensus result, validator votes, execution result and
+   creation time.
 4. For every filing that was judged, the rule, block and salt revealed in the
    judgement give the digest that was filed.
 5. Every withdrawal carries exactly one transfer: to its own sender.
@@ -35,6 +37,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 JS = ROOT / "tools" / "bradbury"
 NOTHING_STORED = ("UNDETERMINED", "LEADER_TIMEOUT", "VALIDATORS_TIMEOUT", "CANCELED")
+VOTE = {0: "NOT_VOTED", 1: "FINISHED_WITH_RETURN", 2: "FINISHED_WITH_ERROR", 3: "TIMEOUT", 4: "NONDET_DISAGREE", 5: "DETERMINISTIC_VIOLATION"}
 
 
 def _throwaway_key():
@@ -51,6 +54,70 @@ KEY = os.environ.get("BRADBURY_READ_KEY") or _throwaway_key()
 def node(*a):
     p = subprocess.run(["node", "gl.mjs", *a], cwd=JS, capture_output=True, text=True, timeout=300, env={**os.environ, "BRADBURY_KEY_FILE": KEY})
     return json.loads([ln for ln in p.stdout.splitlines() if ln.startswith("{")][-1])
+
+
+def _rlp_first(data: bytes) -> bytes:
+    """The first item of an RLP list (Bradbury wraps the call data as [call data, leader-only flag])."""
+    def item(i):
+        b = data[i]
+        if b < 0x80:
+            return i, 1
+        if b < 0xB8:
+            return i + 1, b - 0x80
+        if b < 0xC0:
+            n = b - 0xB7
+            return i + 1 + n, int.from_bytes(data[i + 1 : i + 1 + n], "big")
+        if b < 0xF8:
+            return i + 1, b - 0xC0
+        n = b - 0xF7
+        return i + 1 + n, int.from_bytes(data[i + 1 : i + 1 + n], "big")
+
+    start, _length = item(0)  # the list
+    at, n = item(start)
+    return data[at : at + n]
+
+
+def _call(data: bytes):
+    """Decode GenLayer call data (LEB128 numbers; the low three bits are the type). Returns (method, args)."""
+    pos = 0
+
+    def num():
+        nonlocal pos
+        out = shift = 0
+        while True:
+            b = data[pos]
+            pos += 1
+            out |= (b & 0x7F) << shift
+            shift += 7
+            if b < 0x80:
+                return out
+
+    def take(n):
+        nonlocal pos
+        pos += n
+        return data[pos - n : pos]
+
+    def value():
+        v = num()
+        kind, n = v & 7, v >> 3
+        if kind == 0:
+            return {0: None, 1: False, 2: True}[n] if n < 3 else "0x" + take(20).hex()
+        if kind == 1:
+            return n
+        if kind == 2:
+            return -n - 1
+        if kind == 3:
+            return take(n)
+        if kind == 4:
+            return take(n).decode("utf-8")
+        if kind == 5:
+            return [value() for _ in range(n)]
+        if kind == 6:
+            return {take(num()).decode("utf-8"): value() for _ in range(n)}
+        raise ValueError("unknown call data type")
+
+    d = value()
+    return d.get("method", d.get("")), d.get("args", [])
 
 
 def seal(bounty_id, address, rule, height, salt) -> str:
@@ -89,6 +156,17 @@ def main() -> int:
         result = st if st in NOTHING_STORED else raw.get("resultName")
         if (result, raw.get("txExecutionResultName")) != (s["result"], s["execution"]):
             bad.append(f"step {s['n']} {s['tx']}: chain {result}/{raw.get('txExecutionResultName')}, record {s['result']}/{s['execution']}")
+        try:
+            call = _call(_rlp_first(bytes.fromhex(str(raw.get("txCalldata"))[2:])))
+        except Exception:
+            call = (None, None)
+        if call != (s["method"], s["args"]):
+            bad.append(f"step {s['n']} {s['tx']}: the chain has {call[0]}{call[1]}, the record {s['method']}{s['args']}")
+        votes = [VOTE.get(v, str(v)) for v in (raw.get("lastRound") or {}).get("validatorVotes") or []]
+        if "validators" in s and votes != s["validators"].get("votes"):
+            bad.append(f"step {s['n']}: validator votes on chain {votes}, recorded {s['validators'].get('votes')}")
+        if "created" in s and str(raw.get("createdTimestamp")) != str(s["created"]):
+            bad.append(f"step {s['n']}: created at {raw.get('createdTimestamp')} on chain, recorded {s['created']}")
         if str(raw.get("sender", "")).lower() != s["from"].lower():
             bad.append(f"step {s['n']}: sender on chain {raw.get('sender')}, recorded {s['from']}")
         if str(raw.get("recipient", "")).lower() != addr.lower():

@@ -6,7 +6,9 @@
 1. The code deployed by the recorded deployment transaction is, byte for
    byte, contracts/launch_claim_bounties.py in this repository.
 2. Every recorded transaction exists on Studio, went to the recorded
-   contract from the recorded sender, and has the recorded consensus result,
+   contract from the recorded sender with the recorded value, calls the
+   recorded method with the recorded arguments (decoded from the call data
+   on the chain), and has the recorded consensus result, validator votes,
    execution result, return value and creation time.
 3. Every filing's digest is the sha256 the record says it is: for a filing
    that was judged, the rule, block and salt revealed in the judgement give
@@ -25,6 +27,8 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from genlayer_py.abi import calldata  # noqa: E402
+
 from bounty import balance, client, read, seal, summary, tx  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,7 +57,15 @@ def main() -> int:
     for s in rec["steps"]:
         t = tx(c, s["tx"])
         got = summary(t)
-        for key in ("status", "result", "execution", "returned", "created_at"):
+        try:
+            call = calldata.decode(base64.b64decode((t.get("data") or {}).get("calldata") or ""))
+        except Exception:
+            call = {}
+        if (call.get("method"), call.get("args", [])) != (s["method"], s["args"]):
+            bad.append(f"step {s['n']} {s['tx']}: the chain has {call.get('method')}{call.get('args')}, the record {s['method']}{s['args']}")
+        for key in ("status", "result", "execution", "returned", "created_at", "votes"):
+            if key not in s:
+                continue
             ok = got[key] == s[key] or (key == "status" and {got[key], s[key]} <= {"ACCEPTED", "FINALIZED"})
             if not ok:
                 bad.append(f"step {s['n']} {s['tx']}: {key} on chain {got[key]!r}, recorded {s[key]!r}")

@@ -2,7 +2,7 @@
  "network": "genlayer-studio",
  "chain_id": 61999,
  "contract_source": "contracts/launch_claim_bounties.py",
- "contract_sha256": "9df99bc02bb904f6ce610c1f0d05bb229ee07e33a2b785c41ef186d1003d6292",
+ "contract_sha256": "b8ff0bd534b029ea8bfc7241c0e5d066d9a54c7494926deda30c33bca47f7e7b",
  "accounts": {
   "poster": "0x7C245F8142955E8de8f4B46a21aDD8854342053C",
   "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
@@ -20,24 +20,24 @@
     "Examplecoin",
     "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html",
     "",
-    1794943378,
+    1794955232,
     1000
    ],
    "value": "1000000000000000000",
-   "tx": "0x93d2472e0a573edf0f85b0cc8fd9d1948f4c1efde53d4b68a7272cd57c4777c5",
+   "tx": "0xfd6978744775fcfdbfadb1e052b96a7542dd5e5d819870d172ee494c453fe7f1",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
-    "expires_at": 1794943378,
+    "expires_at": 1794955232,
     "fee": "20000000000000000",
     "id": "1",
     "ok": true,
     "pot": "1000000000000000000"
    },
-   "created_at": "2026-11-17T19:08:02.392282+00:00",
+   "created_at": "2026-11-17T22:25:35.966915+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -52,10 +52,10 @@
    "method": "file_claim",
    "args": [
     "1",
-    "27fb82e1ebdaec84c85b6ee718cb312ba195cbb03f71b68272d20430a6aae930"
+    "921053402db8bc0f6e4a54cf441bef627a45335cb335fce64503387f83a67845"
    ],
    "value": "20000000000000000",
-   "tx": "0x9ccae7d00f64b8e59182155c6f0cca386adb985ce206e56cdcc3ac15d4be9fe1",
+   "tx": "0x04e0b6ada2f9daad33acbc6846ff6ce9f5fb2828188d830b7d072cc02a7458b4",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -63,14 +63,14 @@
    "execution": "SUCCESS",
    "returned": {
     "burned": "20000000000000000",
-    "judge_by": 1794944291,
+    "judge_by": 1794956146,
     "ok": true,
     "seq": 1
    },
-   "created_at": "2026-11-17T19:08:11.676958+00:00",
+   "created_at": "2026-11-17T22:25:46.047516+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 3,
+    "agree": 5,
     "of": 5
    }
   },
@@ -84,10 +84,10 @@
     "1",
     "P1",
     1,
-    "ffe6f3a9b9bfab0f579118ca0f9b2165"
+    "741cd981c89f601a1c94096b85a4b092"
    ],
    "value": "0",
-   "tx": "0x0899d65ef4d1c2dc90f7f7873168bb21c5c5bd4da05a9ce86a5d177bf20b2df5",
+   "tx": "0x4de9cfc050f5fec43b6709b1b8a837ef4f7ae0693f534f0d9a808588ffb44cf5",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -100,7 +100,7 @@
     "seq": 1,
     "state": "WON"
    },
-   "created_at": "2026-11-17T19:08:24.948861+00:00",
+   "created_at": "2026-11-17T22:25:56.682687+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -117,7 +117,7 @@
     0
    ],
    "value": "0",
-   "tx": "0x3a4c30a1f6264ecdedb7ef24d82fa26feb6e206c53e073817b5670fe9aa47eb5",
+   "tx": "0x4843c81d86a3a46e58dff84bc0753b269c9aebd3e4d91acb3a849e3748aefdf7",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -128,7 +128,7 @@
     "left": "0",
     "ok": true
    },
-   "created_at": "2026-11-17T19:08:56.812748+00:00",
+   "created_at": "2026-11-17T22:26:52.889274+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -146,24 +146,24 @@
     "Examplecoin",
     "",
     "https://checker.brilliantnodes.com/examples/bounty/examplecoin/mining.html",
-    1794943482,
+    1794955358,
     1000
    ],
    "value": "2000000000000000000",
-   "tx": "0x1d41752109b911ae9e12f65db00889dcef5c73a8e47398adaefcefe8ea0efdd9",
+   "tx": "0x4ca5a602d92561147d238059482c43ddec1cd0c21e58bfd52fc0fda0796ff725",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
-    "expires_at": 1794943482,
+    "expires_at": 1794955358,
     "fee": "40000000000000000",
     "id": "2",
     "ok": true,
     "pot": "2000000000000000000"
    },
-   "created_at": "2026-11-17T19:09:43.801388+00:00",
+   "created_at": "2026-11-17T22:27:38.158205+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -178,10 +178,10 @@
    "method": "file_claim",
    "args": [
     "2",
-    "6aad6017d4161dd4447af21fa90d7ee2542e2407554c4df1622e676230f3505b"
+    "06ced88ab1506f50ec8d8ba04cce54185cd8f61cc6c68d11321787557679595b"
    ],
    "value": "40000000000000000",
-   "tx": "0xe90fbe24cbda4ec5df6ca4239cda94078e8b19c04429696d172ae69e17b07456",
+   "tx": "0x6f4ec3f8dd806f668846131f0c3a85b301f7a92be7730cb7af0f210d23edeefe",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -189,14 +189,14 @@
    "execution": "SUCCESS",
    "returned": {
     "burned": "40000000000000000",
-    "judge_by": 1794944395,
+    "judge_by": 1794956267,
     "ok": true,
     "seq": 1
    },
-   "created_at": "2026-11-17T19:09:55.955725+00:00",
+   "created_at": "2026-11-17T22:27:47.628825+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 3,
+    "agree": 4,
     "of": 5
    }
   },
@@ -210,10 +210,10 @@
     "2",
     "M1",
     0,
-    "f15415455a35e4640a2494c51f768c2e"
+    "c742a12dd4936354254b968898097aaa"
    ],
    "value": "0",
-   "tx": "0x8bf2a77802945b8015edc151976c2518606b06d4269acbdc290e6fbda77d63e4",
+   "tx": "0x817d321b8579c8d36da82bb80c263eb5cf3e87305ca242ddc3046a1facff0412",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -226,7 +226,7 @@
     "seq": 1,
     "state": "WON"
    },
-   "created_at": "2026-11-17T19:10:06.971491+00:00",
+   "created_at": "2026-11-17T22:27:57.519170+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -244,24 +244,24 @@
     "Controlcoin",
     "https://checker.brilliantnodes.com/examples/bounty/controlcoin/block/{n}.html",
     "",
-    1794943297,
+    1794955172,
     1000
    ],
    "value": "1000000000000000000",
-   "tx": "0x5dac0b7da2661295af56ef8a80e73d406b0d89b5f68bb24030e3c5199d340c2a",
+   "tx": "0xea4383de71391fadd15b7c767693def920d0c3abdeda434898abc9e71894d9ba",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
-    "expires_at": 1794943297,
+    "expires_at": 1794955172,
     "fee": "20000000000000000",
     "id": "3",
     "ok": true,
     "pot": "1000000000000000000"
    },
-   "created_at": "2026-11-17T19:10:39.208815+00:00",
+   "created_at": "2026-11-17T22:28:32.438350+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -276,10 +276,10 @@
    "method": "file_claim",
    "args": [
     "3",
-    "f9b37473b41f5d0aec09c065b4459ba404e5061c9845878c57349f7c830e4cb2"
+    "d39a466c37638f0f352e873f059f297498cb025e6a8591c063a8670ce8765469"
    ],
    "value": "20000000000000000",
-   "tx": "0xfd6f5111ddcbf33fab0655fa7ee322d53ecb6a470ff59639e08c1b25369f76c0",
+   "tx": "0x9557a97c9df5eaf4b3bc74bd58ec80742d03bf0f4c3ac05dcadac8902f41e59e",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -287,14 +287,14 @@
    "execution": "SUCCESS",
    "returned": {
     "burned": "20000000000000000",
-    "judge_by": 1794944451,
+    "judge_by": 1794956322,
     "ok": true,
     "seq": 1
    },
-   "created_at": "2026-11-17T19:10:51.626304+00:00",
+   "created_at": "2026-11-17T22:28:42.294045+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 3,
+    "agree": 5,
     "of": 5
    }
   },
@@ -308,10 +308,10 @@
     "3",
     "P1",
     1,
-    "4de2fa2f09b6b5c9a152389b9a0e65e1"
+    "482cc308704844e877ec1996fecfed4f"
    ],
    "value": "0",
-   "tx": "0xebba506c27702af3a0f962b55f0d54e57a1325d1ecd26a3b9e74c3ae6bd097d7",
+   "tx": "0x5d53d85948662784629984f433e4dc0b3d6470b0186719dfcad47c1833de4974",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -323,7 +323,7 @@
     "seq": 1,
     "state": "OPEN"
    },
-   "created_at": "2026-11-17T19:11:03.270167+00:00",
+   "created_at": "2026-11-17T22:28:51.724680+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -340,17 +340,17 @@
     "3",
     "P1",
     1,
-    "4de2fa2f09b6b5c9a152389b9a0e65e1"
+    "482cc308704844e877ec1996fecfed4f"
    ],
    "value": "0",
-   "tx": "0xeaed44202e036d612862aed800b1379d92741d80064b58bbb5aedf97ebb22cae",
+   "tx": "0x921cfcf728a1d0d8ce127db3a09cbad0a285f236584a9e2e748d59015f726779",
    "expected": "refused by the contract: no live filing",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "ERROR",
    "returned": "you have no live filing on this bounty (a judgement must be sent within 30 minutes of the filing and processed within 60)",
-   "created_at": "2026-11-17T19:11:29.048841+00:00",
+   "created_at": "2026-11-17T22:29:15.988814+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -368,24 +368,24 @@
     "Examplecoin",
     "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html",
     "",
-    1794943600,
+    1794955465,
     1000
    ],
    "value": "1000000000000000000",
-   "tx": "0x0bef4a256a27142e2f451b4435cb0bb68217988e5b23856a4afa17ee34e15860",
+   "tx": "0xe4da51615b4e6858359a10b6bc5e536d021845cd22a2c7020ada10f960e3cd08",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
-    "expires_at": 1794943600,
+    "expires_at": 1794955465,
     "fee": "20000000000000000",
     "id": "4",
     "ok": true,
     "pot": "1000000000000000000"
    },
-   "created_at": "2026-11-17T19:11:40.112788+00:00",
+   "created_at": "2026-11-17T22:29:25.809131+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -400,10 +400,10 @@
    "method": "file_claim",
    "args": [
     "4",
-    "a896067b48ed4cc1071feb8f921e9a99633dc063629e96aeeed62291832fa5c3"
+    "d62a61e67c854fef84a3bd2b947cdaddcb409f561c964c7c57ec4ed533914897"
    ],
    "value": "20000000000000000",
-   "tx": "0xf729baba870bfc76523d50bcd689649a12e9ba5cb65d2a59edb6788801ec7183",
+   "tx": "0x5fd73089898e021d6c0fbc09ede02aad640063e1f7acd35cbf76878db436cb52",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -411,11 +411,11 @@
    "execution": "SUCCESS",
    "returned": {
     "burned": "20000000000000000",
-    "judge_by": 1794944509,
+    "judge_by": 1794956374,
     "ok": true,
     "seq": 1
    },
-   "created_at": "2026-11-17T19:11:49.908706+00:00",
+   "created_at": "2026-11-17T22:29:34.868807+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -430,10 +430,10 @@
    "method": "file_claim",
    "args": [
     "4",
-    "d2e088d12453a6c29da6c1f694d13edf6719e60d0fb188222d14956d3f67ade3"
+    "56655cd31be46b281d2f1acbea8960954091e26d11eabb9dfc08c6cfce0608f0"
    ],
    "value": "20000000000000000",
-   "tx": "0x87c264a2d569fa72214d908e817d4f4a630e5aefc7a6f6a6cfac111f7108d60d",
+   "tx": "0x86dc7dfece80141488609b2f5a461b5e2e53031937e6e8ffdce0c15b5feac619",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -441,11 +441,11 @@
    "execution": "SUCCESS",
    "returned": {
     "burned": "20000000000000000",
-    "judge_by": 1794944526,
+    "judge_by": 1794956384,
     "ok": true,
     "seq": 2
    },
-   "created_at": "2026-11-17T19:12:06.093832+00:00",
+   "created_at": "2026-11-17T22:29:44.023870+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -462,10 +462,10 @@
     "4",
     "P1",
     1,
-    "70068206ffa23fce490158458d31b109"
+    "4da560f90927fbdec2e704f9e18ed22f"
    ],
    "value": "0",
-   "tx": "0x71e974f9b59bcb989f42a8499009d97c7349af19a53e743767ed7527b0418afd",
+   "tx": "0xb9fde7ee83085551e547924b73baed62209777eda41a5ce758908606eab7965a",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -478,7 +478,7 @@
     "seq": 2,
     "state": "PROVISIONAL"
    },
-   "created_at": "2026-11-17T19:12:16.038417+00:00",
+   "created_at": "2026-11-17T22:29:53.605579+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -495,14 +495,14 @@
     "4"
    ],
    "value": "0",
-   "tx": "0x2a1abc4e87794fa3555bcf9902ed802d3679581eab4d9a3694902dd94bde8191",
+   "tx": "0x3c3a4a5c19e87f0787093df2a466ba42d7df7b06b4f4a957f1c573625e34f708",
    "expected": "refused by the contract: window ends",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "ERROR",
-   "returned": "the window ends at unix time 1794946309",
-   "created_at": "2026-11-17T19:13:11.571673+00:00",
+   "returned": "the window ends at unix time 1794958174",
+   "created_at": "2026-11-17T22:30:44.984417+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -519,10 +519,10 @@
     "4",
     "P1",
     1,
-    "7e43972968d2478f450dc90bf26ab7b0"
+    "3b94cd851eebc9fbc602589f211b661c"
    ],
    "value": "0",
-   "tx": "0xb17a1038e265abb7261f50ce3bbe65b1bceb1b7352e280f89735bc499f40efb0",
+   "tx": "0xde94b50c5bd751b041ebe24f82b919dbb2a3e49f56aaa8a4e91f1d11cc4079c4",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -535,7 +535,7 @@
     "seq": 1,
     "state": "WON"
    },
-   "created_at": "2026-11-17T19:13:28.884439+00:00",
+   "created_at": "2026-11-17T22:30:54.568799+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -553,27 +553,27 @@
     "Examplecoin",
     "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html",
     "",
-    1794943738,
+    1794955586,
     1000
    ],
    "value": "500000000000000000",
-   "tx": "0x10ad90c542a2f2bd2904f11f95b5be7e7cf26e08ed4dc6f452fe2cd802334176",
+   "tx": "0xf9b43166f774e40626dbefd565cbe37742dfdc63e139ecf9ffdb0b215ad954b0",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
-    "expires_at": 1794943738,
+    "expires_at": 1794955586,
     "fee": "10000000000000000",
     "id": "5",
     "ok": true,
     "pot": "500000000000000000"
    },
-   "created_at": "2026-11-17T19:13:58.458793+00:00",
+   "created_at": "2026-11-17T22:31:26.539327+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 5,
+    "agree": 3,
     "of": 5
    }
   },
@@ -585,10 +585,10 @@
    "method": "file_claim",
    "args": [
     "5",
-    "c437c8471783922c8475cd9023e618500ab0422ab5cc1d99c969d47ee1089295"
+    "c534b79e388b1680fb2ee0ed2be4eef0d03c50cc3e67edf41c16320a248330c6"
    ],
    "value": "10000000000000001",
-   "tx": "0x0b37006ecaaa93d05daefc7a85cba622ffd4ebab8cf22bd3c79ca4a609babd83",
+   "tx": "0x744df708aff88e1deeb76207053a9a453d0a4bbd6ac6ffd1700c9841f6138426",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -599,10 +599,10 @@
     "ok": false,
     "refunded": "10000000000000001"
    },
-   "created_at": "2026-11-17T19:14:09.523894+00:00",
+   "created_at": "2026-11-17T22:31:35.928244+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 5,
+    "agree": 3,
     "of": 5
    }
   },
@@ -617,7 +617,7 @@
     "block 1 pays the founders"
    ],
    "value": "10000000000000000",
-   "tx": "0xbeaa9b3b389806969f6afef72aec5c2f2d8198041d25bfe3e58e7decace9ac1e",
+   "tx": "0x62cda71989b050dc3afd10c76fbcee604165d7dd144877ac82f92ac3ead9f24d",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -628,10 +628,10 @@
     "ok": false,
     "refunded": "10000000000000000"
    },
-   "created_at": "2026-11-17T19:14:20.626350+00:00",
+   "created_at": "2026-11-17T22:31:43.958653+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 5,
+    "agree": 3,
     "of": 5
    }
   },
@@ -643,10 +643,10 @@
    "method": "file_claim",
    "args": [
     "999",
-    "d53b6c73306da53c6c606966b1e947043c0390ba4f8482ce32cdd09c37817209"
+    "d69d4da435a2a1eef2e282eb16acdfe09e9f2d6669d49c15cf58d6c31a19d7a2"
    ],
    "value": "10000000000000000",
-   "tx": "0x4785fafab76ad1a27c0b9fbaacbf2475558de34d9058593666d7a115eb63bb1f",
+   "tx": "0x3f27277a3b41d723bb37a062ffecba60b36c90b33f83407cd8f99bcd6db103e2",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -657,7 +657,7 @@
     "ok": false,
     "refunded": "10000000000000000"
    },
-   "created_at": "2026-11-17T19:14:30.123437+00:00",
+   "created_at": "2026-11-17T22:31:51.943323+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -672,10 +672,10 @@
    "method": "file_claim",
    "args": [
     "5",
-    "f447b456f0b09d4d6feb42fd54bfbb5efa4f40a64e195bc870777a3b2a4ba85d"
+    "3d8c0366c90c8604786e4f81183142458b86b0ec509d8d62628025e07b939491"
    ],
    "value": "10000000000000000",
-   "tx": "0x0e0668fedfbd05f21172c65c46ad61496f4013fdc272495f309398bb1c4eef9b",
+   "tx": "0x638b549c68b191b2ff576928ef937c216893178bc44b9820b53b4ecb035993e1",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -683,14 +683,14 @@
    "execution": "SUCCESS",
    "returned": {
     "burned": "10000000000000000",
-    "judge_by": 1794944688,
+    "judge_by": 1794956521,
     "ok": true,
     "seq": 1
    },
-   "created_at": "2026-11-17T19:14:48.378807+00:00",
+   "created_at": "2026-11-17T22:32:01.786971+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 5,
+    "agree": 3,
     "of": 5
    }
   },
@@ -702,10 +702,10 @@
    "method": "file_claim",
    "args": [
     "5",
-    "9d3e9753b62f52ea69097bbb95a74272a1c56c8ba680b1886439e7bf0c504ac8"
+    "93c4f151aa85350d17c7de9db31a17c5fe9f2525cec41e91c40126a696a5369a"
    ],
    "value": "10000000000000000",
-   "tx": "0x098bfa7f284abd7cf8d95d0ab13615d4eaced9b5fd6d9e2b0173b79745a96028",
+   "tx": "0x213b9adffd6d33a36e6393ce61a774f678af60bf98e939801818b4cdb7f50902",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -716,7 +716,7 @@
     "ok": false,
     "refunded": "10000000000000000"
    },
-   "created_at": "2026-11-17T19:14:58.168803+00:00",
+   "created_at": "2026-11-17T22:32:10.063547+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -733,17 +733,17 @@
     "5",
     "P1",
     7,
-    "3cbe6bbff81a9b835900846b1373cfd8"
+    "13e6d415366913d471b37a4afba6d18e"
    ],
    "value": "0",
-   "tx": "0x6734a7630ae153e70fc48c155d2855a33a2bd7d38bc842414aa90b7dce9b557f",
+   "tx": "0x90f6cde41c89897d159463162a93d81452b266f31142d0cbfb9f66aa7da470f8",
    "expected": "refused by the contract: do not match",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "ERROR",
    "returned": "the rule, block number and salt do not match what your filing sealed",
-   "created_at": "2026-11-17T19:15:07.590212+00:00",
+   "created_at": "2026-11-17T22:32:18.998806+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -760,17 +760,17 @@
     "5",
     "P1",
     6,
-    "28df10e5b07e480c6b7ddd9a0bf415d8"
+    "a7fe82b8b5ba5dc71b5bfeebf3d94118"
    ],
    "value": "0",
-   "tx": "0xeb8a8cefe8fbd9ee85642c756c209a5c18f255f08379d54746c4e7452774f66c",
+   "tx": "0xd85c944c973a7b10c69f4e65374028f94b925800f3ef5d681c037e5d87557e45",
    "expected": "refused by the contract: do not match",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "ERROR",
    "returned": "the rule, block number and salt do not match what your filing sealed",
-   "created_at": "2026-11-17T19:15:18.448834+00:00",
+   "created_at": "2026-11-17T22:32:27.163439+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -787,17 +787,17 @@
     "5",
     "P1",
     101,
-    "28df10e5b07e480c6b7ddd9a0bf415d8"
+    "a7fe82b8b5ba5dc71b5bfeebf3d94118"
    ],
    "value": "0",
-   "tx": "0x4735ccbdf268d8f772564c075b49f1eeede32086e91b8da22591ca889bc31681",
+   "tx": "0xc5773eae14e3b8873026430e39091cf20b5c6ed126bf203c32a430127185c765",
    "expected": "refused by the contract: 0 to 100",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "ERROR",
    "returned": "height must be 0 to 100 for rule P1 and 0 for rule M1",
-   "created_at": "2026-11-17T19:15:30.851705+00:00",
+   "created_at": "2026-11-17T22:32:40.288791+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -814,17 +814,17 @@
     "5",
     "M1",
     0,
-    "28df10e5b07e480c6b7ddd9a0bf415d8"
+    "a7fe82b8b5ba5dc71b5bfeebf3d94118"
    ],
    "value": "0",
-   "tx": "0xd631c43438486efe6ba09c3d9f23edc34e081a97d79ea3df432bca55f8789a43",
+   "tx": "0xebf248cd62ddc6c7e569307332f8f2b50895a1d82f44a1a80842cb82377f010e",
    "expected": "refused by the contract: pays on",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "ERROR",
    "returned": "this bounty pays on: P1",
-   "created_at": "2026-11-17T19:15:47.160139+00:00",
+   "created_at": "2026-11-17T22:32:48.799244+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -841,10 +841,10 @@
     "5",
     "P1",
     7,
-    "28df10e5b07e480c6b7ddd9a0bf415d8"
+    "a7fe82b8b5ba5dc71b5bfeebf3d94118"
    ],
    "value": "0",
-   "tx": "0x4e647fa0f30cf10a6fc1b0e2128701782f55d101f01b90dcda6aa575718982c8",
+   "tx": "0x21a03957668149870f5a7fa6548d63627c967fdabd6fda617455e486fcfc51d8",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -857,7 +857,7 @@
     "state": "OPEN",
     "tries_left": 2
    },
-   "created_at": "2026-11-17T19:15:58.230764+00:00",
+   "created_at": "2026-11-17T22:32:57.533264+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -872,10 +872,10 @@
    "method": "file_claim",
    "args": [
     "5",
-    "f447b456f0b09d4d6feb42fd54bfbb5efa4f40a64e195bc870777a3b2a4ba85d"
+    "3d8c0366c90c8604786e4f81183142458b86b0ec509d8d62628025e07b939491"
    ],
    "value": "10000000000000000",
-   "tx": "0xf131be9c0b27e468b75ce4879ce0c553f8a44bdff5b6add704d7cd26bf297ed3",
+   "tx": "0x680b56ca56c1ba4caf696efaefaea411667e4ba52aab8b89bf7aafe4f04cf60f",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -883,11 +883,11 @@
    "execution": "SUCCESS",
    "returned": {
     "burned": "10000000000000000",
-    "judge_by": 1794944768,
+    "judge_by": 1794956585,
     "ok": true,
     "seq": 2
    },
-   "created_at": "2026-11-17T19:16:08.818806+00:00",
+   "created_at": "2026-11-17T22:33:05.928820+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -904,17 +904,17 @@
     "5",
     "P1",
     7,
-    "28df10e5b07e480c6b7ddd9a0bf415d8"
+    "a7fe82b8b5ba5dc71b5bfeebf3d94118"
    ],
    "value": "0",
-   "tx": "0xa74e20466d9d061a71674234601b40702f3c7031b35dae6e8f65fc8de627ae61",
+   "tx": "0xee90de654b509acf98ea9cabc34d95113c1d326bacd02fbb0924db534dc026cd",
    "expected": "refused by the contract: do not match",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "ERROR",
    "returned": "the rule, block number and salt do not match what your filing sealed",
-   "created_at": "2026-11-17T19:16:19.900526+00:00",
+   "created_at": "2026-11-17T22:33:14.275686+00:00",
    "rotations": 0,
    "votes": {
     "agree": 5,
@@ -931,17 +931,17 @@
     "5",
     "P1",
     7,
-    "28df10e5b07e480c6b7ddd9a0bf415d8"
+    "a7fe82b8b5ba5dc71b5bfeebf3d94118"
    ],
    "value": "0",
-   "tx": "0x3a2d232778e959e7d0984f51f67601d9d35d3e30e889197c358647a7fe448dc2",
+   "tx": "0x050d5f96d79a199f05c950c8e2ed1d7425dac0fb46801d05571160ffc7c94984",
    "expected": "refused by the contract: no live filing",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "ERROR",
    "returned": "you have no live filing on this bounty (a judgement must be sent within 30 minutes of the filing and processed within 60)",
-   "created_at": "2026-11-17T19:16:31.238802+00:00",
+   "created_at": "2026-11-17T22:33:22.667650+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -959,24 +959,24 @@
     "Examplecoin",
     "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/1.html?n={n}",
     "",
-    1794943902,
+    1794955711,
     1000
    ],
    "value": "500000000000000000",
-   "tx": "0x2ec30ba1be17a174eb7c55f1f1f68de5863ec9d6006582a3aaf9be2d0bb624eb",
+   "tx": "0x70d5ef280144d54db787238b068d41696fa6d75479ca18eae92a3432587c2fa1",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
-    "expires_at": 1794943902,
+    "expires_at": 1794955711,
     "fee": "10000000000000000",
     "id": "6",
     "ok": true,
     "pot": "500000000000000000"
    },
-   "created_at": "2026-11-17T19:16:44.457494+00:00",
+   "created_at": "2026-11-17T22:33:31.349118+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -991,10 +991,10 @@
    "method": "file_claim",
    "args": [
     "6",
-    "a60365c8113daebbd8a959c7c74b8a24ec26abe64247157b00288952d719fed1"
+    "12ec8476dc85218383fe66add390010c482424abe9b75dd67563b6a61648ed0e"
    ],
    "value": "10000000000000000",
-   "tx": "0x05492bcc5c9198fc867eb6a34002f58a679f2dfccb874b06f945780002141023",
+   "tx": "0xd0e2872319229d7e042942462e66a962d246d59cdec4f7ed48ebd50ba563e0a9",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -1002,11 +1002,11 @@
    "execution": "SUCCESS",
    "returned": {
     "burned": "10000000000000000",
-    "judge_by": 1794944814,
+    "judge_by": 1794956620,
     "ok": true,
     "seq": 1
    },
-   "created_at": "2026-11-17T19:16:54.806583+00:00",
+   "created_at": "2026-11-17T22:33:40.485285+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1023,10 +1023,10 @@
     "6",
     "P1",
     2,
-    "71c0a5f8cb8048f92c6249e0cd2dfaa2"
+    "08d8019c50a0b2264e5f2cc31b5d5cd3"
    ],
    "value": "0",
-   "tx": "0x9f38409f30fbe068d5a02c126e36f2c8eda479d919724c204e0c89de26fd4152",
+   "tx": "0x50005b5d1e9ff0c42ddb26638423b727a724bcd032c4c37c258fbc5b7d13d561",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -1039,7 +1039,7 @@
     "state": "OPEN",
     "tries_left": 2
    },
-   "created_at": "2026-11-17T19:17:05.026237+00:00",
+   "created_at": "2026-11-17T22:33:49.511292+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1057,24 +1057,24 @@
     "Examplecoin",
     "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html",
     "",
-    1794944250,
+    1794956092,
     1000
    ],
    "value": "500000000000000000",
-   "tx": "0x8b6cf2b120e1e329d7624c3421de463c4549c4b59020d51dc9f51ee98aa4634a",
+   "tx": "0x6359b425fe1784dc15d5482c5c39a9f989b5127a04e5173286d959db402fca48",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
-    "expires_at": 1794944250,
+    "expires_at": 1794956092,
     "fee": "10000000000000000",
     "id": "7",
     "ok": true,
     "pot": "500000000000000000"
    },
-   "created_at": "2026-11-17T19:17:32.309921+00:00",
+   "created_at": "2026-11-17T22:34:51.878653+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1089,10 +1089,10 @@
    "method": "file_claim",
    "args": [
     "7",
-    "fa7843404ae95e7c9947898966043abc282e6037707cfe676e53fc2e2ebff211"
+    "8461514fd3bab7acd2160cea54eca3cfe6a9294fe3bcba4f74e48339384b1dce"
    ],
    "value": "10000000000000000",
-   "tx": "0xf1516626580863c3e571cb464b216968807464f1fc283f615a4520a161bdf4ce",
+   "tx": "0x3a8b588978bb4dde20e7fab1552f4d5c453de5bb262cd1d39fa845131dbfada5",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -1100,11 +1100,11 @@
    "execution": "SUCCESS",
    "returned": {
     "burned": "10000000000000000",
-    "judge_by": 1794944862,
+    "judge_by": 1794956714,
     "ok": true,
     "seq": 1
    },
-   "created_at": "2026-11-17T19:17:42.725195+00:00",
+   "created_at": "2026-11-17T22:35:14.354200+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1119,10 +1119,10 @@
    "method": "file_claim",
    "args": [
     "7",
-    "0d464a3717289758ff40796920d609bc4362c406334ad6f8e18b7bc4bebad447"
+    "5f441659d37cda176f163ef3f1d3c6ec8d20465def18cc69e8e6f0cb63c2c2e1"
    ],
    "value": "10000000000000000",
-   "tx": "0xd89732692238946a78e708c9226c6845f3ca91d8edb9993f0d5ad110c28b0a62",
+   "tx": "0xac81e84a9f951528f9b9f9adfec43bce1accc4927a2426b35ed2422d7178932e",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -1130,11 +1130,11 @@
    "execution": "SUCCESS",
    "returned": {
     "burned": "10000000000000000",
-    "judge_by": 1794944873,
+    "judge_by": 1794956723,
     "ok": true,
     "seq": 2
    },
-   "created_at": "2026-11-17T19:17:53.483654+00:00",
+   "created_at": "2026-11-17T22:35:23.507409+00:00",
    "rotations": 0,
    "votes": {
     "agree": 5,
@@ -1151,10 +1151,10 @@
     "7",
     "P1",
     1,
-    "6d5a7d847ab5b6e9f6f81d79ace704f6"
+    "bd8aa92a2dae091f8bae1cfd8f7ffdc9"
    ],
    "value": "0",
-   "tx": "0x06459adbbe1fed244b5889f5173299a2cdcd17ea15f00af9b5877da39ce931b3",
+   "tx": "0xc4cdd45ca46b7366307985b0229245257852b6da6a4af20a2fead886afbd377a",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -1167,7 +1167,7 @@
     "seq": 2,
     "state": "PROVISIONAL"
    },
-   "created_at": "2026-11-17T19:18:04.636429+00:00",
+   "created_at": "2026-11-17T22:35:33.170698+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1182,10 +1182,10 @@
    "method": "file_claim",
    "args": [
     "3",
-    "1b29a3e7aff9c9f303865aef09f7dfaf18bb3b7f5dea2468a6f35cfb292155e0"
+    "aaf9eeb0e6bf3ab2ae50186a4614386e25b718eb656e8b7d8c426a137241dc67"
    ],
    "value": "20000000000000000",
-   "tx": "0xf1dbdf634e29d839994e3d755549dac58b9ddec89c6ffe388aa99fe00066ca28",
+   "tx": "0x7211b5265bdcb16f39cd6fd3a99c38304eb36efb2db89de9ba8770e796d47b5b",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -1196,7 +1196,7 @@
     "ok": false,
     "refunded": "20000000000000000"
    },
-   "created_at": "2026-11-17T19:21:41.479268+00:00",
+   "created_at": "2026-11-17T22:39:37.859538+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1213,14 +1213,14 @@
     "3"
    ],
    "value": "0",
-   "tx": "0x184f3422cc5f0e8516815cb9abbda9e0037ecb2a5d4b89c49a4038c4c61ad7ce",
+   "tx": "0xbc8342c6dfcfbd0bbc14beeea284814254f3358db20b59365156d3feaa9f73e1",
    "expected": "refused by the contract: reclaimed from",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "ERROR",
-   "returned": "the pot can be reclaimed from unix time 1794946897",
-   "created_at": "2026-11-17T19:21:51.850889+00:00",
+   "returned": "the pot can be reclaimed from unix time 1794958772",
+   "created_at": "2026-11-17T22:39:46.769647+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1237,17 +1237,17 @@
     "7"
    ],
    "value": "0",
-   "tx": "0x1df92cc8ef84519d5cfefdfa9b72d2d5820f4e46b467b26bcb5996cfa348e5d3",
+   "tx": "0x952e2ba2f7516d9ca2ce18dbb4c031bda8c0bf0851154b0d7d86cb92f4781b08",
    "expected": "refused by the contract: window ends",
    "as_expected": true,
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "ERROR",
-   "returned": "the window ends at unix time 1794946662",
-   "created_at": "2026-11-17T19:22:05.318788+00:00",
+   "returned": "the window ends at unix time 1794958514",
+   "created_at": "2026-11-17T22:39:57.720371+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 5,
+    "agree": 3,
     "of": 5
    }
   },
@@ -1261,10 +1261,10 @@
     "7"
    ],
    "value": "0",
-   "tx": "0xf2a5a28cff431a0d20d6b73fddc0db1bb493755c0fc2778cf83bb73f0912cd5d",
+   "tx": "0xbeae278a9c4f2b7e6f63dd187389f8e474b8bcfb9d39df3d588cd39cc4bd1e41",
    "expected": "accepted",
    "as_expected": true,
-   "status": "FINALIZED",
+   "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
@@ -1273,13 +1273,12 @@
     "state": "WON",
     "winner": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231"
    },
-   "created_at": "2026-11-17T20:17:51.744548+00:00",
+   "created_at": "2026-11-17T23:35:18.921443+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
     "of": 5
-   },
-   "note": "Recorded as it happened: this transaction was sent at 20:17:51 UTC and went through, but Studio's gateway answered the script with an error page (HTTP 520) while it waited, and the script stopped. The transaction was found on the chain by its sender and time, entered here from the chain, and the run was resumed from the next step with --resume."
+   }
   },
   {
    "n": 43,
@@ -1291,7 +1290,7 @@
     0
    ],
    "value": "0",
-   "tx": "0xe407b12c4bd744f17c3c2c8f30296be97570fca203e69a3bf780e5ca02c23902",
+   "tx": "0xdc16401c175523f667acfa74c26f25b72c619cda8ff127664f1077cb23312875",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -1302,7 +1301,7 @@
     "left": "0",
     "ok": true
    },
-   "created_at": "2026-11-17T20:21:17.678546+00:00",
+   "created_at": "2026-11-17T23:35:28.973200+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1319,7 +1318,7 @@
     "3"
    ],
    "value": "0",
-   "tx": "0xf78fc120af25f181a7b4af1ccd6bd39fdcccf58ebf2966e24ebb8841dbf8b3d5",
+   "tx": "0x447bec9e381a65486b0e1187ddf0f2f492725bda95796a1e254dafb3bde4fe1b",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -1330,10 +1329,10 @@
     "ok": true,
     "state": "EXPIRED"
    },
-   "created_at": "2026-11-17T20:21:44.699974+00:00",
+   "created_at": "2026-11-17T23:39:37.756261+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 4,
+    "agree": 3,
     "of": 5
    }
   },
@@ -1347,7 +1346,7 @@
     0
    ],
    "value": "0",
-   "tx": "0x510c35b27e72fba11af44626079e6d01afcadba7a0e20358d1bc713e9dacf22d",
+   "tx": "0x078d750f1f5ec9c5ee38ab122e0235aa744f8f44376febc6d140d5a5e7564b2b",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -1358,7 +1357,7 @@
     "left": "0",
     "ok": true
    },
-   "created_at": "2026-11-17T20:21:56.526477+00:00",
+   "created_at": "2026-11-17T23:39:45.722828+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1375,7 +1374,7 @@
     0
    ],
    "value": "0",
-   "tx": "0xcbc37c82869ce93a673d3f098ca0372b18a0c860bc3f0b9da738dda9b52fbfaa",
+   "tx": "0xfc0be8520380df6d1edea97fe520550f5c00f04f2f7f3ba925431e9d94a2c6e2",
    "expected": "accepted",
    "as_expected": true,
    "status": "ACCEPTED",
@@ -1386,10 +1385,10 @@
     "left": "0",
     "ok": true
    },
-   "created_at": "2026-11-17T20:22:08.111151+00:00",
+   "created_at": "2026-11-17T23:39:54.442701+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 5,
+    "agree": 3,
     "of": 5
    }
   }
@@ -1408,7 +1407,7 @@
     "digest_length": 64
    },
    "ok": true,
-   "at": 1794942504
+   "at": 1794954357
   },
   {
    "label": "1. the bounty is won by the hunter, on the agreed amount",
@@ -1431,7 +1430,7 @@
     }
    },
    "ok": true,
-   "at": 1794942536
+   "at": 1794954409
   },
   {
    "label": "1. the leader's line, which every accepting validator found on its own copy of the page",
@@ -1441,14 +1440,14 @@
    },
    "want": null,
    "ok": true,
-   "at": 1794942536
+   "at": 1794954409
   },
   {
    "label": "1. the pot is credited to the hunter",
    "value": "1000000000000000000",
    "want": "1000000000000000000",
    "ok": true,
-   "at": 1794942538
+   "at": 1794954411
   },
   {
    "label": "1. the hunter's wallet received the pot (less any transaction fee)",
@@ -1457,7 +1456,7 @@
    },
    "want": null,
    "ok": true,
-   "at": 1794942579
+   "at": 1794954455
   },
   {
    "label": "after case 1: the contract's balance equals locked + credited + burned",
@@ -1471,7 +1470,7 @@
    },
    "want": null,
    "ok": true,
-   "at": 1794942582
+   "at": 1794954458
   },
   {
    "label": "2. the agreed top miner is stored; block counts are not",
@@ -1490,7 +1489,7 @@
     "counts_stored": false
    },
    "ok": true,
-   "at": 1794942637
+   "at": 1794954512
   },
   {
    "label": "4. the second hunter leads; nothing is paid while an earlier filing waits",
@@ -1505,7 +1504,7 @@
     "credit": "0"
    },
    "ok": true,
-   "at": 1794942790
+   "at": 1794954644
   },
   {
    "label": "4. the first hunter won; the second got nothing",
@@ -1528,21 +1527,21 @@
     ]
    },
    "ok": true,
-   "at": 1794942838
+   "at": 1794954686
   },
   {
    "label": "5. the three refused payments are credited to the copier",
    "value": "30000000000000001",
    "want": "30000000000000001",
    "ok": true,
-   "at": 1794942887
+   "at": 1794954721
   },
   {
    "label": "7. the window ends 60 minutes after the earlier filing was sent",
-   "value": 1794946662,
-   "want": 1794946662,
+   "value": 1794958514,
+   "want": 1794958514,
    "ok": true,
-   "at": 1794943123
+   "at": 1794954978
   },
   {
    "label": "after cases 1 to 7: the contract's balance equals locked + credited + burned",
@@ -1556,21 +1555,21 @@
    },
    "want": null,
    "ok": true,
-   "at": 1794943126
+   "at": 1794954980
   },
   {
    "label": "3. views show the bounty as expired and unclaimed",
    "value": "EXPIRED_UNCLAIMED",
    "want": "EXPIRED_UNCLAIMED",
    "ok": true,
-   "at": 1794943325
+   "at": 1794955197
   },
   {
    "label": "7. the copier got nothing but its refunds",
    "value": "50000000000000001",
    "want": "50000000000000001",
    "ok": true,
-   "at": 1794946873
+   "at": 1794958528
   },
   {
    "label": "at the end: the contract's balance equals locked + credited + burned",
@@ -1584,31 +1583,32 @@
    },
    "want": null,
    "ok": true,
-   "at": 1794946969
+   "at": 1794958841
   },
   {
    "label": "at the end: burned equals the fees of the ten filings taken",
    "value": "170000000000000000",
    "want": "170000000000000000",
    "ok": true,
-   "at": 1794946971
+   "at": 1794958843
   }
  ],
  "deploy": {
-  "tx": "0x44912e1b79dde350236d59f04b674b644647e8b5cdc4ee91046abb3891a8f709",
-  "address": "0x234D26C4f2477EC4ef1b0FCA1f0ad0dA5c03bB8e",
+  "tx": "0x6b12ad26457f5eb861afd6a1b2f6a461b2510765f39cf45e552f332c9939a2c7",
+  "address": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
   "status": "ACCEPTED",
   "result": "MAJORITY_AGREE",
   "execution": "SUCCESS",
-  "created_at": "2026-11-17T19:07:50.428809+00:00",
+  "created_at": "2026-11-17T22:25:23.796624+00:00",
   "rotations": 0,
   "votes": {
    "agree": 3,
    "of": 5
   }
  },
- "address": "0x234D26C4f2477EC4ef1b0FCA1f0ad0dA5c03bB8e",
+ "address": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
  "rules": {
+  "catch_all_scope": "the whole line that carries the miner's name and its count",
   "catch_all_stems": [
    "unknown",
    "unidentif",
@@ -1653,6 +1653,7 @@
    "individuals",
    "independent",
    "small",
+   "smaller",
    "network",
    "overall",
    "combined",
@@ -1667,6 +1668,10 @@
    "no",
    "not",
    "coinbase",
+   "zero",
+   "burn",
+   "burned",
+   "burnt",
    "sonstige",
    "andere",
    "unbekannt",
@@ -1726,26 +1731,19 @@
    "lead.leader_reading": "the leader's copy, checked by every accepting validator on its own copy of the page"
   }
  },
- "interruptions": [
-  {
-   "at_utc": "2026-11-17T20:17:51Z",
-   "what": "Studio gateway error (HTTP 520) while waiting for step 42; resumed with --resume",
-   "step": 42
-  }
- ],
  "bounties": {
   "1": {
-   "as_of": 1794946971,
+   "as_of": 1794958843,
    "block_url_template": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html",
    "burned": "20000000000000000",
    "claim_type": "NO_FOUNDER_REWARD",
-   "expires_at": 1794943378,
+   "expires_at": 1794955232,
    "fee": "20000000000000000",
    "filed": 1,
    "filings": [
     {
-     "at": 1794942491,
-     "digest": "27fb82e1ebdaec84c85b6ee718cb312ba195cbb03f71b68272d20430a6aae930",
+     "at": 1794954346,
+     "digest": "921053402db8bc0f6e4a54cf441bef627a45335cb335fce64503387f83a67845",
      "height": 1,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "live": false,
@@ -1753,7 +1751,7 @@
      "seq": 1,
      "status": "PAYS",
      "tries": 3,
-     "us": 1794942491676958
+     "us": 1794954346047516
     }
    ],
    "hosts": [
@@ -1766,10 +1764,10 @@
      "block": 1,
      "outcome": "PAYS_P1"
     },
-    "filed_at": 1794942491,
+    "filed_at": 1794954346,
     "height": 1,
     "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
-    "judged_at": 1794942504,
+    "judged_at": 1794954356,
     "leader_reading": {
      "amount_as_printed": "2,000,000.00000000",
      "line": "0 2,000,000.00000000 EXM Founders allocation address exm1qfounders00000000000000000000000"
@@ -1778,12 +1776,12 @@
     "rule": "P1",
     "seq": 1,
     "url": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/1.html",
-    "us": 1794942491676958
+    "us": 1794954346047516
    },
    "live_filings": 0,
    "log": [
     {
-     "at": 1794942504,
+     "at": 1794954356,
      "height": 1,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "outcome": "PAYS_P1",
@@ -1798,30 +1796,30 @@
    "pays_on": {
     "P1": "a block from 0 to 100 on the pinned block page creates coins for someone beyond the ordinary block reward"
    },
-   "posted_at": 1794942482,
+   "posted_at": 1794954335,
    "poster": "0x7C245F8142955E8de8f4B46a21aDD8854342053C",
    "pot": "1000000000000000000",
    "pot_held": "0",
-   "reclaim_from": 1794946978,
+   "reclaim_from": 1794958832,
    "state": "WON",
    "stored_state": "WON",
    "subject_name": "Examplecoin",
    "subject_note": "written by the poster; not verified",
-   "window_end": 1794942504,
-   "won_at": 1794942504
+   "window_end": 1794954356,
+   "won_at": 1794954356
   },
   "2": {
-   "as_of": 1794946973,
+   "as_of": 1794958845,
    "block_url_template": "",
    "burned": "40000000000000000",
    "claim_type": "DECENTRALIZED_MINING",
-   "expires_at": 1794943482,
+   "expires_at": 1794955358,
    "fee": "40000000000000000",
    "filed": 1,
    "filings": [
     {
-     "at": 1794942595,
-     "digest": "6aad6017d4161dd4447af21fa90d7ee2542e2407554c4df1622e676230f3505b",
+     "at": 1794954467,
+     "digest": "06ced88ab1506f50ec8d8ba04cce54185cd8f61cc6c68d11321787557679595b",
      "height": 0,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "live": false,
@@ -1829,7 +1827,7 @@
      "seq": 1,
      "status": "PAYS",
      "tries": 3,
-     "us": 1794942595955725
+     "us": 1794954467628825
     }
    ],
    "hosts": [
@@ -1841,20 +1839,20 @@
      "outcome": "PAYS_M1",
      "top_miner": "exm1qa7example0000000000000000000000001"
     },
-    "filed_at": 1794942595,
+    "filed_at": 1794954467,
     "height": 0,
     "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
-    "judged_at": 1794942606,
+    "judged_at": 1794954477,
     "note": "validators agreed on the top miner by name; each one's own copy showed it with more than half of at least min_blocks blocks; the counts are not stored, because on a live page they differ by a few blocks between validators",
     "rule": "M1",
     "seq": 1,
     "url": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/mining.html",
-    "us": 1794942595955725
+    "us": 1794954467628825
    },
    "live_filings": 0,
    "log": [
     {
-     "at": 1794942606,
+     "at": 1794954477,
      "height": 0,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "outcome": "PAYS_M1",
@@ -1869,30 +1867,30 @@
    "pays_on": {
     "M1": "the pinned mining page shows one named miner with more than half of at least min_blocks blocks"
    },
-   "posted_at": 1794942583,
+   "posted_at": 1794954458,
    "poster": "0x7C245F8142955E8de8f4B46a21aDD8854342053C",
    "pot": "2000000000000000000",
    "pot_held": "0",
-   "reclaim_from": 1794947082,
+   "reclaim_from": 1794958958,
    "state": "WON",
    "stored_state": "WON",
    "subject_name": "Examplecoin",
    "subject_note": "written by the poster; not verified",
-   "window_end": 1794942606,
-   "won_at": 1794942606
+   "window_end": 1794954477,
+   "won_at": 1794954477
   },
   "3": {
-   "as_of": 1794946975,
+   "as_of": 1794958847,
    "block_url_template": "https://checker.brilliantnodes.com/examples/bounty/controlcoin/block/{n}.html",
    "burned": "20000000000000000",
    "claim_type": "NO_PREMINE",
-   "expires_at": 1794943297,
+   "expires_at": 1794955172,
    "fee": "20000000000000000",
    "filed": 1,
    "filings": [
     {
-     "at": 1794942651,
-     "digest": "f9b37473b41f5d0aec09c065b4459ba404e5061c9845878c57349f7c830e4cb2",
+     "at": 1794954522,
+     "digest": "d39a466c37638f0f352e873f059f297498cb025e6a8591c063a8670ce8765469",
      "height": 1,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "live": false,
@@ -1900,7 +1898,7 @@
      "seq": 1,
      "status": "NO_PAY",
      "tries": 3,
-     "us": 1794942651626304
+     "us": 1794954522294045
     }
    ],
    "hosts": [
@@ -1911,7 +1909,7 @@
    "live_filings": 0,
    "log": [
     {
-     "at": 1794942663,
+     "at": 1794954531,
      "height": 1,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "outcome": "NO_PAY",
@@ -1920,7 +1918,7 @@
      "what": "JUDGED"
     },
     {
-     "at": 1794946904,
+     "at": 1794958777,
      "what": "RECLAIMED"
     }
    ],
@@ -1930,11 +1928,11 @@
    "pays_on": {
     "P1": "a block from 0 to 100 on the pinned block page creates coins for someone beyond the ordinary block reward"
    },
-   "posted_at": 1794942639,
+   "posted_at": 1794954512,
    "poster": "0x7C245F8142955E8de8f4B46a21aDD8854342053C",
    "pot": "1000000000000000000",
    "pot_held": "0",
-   "reclaim_from": 1794946897,
+   "reclaim_from": 1794958772,
    "state": "EXPIRED",
    "stored_state": "EXPIRED",
    "subject_name": "Controlcoin",
@@ -1943,17 +1941,17 @@
    "won_at": 0
   },
   "4": {
-   "as_of": 1794946977,
+   "as_of": 1794958849,
    "block_url_template": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html",
    "burned": "40000000000000000",
    "claim_type": "NO_PREMINE",
-   "expires_at": 1794943600,
+   "expires_at": 1794955465,
    "fee": "20000000000000000",
    "filed": 2,
    "filings": [
     {
-     "at": 1794942709,
-     "digest": "a896067b48ed4cc1071feb8f921e9a99633dc063629e96aeeed62291832fa5c3",
+     "at": 1794954574,
+     "digest": "d62a61e67c854fef84a3bd2b947cdaddcb409f561c964c7c57ec4ed533914897",
      "height": 1,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "live": false,
@@ -1961,11 +1959,11 @@
      "seq": 1,
      "status": "PAYS",
      "tries": 3,
-     "us": 1794942709908706
+     "us": 1794954574868807
     },
     {
-     "at": 1794942726,
-     "digest": "d2e088d12453a6c29da6c1f694d13edf6719e60d0fb188222d14956d3f67ade3",
+     "at": 1794954584,
+     "digest": "56655cd31be46b281d2f1acbea8960954091e26d11eabb9dfc08c6cfce0608f0",
      "height": 1,
      "hunter": "0x859E31B4aE766266DAeEB66269ad3843806ACf42",
      "live": false,
@@ -1973,7 +1971,7 @@
      "seq": 2,
      "status": "OUTRANKED",
      "tries": 3,
-     "us": 1794942726093832
+     "us": 1794954584023870
     }
    ],
    "hosts": [
@@ -1986,10 +1984,10 @@
      "block": 1,
      "outcome": "PAYS_P1"
     },
-    "filed_at": 1794942709,
+    "filed_at": 1794954574,
     "height": 1,
     "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
-    "judged_at": 1794942808,
+    "judged_at": 1794954654,
     "leader_reading": {
      "amount_as_printed": "2,000,000.00000000",
      "line": "0 2,000,000.00000000 EXM Founders allocation address exm1qfounders00000000000000000000000"
@@ -1998,12 +1996,12 @@
     "rule": "P1",
     "seq": 1,
     "url": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/1.html",
-    "us": 1794942709908706
+    "us": 1794954574868807
    },
    "live_filings": 0,
    "log": [
     {
-     "at": 1794942736,
+     "at": 1794954593,
      "height": 1,
      "hunter": "0x859E31B4aE766266DAeEB66269ad3843806ACf42",
      "outcome": "PAYS_P1",
@@ -2012,7 +2010,7 @@
      "what": "JUDGED"
     },
     {
-     "at": 1794942808,
+     "at": 1794954654,
      "height": 1,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "outcome": "PAYS_P1",
@@ -2027,30 +2025,30 @@
    "pays_on": {
     "P1": "a block from 0 to 100 on the pinned block page creates coins for someone beyond the ordinary block reward"
    },
-   "posted_at": 1794942700,
+   "posted_at": 1794954565,
    "poster": "0x7C245F8142955E8de8f4B46a21aDD8854342053C",
    "pot": "1000000000000000000",
    "pot_held": "0",
-   "reclaim_from": 1794947200,
+   "reclaim_from": 1794959065,
    "state": "WON",
    "stored_state": "WON",
    "subject_name": "Examplecoin",
    "subject_note": "written by the poster; not verified",
-   "window_end": 1794942808,
-   "won_at": 1794942808
+   "window_end": 1794954654,
+   "won_at": 1794954654
   },
   "5": {
-   "as_of": 1794946979,
+   "as_of": 1794958851,
    "block_url_template": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html",
    "burned": "20000000000000000",
    "claim_type": "NO_FOUNDER_REWARD",
-   "expires_at": 1794943738,
+   "expires_at": 1794955586,
    "fee": "10000000000000000",
    "filed": 2,
    "filings": [
     {
-     "at": 1794942888,
-     "digest": "f447b456f0b09d4d6feb42fd54bfbb5efa4f40a64e195bc870777a3b2a4ba85d",
+     "at": 1794954721,
+     "digest": "3d8c0366c90c8604786e4f81183142458b86b0ec509d8d62628025e07b939491",
      "height": 7,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "live": false,
@@ -2058,11 +2056,11 @@
      "seq": 1,
      "status": "LIVE",
      "tries": 2,
-     "us": 1794942888378807
+     "us": 1794954721786971
     },
     {
-     "at": 1794942968,
-     "digest": "f447b456f0b09d4d6feb42fd54bfbb5efa4f40a64e195bc870777a3b2a4ba85d",
+     "at": 1794954785,
+     "digest": "3d8c0366c90c8604786e4f81183142458b86b0ec509d8d62628025e07b939491",
      "height": -1,
      "hunter": "0x859E31B4aE766266DAeEB66269ad3843806ACf42",
      "live": false,
@@ -2070,7 +2068,7 @@
      "seq": 2,
      "status": "LIVE",
      "tries": 3,
-     "us": 1794942968818806
+     "us": 1794954785928820
     }
    ],
    "hosts": [
@@ -2081,7 +2079,7 @@
    "live_filings": 0,
    "log": [
     {
-     "at": 1794942958,
+     "at": 1794954777,
      "height": 7,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "outcome": "UNREADABLE",
@@ -2096,11 +2094,11 @@
    "pays_on": {
     "P1": "a block from 0 to 100 on the pinned block page creates coins for someone beyond the ordinary block reward"
    },
-   "posted_at": 1794942838,
+   "posted_at": 1794954686,
    "poster": "0x7C245F8142955E8de8f4B46a21aDD8854342053C",
    "pot": "500000000000000000",
    "pot_held": "500000000000000000",
-   "reclaim_from": 1794947338,
+   "reclaim_from": 1794959186,
    "state": "EXPIRED_UNCLAIMED",
    "stored_state": "OPEN",
    "subject_name": "Examplecoin",
@@ -2109,17 +2107,17 @@
    "won_at": 0
   },
   "6": {
-   "as_of": 1794946982,
+   "as_of": 1794958852,
    "block_url_template": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/1.html?n={n}",
    "burned": "10000000000000000",
    "claim_type": "NO_PREMINE",
-   "expires_at": 1794943902,
+   "expires_at": 1794955711,
    "fee": "10000000000000000",
    "filed": 1,
    "filings": [
     {
-     "at": 1794943014,
-     "digest": "a60365c8113daebbd8a959c7c74b8a24ec26abe64247157b00288952d719fed1",
+     "at": 1794954820,
+     "digest": "12ec8476dc85218383fe66add390010c482424abe9b75dd67563b6a61648ed0e",
      "height": 2,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "live": false,
@@ -2127,7 +2125,7 @@
      "seq": 1,
      "status": "LIVE",
      "tries": 2,
-     "us": 1794943014806583
+     "us": 1794954820485285
     }
    ],
    "hosts": [
@@ -2138,7 +2136,7 @@
    "live_filings": 0,
    "log": [
     {
-     "at": 1794943025,
+     "at": 1794954829,
      "height": 2,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "outcome": "WRONG_PAGE",
@@ -2153,11 +2151,11 @@
    "pays_on": {
     "P1": "a block from 0 to 100 on the pinned block page creates coins for someone beyond the ordinary block reward"
    },
-   "posted_at": 1794943004,
+   "posted_at": 1794954811,
    "poster": "0x7C245F8142955E8de8f4B46a21aDD8854342053C",
    "pot": "500000000000000000",
    "pot_held": "500000000000000000",
-   "reclaim_from": 1794947502,
+   "reclaim_from": 1794959311,
    "state": "EXPIRED_UNCLAIMED",
    "stored_state": "OPEN",
    "subject_name": "Examplecoin",
@@ -2166,17 +2164,17 @@
    "won_at": 0
   },
   "7": {
-   "as_of": 1794946984,
+   "as_of": 1794958854,
    "block_url_template": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html",
    "burned": "20000000000000000",
    "claim_type": "NO_PREMINE",
-   "expires_at": 1794944250,
+   "expires_at": 1794956092,
    "fee": "10000000000000000",
    "filed": 2,
    "filings": [
     {
-     "at": 1794943062,
-     "digest": "fa7843404ae95e7c9947898966043abc282e6037707cfe676e53fc2e2ebff211",
+     "at": 1794954914,
+     "digest": "8461514fd3bab7acd2160cea54eca3cfe6a9294fe3bcba4f74e48339384b1dce",
      "height": -1,
      "hunter": "0x859E31B4aE766266DAeEB66269ad3843806ACf42",
      "live": false,
@@ -2184,11 +2182,11 @@
      "seq": 1,
      "status": "LIVE",
      "tries": 3,
-     "us": 1794943062725195
+     "us": 1794954914354200
     },
     {
-     "at": 1794943073,
-     "digest": "0d464a3717289758ff40796920d609bc4362c406334ad6f8e18b7bc4bebad447",
+     "at": 1794954923,
+     "digest": "5f441659d37cda176f163ef3f1d3c6ec8d20465def18cc69e8e6f0cb63c2c2e1",
      "height": 1,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "live": false,
@@ -2196,7 +2194,7 @@
      "seq": 2,
      "status": "PAYS",
      "tries": 3,
-     "us": 1794943073483654
+     "us": 1794954923507409
     }
    ],
    "hosts": [
@@ -2209,10 +2207,10 @@
      "block": 1,
      "outcome": "PAYS_P1"
     },
-    "filed_at": 1794943073,
+    "filed_at": 1794954923,
     "height": 1,
     "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
-    "judged_at": 1794943084,
+    "judged_at": 1794954933,
     "leader_reading": {
      "amount_as_printed": "2,000,000.00000000",
      "line": "0 2,000,000.00000000 EXM Founders allocation address exm1qfounders00000000000000000000000"
@@ -2221,12 +2219,12 @@
     "rule": "P1",
     "seq": 2,
     "url": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/1.html",
-    "us": 1794943073483654
+    "us": 1794954923507409
    },
    "live_filings": 0,
    "log": [
     {
-     "at": 1794943084,
+     "at": 1794954933,
      "height": 1,
      "hunter": "0xF0D6bf4e4E2975EC5aDD25a5628f59182BFe2231",
      "outcome": "PAYS_P1",
@@ -2241,24 +2239,24 @@
    "pays_on": {
     "P1": "a block from 0 to 100 on the pinned block page creates coins for someone beyond the ordinary block reward"
    },
-   "posted_at": 1794943052,
+   "posted_at": 1794954891,
    "poster": "0x7C245F8142955E8de8f4B46a21aDD8854342053C",
    "pot": "500000000000000000",
    "pot_held": "0",
-   "reclaim_from": 1794947850,
+   "reclaim_from": 1794959692,
    "state": "WON",
    "stored_state": "WON",
    "subject_name": "Examplecoin",
    "subject_note": "written by the poster; not verified",
-   "window_end": 1794946662,
-   "won_at": 1794946662
+   "window_end": 1794958514,
+   "won_at": 1794958514
   }
  },
  "summary": {
-  "transactions": 47,
-  "as_expected": 46,
+  "deployment": 1,
   "steps": 46,
-  "checks_ok": 16,
-  "checks": 16
+  "steps_as_expected": 46,
+  "checks": 16,
+  "checks_met": 16
  }
 }

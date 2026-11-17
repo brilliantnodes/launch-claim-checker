@@ -305,7 +305,8 @@ $("post-form").addEventListener("submit", async (ev) => {
   const minutes = Number($("minutes").value);
   const pot = toWei($("pot").value);
   const minBlocks = n.mine ? Number($("minblocks").value) : 1000;
-  if (!Number.isInteger(minutes) || minutes < 10) return postError("A bounty runs for at least 10 minutes.");
+  // The contract's minimum is 10 minutes, counted from the transaction's own time, which is a little after this click.
+  if (!Number.isInteger(minutes) || minutes < 11) return postError("A bounty posted from this page runs for at least 11 minutes.");
   if (pot === null || pot < 10n ** 16n) return postError("The pot must be at least 0.01 GEN.");
   if (!Number.isInteger(minBlocks)) return postError("Blocks needed must be a whole number from 500 to 10,000.");
   const args = [ctype, $("subject").value.trim(), n.tpl ? $("tpl").value.trim() : "", n.mine ? $("mine").value.trim() : "", nowS() + minutes * 60, minBlocks];

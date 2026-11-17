@@ -1,0 +1,190 @@
+{
+ "network": "genlayer-studio",
+ "probe_source": "tools/probes/probe.py",
+ "account": "0xeC7e8BA0da7ee1d1DB0F4c3689318774532D71d4",
+ "address": "0x4F9c0907F22D965CaD24814c1208586e95Ab2f7c",
+ "deploy_tx": "0x7b9904821d17f7d50f6c7dbc12f0c5e6d1f654a4b7ce1ae0da2b0396494940c8",
+ "measurements": [
+  {
+   "question": "Which time does a contract see for a transaction?",
+   "method": "stamp",
+   "args": [
+    "a"
+   ],
+   "value": "0",
+   "tx": "0x1bed9212e5e87bed1237fe77d40fa93d2afb7eb8abf794db8789353f59e0cdbf",
+   "status": "ACCEPTED",
+   "execution": "SUCCESS",
+   "returned": "2026-11-17T21:19:53.930948Z",
+   "created_at": "2026-11-17T21:19:53.930948+00:00",
+   "contract_balance_change": "0",
+   "sender_balance_change": "0",
+   "finding": {
+    "contract_saw": "2026-11-17T21:19:53.930948Z",
+    "transaction_created_at": "2026-11-17T21:19:53.930948+00:00",
+    "same_to_the_microsecond": true
+   }
+  },
+  {
+   "question": "A payable call that raises: where is the GEN?",
+   "method": "pay_raise",
+   "args": [],
+   "value": "10000000000000000",
+   "tx": "0x39c6bd281e975072e322400d156fd39a6f91cd5559f26748e389deee1786df86",
+   "status": "ACCEPTED",
+   "execution": "ERROR",
+   "returned": "refused on purpose",
+   "created_at": "2026-11-17T21:20:40.095321+00:00",
+   "contract_balance_change": "10000000000000000",
+   "sender_balance_change": "-10000000000000000",
+   "finding": {
+    "call_failed": true,
+    "gen_stayed_in_the_contract": true
+   }
+  },
+  {
+   "question": "A payable call with one argument too many: where is the GEN?",
+   "method": "pay_ok",
+   "args": [
+    "extra"
+   ],
+   "value": "10000000000000000",
+   "tx": "0xf648a7c003bf89f7240091a212a7a8f1203c81b724ff820fedc334ff116770e4",
+   "status": "ACCEPTED",
+   "execution": "ERROR",
+   "returned": "exit_code 1",
+   "created_at": "2026-11-17T21:21:18.228845+00:00",
+   "contract_balance_change": "10000000000000000",
+   "sender_balance_change": "-10000000000000000",
+   "finding": {
+    "call_failed": true,
+    "gen_stayed_in_the_contract": true
+   }
+  },
+  {
+   "question": "GEN sent with a call that takes none: where is the GEN?",
+   "method": "stamp",
+   "args": [
+    "b"
+   ],
+   "value": "10000000000000000",
+   "tx": "0x938647a39f53d50f545e7e709a3108ec4597a4ce55b072f0baa6118850675edb",
+   "status": "ACCEPTED",
+   "execution": "ERROR",
+   "returned": "exit_code 1",
+   "created_at": "2026-11-17T21:21:57.330741+00:00",
+   "contract_balance_change": "10000000000000000",
+   "sender_balance_change": "-10000000000000000",
+   "finding": {
+    "call_failed": true,
+    "gen_stayed_in_the_contract": true
+   }
+  },
+  {
+   "question": "Does sha256 give the same digest inside a contract?",
+   "method": "digest",
+   "args": [
+    "1|0xabc|P1|1|5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a"
+   ],
+   "value": "0",
+   "tx": "0x3407ca4cb5fb7152c60198f2fcc90e73ffc1f5e1e4553e24f347027dc61d746f",
+   "status": "ACCEPTED",
+   "execution": "SUCCESS",
+   "returned": "fcfba8881ff9c1330c6df9704f982e6e4a9816b6d62a2580f3f8b513037755b6",
+   "created_at": "2026-11-17T21:22:35.528811+00:00",
+   "contract_balance_change": "0",
+   "sender_balance_change": "0",
+   "finding": {
+    "same_as_python": true
+   }
+  },
+  {
+   "question": "What does web.render return for a table?",
+   "method": "look",
+   "args": [
+    "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/1.html"
+   ],
+   "value": "0",
+   "tx": "0x87c19eb6555e1257010e0cb60763482423e17846c8bd4bf857ef0897be14dc28",
+   "status": "ACCEPTED",
+   "execution": "SUCCESS",
+   "returned": {
+    "length": 487,
+    "ok": true,
+    "text": "Fictional test page. Examplecoin does not exist. The figures below are invented to test Launch Claim Checker.\n\nExamplecoin explorer: block 1\n\nHeight: 1. Transactions: 1.\n\nCoinbase transaction outputs\nOutput Amount Recipient\n0 2,000,000.00000000 EXM Founders allocation address exm1qfounders00000000000000000000000\n1 50.00000000 EXM Miner exm1qa7example0000000000000000000000001\n\nOrdinary block reward: 50 EXM. Extra output in this block: 2,000,000 EXM to the founders allocation address."
+   },
+   "created_at": "2026-11-17T21:23:14.938814+00:00",
+   "contract_balance_change": "0",
+   "sender_balance_change": "0",
+   "finding": {
+    "a_table_row_is_one_line": true
+   }
+  },
+  {
+   "question": "What does web.render do with a page that does not exist?",
+   "method": "look",
+   "args": [
+    "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/7.html"
+   ],
+   "value": "0",
+   "tx": "0x39587847c0261a8228d9f16deb0296a96b9fb2eaf46f9adb691aca2c7eabf535",
+   "status": "ACCEPTED",
+   "execution": "SUCCESS",
+   "returned": {
+    "length": -1,
+    "ok": false,
+    "text": "{'causes': ['WEBPAGE_LOAD_FAILED'], 'ctx': {'body': '404\\n\\nFile not found\\n\\nThe site configured at this address does not contain the requested file.\\n\\nIf this is your site, make sure that the filename case matches the URL as well as any file permissions.\\nFor root URLs (like http://example.com/) "
+   },
+   "created_at": "2026-11-17T21:23:58.605359+00:00",
+   "contract_balance_change": "0",
+   "sender_balance_change": "0",
+   "finding": {
+    "render_raised": true
+   }
+  },
+  {
+   "question": "Does web.render follow a redirect without saying so?",
+   "method": "look",
+   "args": [
+    "http://checker.brilliantnodes.com/examples/bounty/controlcoin/block/1.html"
+   ],
+   "value": "0",
+   "tx": "0xb2a18b0e5a0cee02d26e888cd3a15da9e5932ca7b4e7e64010a8f264a4f208af",
+   "status": "ACCEPTED",
+   "execution": "SUCCESS",
+   "returned": {
+    "length": 351,
+    "ok": true,
+    "text": "Fictional test page. Controlcoin does not exist. The figures below are invented to test Launch Claim Checker.\n\nControlcoin explorer: block 1\n\nHeight: 1. Transactions: 1.\n\nCoinbase transaction outputs\nOutput Amount Recipient\n0 50.00000000 CTL Miner ctl1qm1example0000000000000000000000001\n\nOrdinary block reward: 50 CTL. This block has no other output."
+   },
+   "created_at": "2026-11-17T21:24:36.943647+00:00",
+   "contract_balance_change": "0",
+   "sender_balance_change": "0",
+   "finding": {
+    "page_text_returned_with_no_sign_of_the_redirect": true
+   }
+  }
+ ],
+ "contract_log": [
+  {
+   "datetime": "2026-11-17T21:19:53.930948Z",
+   "value": "0",
+   "what": "stamp:a"
+  },
+  {
+   "datetime": "2026-11-17T21:23:14.938814Z",
+   "value": "0",
+   "what": "look"
+  },
+  {
+   "datetime": "2026-11-17T21:23:58.605359Z",
+   "value": "0",
+   "what": "look"
+  },
+  {
+   "datetime": "2026-11-17T21:24:36.943647Z",
+   "value": "0",
+   "what": "look"
+  }
+ ]
+}

@@ -1,5 +1,5 @@
-// Bradbury helper used by tools/live_cases.py (genlayer-js 2). Usage:
-//   npm install            (in this folder)
+// Bradbury helper used by tools/live_bounties_bradbury.py and tools/verify_bounties_bradbury.py (genlayer-js 2). Usage:
+//   npm ci                 (in this folder)
 //   BRADBURY_KEY_FILE=/path/to/key node gl.mjs deploy <contract.py> '<json args>'
 //   BRADBURY_KEY_FILE=... node gl.mjs write <address> <fn> '<json args>' <value wei> <payees,comma,separated>
 //   BRADBURY_KEY_FILE=... node gl.mjs read <address> <fn> '<json args>'
@@ -50,7 +50,9 @@ try {
     const est = await client.estimateTransactionFees();
     console.error("fee estimate (GEN):", Number(est.feeValue) / 1e18);
     const hash = await client.deployContract({ code, args: JSON.parse(a2 || "[]"), leaderOnly: false, fees: est });
-    const r = await receipt(hash);
+    console.log(JSON.stringify({ sent: hash }));
+    let r;
+    try { r = await receipt(hash); } catch (e) { out({ ok: false, hash, error: String(e?.message || e).slice(0, 1500) }); process.exit(0); }
     out({ ok: true, hash, secs: Math.round((Date.now() - t0) / 1000), receipt: brief(r), raw: r });
   } else if (cmd === "write") {
     const t0 = Date.now();

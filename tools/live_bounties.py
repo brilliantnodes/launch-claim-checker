@@ -6,8 +6,8 @@
 --resume continues an interrupted run from its record: steps and checks that
 are already in the record are not done again.
 
-Three throwaway keys (poster, hunter, copier) are read from LCB_KEYS (made if
-missing, never printed) and funded from Studio's faucet. All coins, pools and
+Three throwaway keys (poster, hunter, copier) are read from the folder named in
+LCB_KEYS (default ~/.lcb-keys; made if missing, never printed) and funded from Studio's faucet. All coins, pools and
 explorer pages are fictional (Examplecoin, Controlcoin). The run takes a little
 over an hour, because the contract's own waiting times are real: a filing lives
 30 minutes, and a pot goes back 60 minutes after the expiry.
@@ -29,7 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bounty import G, balance, client, deploy, fund, new_salt, read, seal, send  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
-KEYS = Path(os.environ.get("LCB_KEYS", "/home/claude/keys"))
+KEYS = Path(os.environ.get("LCB_KEYS", str(Path.home() / ".lcb-keys")))
 RESUME = "--resume" in sys.argv
 _args = [a for a in sys.argv[1:] if a != "--resume"]
 OUT = Path(_args[0]) if _args else ROOT / "examples" / "live" / "bounties-studio.json"
@@ -280,7 +280,7 @@ reconcile("at the end")
 t = view("totals")
 check("at the end: burned equals the fees of the ten filings taken", t["burned"], str(fee1 + fee2 + fee3 + 2 * fee4 + 2 * fee5 + fee6 + 2 * fee7))
 rec["bounties"] = {b: bounty(b) for b in (b1, b2, b3, b4, b5, b6, b7)}
-rec["summary"] = {"transactions": len(rec["steps"]) + 1, "as_expected": sum(1 for s in rec["steps"] if s["as_expected"]), "steps": len(rec["steps"]),
-                  "checks_ok": sum(1 for c in rec["checks"] if c["ok"]), "checks": len(rec["checks"])}
+rec["summary"] = {"deployment": 1, "steps": len(rec["steps"]), "steps_as_expected": sum(1 for s in rec["steps"] if s["as_expected"]),
+                  "checks": len(rec["checks"]), "checks_met": sum(1 for c in rec["checks"] if c["ok"])}
 save()
 print(json.dumps(rec["summary"]), flush=True)

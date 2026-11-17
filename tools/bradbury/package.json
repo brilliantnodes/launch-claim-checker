@@ -1,5 +1,5 @@
 {
-  "name": "privatecredit-gate-bradbury",
+  "name": "launch-claim-checker-bradbury",
   "private": true,
   "type": "module",
   "dependencies": {

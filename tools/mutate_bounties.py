@@ -8,18 +8,17 @@ change at a time, and confirm that the direct-mode tests catch every break.
 Each mutant is written to a temporary file and the tests are pointed at it
 with LCB_CONTRACT; contracts/launch_claim_bounties.py itself is never modified.
 
-Left out on purpose (equivalent mutants, so no test can catch them):
+Left out on purpose (changes that make no difference to what the contract does, so no test of the contract can catch them):
 - the float check in _parse_count: a float's text has a dot, which the digit
   check refuses;
 - removing only one of the two marker replacements in _clean_page: the
-  third replacement already removes every marker;
+  third replacement already removes every marker, so the first two are
+  redundant in what the contract does (a test of that one function alone
+  could tell them apart);
 - the checks on a leader's result for the quote (its length, and that it
-  contains the amount) and for the rule: a validator also compares the
-  leader with its own reading through _same_outcome and _quote_ok, which
-  refuse the same results, so removing one of the doubled checks changes
-  nothing;
-- the type check at the top of _quote_ok: a value of another type fails the
-  length or the amount check that follows;
+  contains the amount) and for the rule: redundant in the same way, because
+  a validator also compares the leader with its own reading through
+  _same_outcome and _quote_ok, which refuse the same results;
 - min() over the caller's matching live filings in judge(): one address has
   at most one live filing at any transaction time, so there is one to pick;
 - the empty-needle guard in _places: no caller passes an empty needle;
@@ -39,12 +38,6 @@ SRC = (ROOT / "contracts" / "launch_claim_bounties.py").read_text()
 SAME = 'return leader["amount"] == mine["amount"] and _quote_ok(leader["quote"], leader["amount_text"], lines)'
 STANDS_B = "joined_before = b1.isalnum() or (needle[0].isdigit() and b1 in JOINERS and b2.isdigit())"
 STANDS_A = "joined_after = a1.isalnum() or (needle[-1].isdigit() and a1 in JOINERS and a2.isdigit())"
-ON_PAGE = "    if not any(_stands(line, name) and _stands(line, top_f) for line in lines) or not _stands(page, _fold(total_text)):"
-AMOUNT_IN = "    if not any(not _spaced(q, i, a) for i in _places(q, a)):\n        return False"
-CATCH = "        if word in AGGREGATE_WORDS or word.startswith(AGGREGATE_STEMS):\n            return None"
-ZEROS = 'if ("0" in name and all(c in "0x" for c in name)) or any(part in name for part in AGGREGATE_PARTS):'
-AFTER = 'and not (text[j + 4 : j + 5] != "" and text[j + 4] in DIGITS):\n        return True'
-BEFORE = '    return k == 3 and i >= 2 and text[i - 1] == " " and text[i - 2] in DIGITS'
 TOO_LATE = 'if s["t"] >= ts + FILING_TTL:'
 BAD_TIME = """        try:
             us = self._us()
@@ -65,6 +58,15 @@ COLLAPSE = 'text = "\\n".join(" ".join(line.split()) for line in text.splitlines
 PAYS = 'if total < min_blocks or 2 * top <= total:\n        return {"kind": "NO_PAY"}'
 TAIL = '        return {"kind": kind, "miner": name}\n    return {"kind": kind}'
 
+QUOTE = "    inside = _places(q, a)\n    return any(not _spaced(line, at + i, a) for line in lines for at in _places(line, q) for i in inside)"
+BEFORE = '    if k != 3 or "," in number or i < 2 or text[i - 1] != " ":\n        return False'
+LAST = "    return m < 0 or not (text[m].isalnum() or (text[m] in joins and m >= 1 and text[m - 1] in DIGITS))"
+QUOTED = "    return len(inside) > 0 and any(all(not _spaced(line, p, a) for p in _places(line, a)) for line in lines if _stands(line, q))"
+TOTAL = "    if printed < (2 if top_f == total_f else 1):"
+CATCH = "        if word in AGGREGATE_WORDS or any(stem in word for stem in AGGREGATE_STEMS):\n            return True"
+ZEROS = '    if "0" in core and (all(c in "0x" for c in core) or bare.strip("0") == "dead"):\n        return None'
+ROWS = "    rows = [line for line in lines if _stands(line, name) and _clear(line, top_f)]"
+
 MUTANTS = [
     # --- agreement between validators
     ("P1 amount not compared", SAME, 'return _quote_ok(leader["quote"], leader["amount_text"], lines)'),
@@ -81,17 +83,9 @@ MUTANTS = [
     ("block number need not be printed on the page", BLOCK_NO, 'if _parse_count(ans.get("block_number")) != height:'),
     ("anything but 'no' pays", 'if str(ans.get("extra_allocation", "")).strip().lower() != "yes":', 'if str(ans.get("extra_allocation", "")).strip().lower() == "no":'),
     ("line not required", 'if amount is None or not _quote_ok(quote, amount_text, lines):\n        return {"kind": "NO_PAY"}', 'if amount is None:\n        return {"kind": "NO_PAY"}'),
-    ("line need not be on the page", "    return any(_stands(line, q) for line in lines)", "    return True"),
-    ("line may start or stop inside a word or number", "    return any(_stands(line, q) for line in lines)", "    return any(q in line for line in lines)"),
-    ("line may be stitched across lines", "    return any(_stands(line, q) for line in lines)", '    return _stands(" ".join(lines), q)'),
-    ("line need not contain the amount", AMOUNT_IN, "    if False:\n        return False"),
-    ("the amount may be part of a longer number in the line", AMOUNT_IN, "    if a not in q:\n        return False"),
-    ("an amount next to another number is accepted", AMOUNT_IN, "    if not _places(q, a):\n        return False"),
-    ("a number followed by a group of three digits is not ambiguous", AFTER, AFTER.replace("return True", "pass")),
-    ("a number followed by four digits is ambiguous", AFTER, ":\n        return True"),
-    ("a number of three digits after another number is not ambiguous", BEFORE, "    return False"),
-    ("any number after another number is ambiguous", BEFORE, BEFORE.replace("k == 3", "k >= 1")),
-    ("apostrophes and underscores do not join digits", 'JOINERS = ",.\'\\u2019_"', 'JOINERS = ",."'),
+    ("apostrophes and underscores do not join digits", 'JOINERS = ",.\'\\u2019_\\u00b7"', 'JOINERS = ",.\\u00b7"'),
+    ("a middle dot does not join digits", 'JOINERS = ",.\'\\u2019_\\u00b7"', 'JOINERS = ",.\'\\u2019_"'),
+    ("an invisible separator splits a number", '"\\u2062", "\\u2063", "\\u2064",', '"\\u2062", "\\u2064",'),
     ("no minimum line length", "if not QUOTE_MIN <= len(q) <= QUOTE_MAX:", "if not len(q) <= QUOTE_MAX:"),
     ("no maximum line length", "if not QUOTE_MIN <= len(q) <= QUOTE_MAX:", "if not QUOTE_MIN <= len(q):"),
     ("a whole-number amount from the model is refused", '    if isinstance(amount_text, int) and not isinstance(amount_text, bool):\n        amount_text = str(amount_text)\n', ""),
@@ -130,21 +124,9 @@ MUTANTS = [
     ("exactly half pays", PAYS, 'if total < min_blocks or 2 * top < total:\n        return {"kind": "NO_PAY"}'),
     ("min_blocks ignored", PAYS, 'if 2 * top <= total:\n        return {"kind": "NO_PAY"}'),
     ("one block short of min_blocks pays", PAYS, 'if total < min_blocks - 1 or 2 * top <= total:\n        return {"kind": "NO_PAY"}'),
-    ("catch-all rows count as a miner", CATCH, "        if False:\n            return None"),
-    ("catch-all words glued to another word count as a miner", CATCH, "        if word in AGGREGATE_WORDS:\n            return None"),
-    ("only the stems of catch-all words are checked", CATCH, "        if word.startswith(AGGREGATE_STEMS):\n            return None"),
-    ("a zero address counts as a miner", ZEROS, "if any(part in name for part in AGGREGATE_PARTS):"),
-    ("catch-all labels without spaces between words count as a miner", ZEROS, 'if "0" in name and all(c in "0x" for c in name):'),
-    ("n/a counts as a miner", 'for ch in name.replace("n/a", "na") + " ":', 'for ch in name + " ":'),
-    ("a catch-all word at the end of a name is missed", 'for ch in name.replace("n/a", "na") + " ":', 'for ch in name.replace("n/a", "na"):'),
-    ("only the first word of a name is checked", "            return None  # 'other (9 addresses)'", "            return None\n        if word:\n            break  # 'other (9 addresses)'"),
     ("names of one or two characters count as a miner", SHORT, "if not any(c.isalpha() for c in name):"),
     ("names without a letter count as a miner", SHORT, "if sum(1 for c in name if c.isalnum()) < 3:"),
     ("miner name length not capped", 'if name == "" or len(name) > MAX_NAME_LEN:', 'if name == "":'),
-    ("miner need not be on the page", ON_PAGE, "    if not _stands(page, top_f) or not _stands(page, _fold(total_text)):"),
-    ("top count need not be on the page", ON_PAGE, "    if not _stands(page, name) or not _stands(page, _fold(total_text)):"),
-    ("total count need not be on the page", ON_PAGE, "    if not any(_stands(line, name) and _stands(line, top_f) for line in lines):"),
-    ("the miner and its count may stand on different lines", ON_PAGE, "    if not _stands(page, name) or not _stands(page, top_f) or not _stands(page, _fold(total_text)):"),
     ("top above total accepted", "if name is None or top is None or total is None or top > total:", "if name is None or top is None or total is None:"),
     # --- pinned addresses
     ("http accepted", 'if not url.startswith("https://"):\n        return f"{label} must start with https://"', 'if False:\n        return f"{label} must start with https://"'),
@@ -277,6 +259,67 @@ MUTANTS = [
     ("a list of nothing can be asked for", 'limit, at = max(1, min(_as_int(limit, "limit"), MAX_LATEST)), _as_int(at, "at")', 'limit, at = min(_as_int(limit, "limit"), MAX_LATEST), _as_int(at, "at")'),
     ("the list per address is not capped", "json.dumps(ids[-MAX_PER_ADDRESS:])", "json.dumps(ids)"),
     ("the log is not capped", '    del s["log"][:-MAX_LOG]\n', ""),
+    # --- added after the final review: the evidence line, numbers written with spaces, catch-all rows
+    ("line need not be on the page", QUOTED, "    return bool(inside)"),
+    ("line may start or stop inside a word or number", "for line in lines if _stands(line, q))", "for line in lines if q in line)"),
+    ("line may be stitched across lines", "for line in lines if _stands(line, q))", 'for line in [" ".join(lines)] if _stands(line, q))'),
+    ("line need not contain the amount", "    inside = _places(q, a)\n", "    inside = [0]\n"),
+    ("the amount may be part of a longer number in the line", "    inside = _places(q, a)\n", "    inside = [q.find(a)] if a in q else []\n"),
+    ("a number that may be one group of a longer one is accepted", "any(all(not _spaced(line, p, a) for p in _places(line, a)) for line in lines", "any(True for line in lines"),
+    ("an amount that is clear at one place of the line and not at another is accepted", "all(not _spaced(line, p, a) for p in _places(line, a))", "any(not _spaced(line, p, a) for p in _places(line, a))"),
+    ("a line without the amount is accepted when nothing in it is ambiguous", "    return len(inside) > 0 and any(all(", "    return any(all("),
+    ("the ambiguity is judged on the quote, not on the page line", "all(not _spaced(line, p, a) for p in _places(line, a))", "all(not _spaced(q, p, a) for p in _places(q, a))"),
+    ("a line that is not text is accepted", "    if not isinstance(quote, str) or not isinstance(amount_text, str):\n        return False\n    q, a = _fold(quote), _fold(amount_text)", "    q, a = _fold(quote), _fold(amount_text)"),
+    ("a short number followed by a group of three digits is not ambiguous", "            return True\n    k = 0", "            pass\n    k = 0"),
+    ("any number followed by three digits is ambiguous", "    if len(number) <= 3 and all(c in DIGITS for c in number):\n        if text[j", "    if True:\n        if text[j"),
+    ("a number followed by two digits at the end of the text is ambiguous", " and len(text) >= j + 4 and all(c in DIGITS for c in text[j + 1 : j + 4])", " and all(c in DIGITS for c in text[j + 1 : j + 4])"),
+    ("three decimals followed by more digits are not ambiguous", '    if number[-4:-3] == "." and', '    if False and number[-4:-3] == "." and'),
+    ("any decimals followed by a number are ambiguous", '    if number[-4:-3] == "." and all(c in DIGITS for c in number[-3:]) and', '    if "." in number and'),
+    ("a number after a time of day is ambiguous", 'joins = JOINERS + ":" if i - 2 - m == 2 else JOINERS', "joins = JOINERS"),
+    ("a number after any run of digits behind a colon is not ambiguous", 'joins = JOINERS + ":" if i - 2 - m == 2 else JOINERS', 'joins = JOINERS + ":"'),
+    ("decimals written in groups are not ambiguous", '    if i - 2 - m == 3 and text[m] == "." and m >= 1 and text[m - 1] in DIGITS:\n        return True', '    if False:\n        return True'),
+    ("a zero address with a word next to it counts as a miner", ' or any(_null_address(t) for t in "".join(c if c.isalnum() or c in ".\\u2026" else " " for c in text).split()):', ":"),
+    ("a zero address glued to a label by a colon counts as a miner", '"".join(c if c.isalnum() or c in ".\\u2026" else " " for c in text).split()', 'text.split(" ")'),
+    ("a shortened zero address in a row is split at its dots", 'c.isalnum() or c in ".\\u2026" else " "', 'c.isalnum() else " "'),
+    ("a burn address with a word next to it counts as a miner", 'core[2:].strip("0") in ("", "dead")', 'core[2:].strip("0") == ""'),
+    ("a bare 0x is taken for a zero address", "    return len(core) > 2 and core.startswith", "    return core.startswith"),
+    ("any token that ends in zeros is taken for a zero address", 'core.startswith("0x") and core[2:].strip', "core[2:].strip"),
+    ("a number followed by four digits is ambiguous", '    if text[p : p + 1] != "" and text[p] in DIGITS:\n        return True\n', ""),
+    ("a number followed by a percentage is ambiguous", '    return text[p : p + 1] == "%"', "    return False"),
+    ("a number followed by a percentage with decimals is ambiguous", '    while p < len(text) and text[p] in DIGITS + ".":\n        p += 1\n', ""),
+    ("a number followed by a decimal amount is not ambiguous", '    return text[p : p + 1] == "%"', '    return text[p : p + 1] == "%" or p > 0 and text[p - 1] in DIGITS'),
+    ("a number after a lone 0 is ambiguous", '    if i - 2 - m < 3 and text[m + 1] == "0":\n        return False  # \'0 500.00\': no number begins with a group that starts with 0\n', ""),
+    ("a number after a group of three that starts with 0 is not ambiguous", 'if i - 2 - m < 3 and text[m + 1] == "0":', 'if text[m + 1] == "0":'),
+    ("a number after any short number that is not 0 is not ambiguous", 'if i - 2 - m < 3 and text[m + 1] == "0":', "if i - 2 - m < 3:"),
+    ("a shortened zero address counts as a miner", '    core = "".join(c for c in name if c.isalnum())  # \'0x0000...0000\' is the same address, shortened', "    core = name"),
+    ("a row called zero address or burn counts as a miner", '"coinbase", "zero", "burn", "burned", "burnt",', '"coinbase",'),
+    ("a number after another short number is not ambiguous", BEFORE, "    if True:\n        return False"),
+    ("a number of any length after another number is ambiguous", BEFORE, BEFORE.replace("k != 3", "k < 1")),
+    ("a comma-grouped number after another number is ambiguous", BEFORE, BEFORE.replace(' or "," in number', "")),
+    ("a number after a long number is ambiguous", "    if not 1 <= i - 2 - m <= 3:\n        return False", "    if i - 2 - m < 1:\n        return False"),
+    ("a number after a word that ends in digits is ambiguous", LAST, "    return m < 0 or not (text[m] in joins and m >= 1 and text[m - 1] in DIGITS)"),
+    ("a number after a comma-grouped number is ambiguous", LAST, "    return m < 0 or not text[m].isalnum()"),
+    ("block counts may be one group of a longer number", "    return any(not _spaced(line, i, number) for i in _places(line, number))", "    return _stands(line, number)"),
+    ("catch-all rows count as a miner", CATCH, "        if False:\n            return True"),
+    ("catch-all words glued to another word count as a miner", CATCH, "        if word in AGGREGATE_WORDS:\n            return True"),
+    ("only the stems of catch-all words are checked", CATCH, "        if any(stem in word for stem in AGGREGATE_STEMS):\n            return True"),
+    ("a catch-all stem at the end of a glued word is missed", CATCH, CATCH.replace("stem in word for stem", "word.startswith(stem) for stem")),
+    ("n/a counts as a miner", ' or _stands(text, "n/a")', ""),
+    ("a slash glues two words into one", 'for ch in text + " ":', 'for ch in text.replace("n/a", "na") + " ":'),
+    ("a catch-all word at the end of a name is missed", 'for ch in text + " ":', "for ch in text:"),
+    ("only the first word of a name is checked", "            return True  # 'other (9 addresses)'", "            return True\n        if word:\n            break  # 'other (9 addresses)'"),
+    ("catch-all labels without spaces between words count as a miner", "    if any(part in text for part in AGGREGATE_PARTS) or", "    if False or"),
+    ("a zero or burn address counts as a miner", ZEROS, "    if False:\n        return None"),
+    ("a burn address counts as a miner", ZEROS, ZEROS.replace(' or bare.strip("0") == "dead"', "")),
+    ("a name with a catch-all word is accepted from a leader", "    return None if _catch_all(name) else name", "    return name"),
+    ("miner need not be on the page", ROWS, "    rows = [line for line in lines if _clear(line, top_f)]"),
+    ("top count need not be on the miner's line", ROWS, "    rows = [line for line in lines if _stands(line, name)]"),
+    ("the miner and its count may stand on different lines", ROWS, "    rows = [line for line in lines if _stands(line, name)] if any(_clear(line, top_f) for line in lines) else []"),
+    ("total count need not be on the page", TOTAL, "    if False:"),
+    ("a count copied into both fields passes for a total", TOTAL, "    if printed < 1:"),
+    ("a total that may be one group of a longer number is accepted", " for i in _places(line, total_f) if not _spaced(line, i, total_f))", " for i in _places(line, total_f))"),
+    ("a catch-all word elsewhere on the miner's row is not seen", "    if not any(not _catch_all(line) for line in rows):", "    if not rows:"),
+    ("an answer without the form's fields is read anyway", '        if any(key not in ans for key in form):\n            raise ValueError("not the form asked for")\n', ""),
 ]
 
 

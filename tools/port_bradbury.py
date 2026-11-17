@@ -1,6 +1,6 @@
 """Make the Bradbury Phase 2 (GenVM v0.6) build of a contract written for Studio (GenVM v0.2).
 
-    python3 port.py <source.py> <out.py> [--pack]
+    python3 tools/port_bradbury.py <source.py> <out.py> [--pack]
 
 Rewrites, in the direction of GenLayer Foundation's own Studio/Bradbury targets
 (genlayer-foundation/uptime, contracts/targets.json):
@@ -15,7 +15,7 @@ fits under Bradbury's per-transaction gas cap. The script asserts that the
 output's AST equals the source's AST after applying exactly these renames, and
 that no Studio-only construct is left.
 
---pack (for contracts still above the limit after stripping, such as RigSettle):
+--pack (for contracts still above the limit after stripping, such as LaunchClaimBounties):
 the stripped code is zlib-compressed and base85-encoded inside a two-line stub
 that decompresses and executes it in the module namespace at load time. The
 script asserts the round trip is lossless; the unpacked code is the stripped

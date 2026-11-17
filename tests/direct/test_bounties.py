@@ -352,7 +352,7 @@ def test_file_burns_the_fee_and_takes_a_place_in_the_queue(env):
     assert late["filings"][0]["live"] is False and late["live_filings"] == 0
 
 
-def test_a_filing_shows_nothing_about_the_claim_it_seals(env):
+def test_a_filing_shows_no_rule_and_no_block_until_it_is_revealed(env):
     post(env, claim_type="FAIR_LAUNCH", mine=MINE)
     file(env, rule="P1", height=1)
     file(env, who=env.charlie, rule="M1", height=0)
@@ -679,7 +679,7 @@ def test_p1_copies_that_do_not_pay(env, answer):
     assert env.c.get_claimable(env.hunter) == "0" and get(env)["pot_held"] == str(POT)
 
 
-@pytest.mark.parametrize("answer", [p1(raw=["not", "an", "object"]), "the model said something that is not JSON", "", "```json\n{broken\n```", "42"])
+@pytest.mark.parametrize("answer", [p1(raw=["not", "an", "object"]), "the model said something that is not JSON", "", "```json\n{broken\n```", "42", p1(raw={}), p1(raw={"extra_allocation": "yes"})])
 def test_an_answer_that_is_not_the_form_costs_a_try_not_the_filing(env, answer):
     post(env)
     file(env)
@@ -709,18 +709,60 @@ def test_an_amount_that_may_be_part_of_a_longer_number_does_not_pay(env, printed
     assert judge(env, page=BLOCK1.replace(LINE, line), answer=p1(amount=amount, line=line))["outcome"] == "NO_PAY"
 
 
-def test_an_amount_next_to_another_number_is_refused_as_ambiguous(env):
-    # Row layout of an explorer table: output index, amount, recipient.
-    rows = "0 2,000,000.00000000 EXM Founders exm1qfounders01\n1 500.00000000 EXM Treasury exm1qtreasury01\n2 50.00000000 EXM Miner exm1qminer0001\n"
-    page = CLEAN1 + rows
-    for i, (amount, line, expected) in enumerate((
-        ("2,000,000.00000000", "0 2,000,000.00000000 EXM Founders exm1qfounders01", "PAYS_P1"),  # '0 2,' is not a group of three
-        ("500.00000000", "1 500.00000000 EXM Treasury exm1qtreasury01", "NO_PAY"),  # '1 500' could be 1,500
-        ("500.00000000", "500.00000000 EXM Treasury exm1qtreasury01", "PAYS_P1"),  # the same row, quoted from the amount on
-    )):
-        post(env)
-        file(env, bid=str(i + 1))
-        assert judge(env, bid=str(i + 1), page=page, answer=p1(amount=amount, line=line))["outcome"] == expected, line
+ROWS = "0 2,000,000.00000000 EXM Founders exm1qfounders01\n1 500.00000000 EXM Treasury exm1qtreasury01\n2 50.00000000 EXM Miner exm1qminer0001\n"
+ROW_CASES = [
+    # Row layout of an explorer table: output index, amount, recipient. The outcome does not depend on how much of the row is quoted.
+    (ROWS, "2,000,000.00000000", "0 2,000,000.00000000 EXM Founders exm1qfounders01", "PAYS_P1"),  # '0 2,' is not a group of three
+    (ROWS, "2,000,000.00000000", "2,000,000.00000000 EXM Founders exm1qfounders01", "PAYS_P1"),
+    (ROWS, "500.00000000", "1 500.00000000 EXM Treasury exm1qtreasury01", "NO_PAY"),  # '1 500' could be 1,500
+    (ROWS, "500.00000000", "500.00000000 EXM Treasury exm1qtreasury01", "NO_PAY"),  # the same row, quoted from the amount on
+    ("0 500,000.00000000 EXM Founders exm1qfounders01\n", "500,000.00000000", "0 500,000.00000000 EXM Founders exm1qfounders01", "PAYS_P1"),  # commas: not written with spaces
+    ("0 100,000,000.00000000 EXM Founders exm1qfounders01\n", "100,000,000.00000000", "0 100,000,000.00000000 EXM Founders exm1qfounders01", "PAYS_P1"),
+    ("1 125.00000000 EXM Founders exm1qfounders01\n", "125.00000000", "1 125.00000000 EXM Founders exm1qfounders01", "NO_PAY"),  # could be 1,125
+    ("To exm1qfounders0001 500.00000000 EXM premine\n", "500.00000000", "To exm1qfounders0001 500.00000000 EXM premine", "PAYS_P1"),  # an address before it is not a group
+    ("Founders allocation 2 000 000 EXM to exm1qfounders01\n", "2", "Founders allocation 2", "NO_PAY"),  # the quote stops at the space
+    ("Premine 1 500.00 EXM to founders exm1qfounders01\n", "500.00", "500.00 EXM to founders exm1qfounders01", "NO_PAY"),  # the quote starts after the space
+    ("Founders allocation 750 EXM (100% of block 1)\n", "750", "Founders allocation 750 EXM (100% of block 1)", "PAYS_P1"),
+    ("0 500.00000000 EXM Founders exm1qfounders01\n", "500.00000000", "0 500.00000000 EXM Founders exm1qfounders01", "PAYS_P1"),  # output index 0 is no group of a number
+    ("Founders allocation 750 100.00% of block 1\n", "750", "Founders allocation 750 100.00% of block 1", "PAYS_P1"),  # a percentage is no group
+    ("08:15:42 500.00000000 EXM Founders exm1qfounders01\n", "500.00000000", "08:15:42 500.00000000 EXM Founders exm1qfounders01", "PAYS_P1"),  # a time of day is no group
+    ("Premine 1 500.00 EXM to founders (500.00 locked)\n", "500.00", "Premine 1 500.00 EXM to founders (500.00 locked)", "NO_PAY"),  # clear at one place, not at the other
+    ("Founders allocation 0.123 456 78 EXM to exm1qfounders01\n", "0.123", "Founders allocation 0.123", "NO_PAY"),  # decimals written in groups
+    ("Founders allocation 2\u00b7000\u00b7000 EXM to exm1qfounders01\n", "2", "Founders allocation 2", "NO_PAY"),  # groups joined by a middle dot
+    ("Founders allocation 2\u2063000\u2063000 EXM to exm1qfounders01\n", "2", "Founders allocation 2", "NO_PAY"),  # groups split by an invisible separator
+    ("Premine 1 500.00 EXM to founders (500.00 locked)\n", "500.00", "EXM to founders (500.00 locked)", "NO_PAY"),  # the same, however little of the line is quoted
+    ("Founders 750 EXM exm1qfounders01 750 123 confirmations\n", "750", "Founders 750 EXM exm1qfounders01", "NO_PAY"),  # known limit: the line has 750 twice, once before a three-digit column
+    ("Founders allocation 0.123 456 78 EXM to exm1qfounders01\n", "456", "Founders allocation 0.123 456 78 EXM to exm1qfounders01", "NO_PAY"),  # a group of the decimals
+    ("Output 1:1 500.00 EXM to founders exm1qfounders01\n", "500.00", "Output 1:1 500.00 EXM to founders exm1qfounders01", "NO_PAY"),  # 1:1 is no time of day
+    ("Founders allocation 0.125 EXM to exm1qfounders01\n", "0.125", "Founders allocation 0.125 EXM", "PAYS_P1"),  # three decimals after a whole part of 0 are decimals
+    ("Founders exm1qfounders01 0.125 3 confirmations\n", "0.125", "Founders exm1qfounders01 0.125 3 confirmations", "NO_PAY"),  # known limit: three decimals right before another number
+    ("1 500,000.00000000 EXM Founders exm1qfounders01\n", "500,000.00000000", "1 500,000.00000000 EXM Founders exm1qfounders01", "PAYS_P1"),  # an amount with commas is whole as it stands
+]
+
+
+@pytest.mark.parametrize("rows,amount,line,expected", ROW_CASES)
+def test_a_number_that_may_be_one_group_of_a_longer_one_is_refused_on_the_page_line(env, rows, amount, line, expected):
+    post(env)
+    file(env)
+    assert judge(env, page=CLEAN1 + rows, answer=p1(amount=amount, line=line))["outcome"] == expected
+
+
+def test_validators_that_quote_the_same_row_differently_still_agree(env):
+    post(env)
+    file(env)
+    assert judge(env, page=CLEAN1 + ROWS, answer=p1(line="0 2,000,000.00000000 EXM Founders exm1qfounders01"))["outcome"] == "PAYS_P1"
+    mocks(env, CLEAN1 + ROWS, p1(line="2,000,000.00000000 EXM Founders"))
+    assert env.vm.run_validator() is True
+    mocks(env, CLEAN1 + ROWS, p1(amount="500.00000000", line="500.00000000 EXM Treasury exm1qtreasury01"))
+    assert env.vm.run_validator() is False  # that reading does not pay on this validator
+
+
+def test_a_line_that_is_not_text_does_not_pay(env):
+    page = BLOCK1 + "200000000000\n"
+    answer = '```json\n{"block_number": "1", "extra_allocation": "yes", "allocation_amount": "200000000000", "evidence_line": 200000000000}\n```'
+    post(env)
+    file(env)
+    assert judge(env, page=page, answer=answer)["outcome"] == "NO_PAY"
 
 
 def test_a_line_cut_short_cannot_pass_for_a_smaller_amount(env):
@@ -914,6 +956,8 @@ def catch_all(name):
 
 
 M1_CASES = [
+    # A full count before a three-digit column is not one group of a longer number.
+    (MINING.replace("last 1,000 blocks", "last 6,000 blocks").replace("Deepvein Pool 840 84.00%", "Deepvein Pool 5,400 840 90.00%"), m1(top="5,400", total="6,000"), "PAYS_M1"),
     (mining("501"), m1(top="501"), "PAYS_M1"),
     (mining("500"), m1(top="500"), "NO_PAY"),  # exactly half is not more than half
     (mining("499"), m1(top="499"), "NO_PAY"),
@@ -922,6 +966,22 @@ M1_CASES = [
     (mining("1,001"), m1(top="1,001"), "NO_PAY"),  # more than the table covers
     (MINING, m1(name="Unknown", top="70"), "NO_PAY"),
     catch_all("Unknown"),  # a catch-all row is not a miner
+    catch_all("0x0000\u20260000"),  # the zero address as explorers shorten it
+    catch_all("0x0000...0000"),
+    catch_all("0x0000\u2026dEaD"),
+    catch_all("0x0000000000000000000000000000000000000000 (Zero Address)"),
+    catch_all("Burn address"),
+    catch_all("Address 0x0000000000000000000000000000000000000000"),  # a word next to the address does not make it a miner
+    catch_all("Miner 0x0000\u20260000"),
+    catch_all("Dead Address 0x0000\u2026dEaD"),
+    (mining(name="Validator 0x0000\u20260000"), m1(name="Validator"), "NO_PAY"),  # the model gives only the label; the row still has the address
+    (mining(name="Miner:0x0000\u20260000"), m1(name="Miner"), "NO_PAY"),  # glued to its label by a colon
+    (mining(name="Miner:0x0000...0000"), m1(name="Miner:0x0000...0000"), "NO_PAY"),
+    (mining(name="0x0000\u20261a2b"), m1(name="0x0000\u20261a2b"), "PAYS_M1"),  # a shortened address that only begins with zeros is a miner
+    (mining(name="0x0000...1a2b"), m1(name="0x0000...1a2b"), "PAYS_M1"),
+    (mining(name="Quarry22"), m1(name="Quarry22"), "PAYS_M1"),  # a name that ends in digits is no group of the count after it
+    (mining(name="Validator 0000000000000000000000000000000000000000"), m1(name="Validator"), "PAYS_M1"),  # known limit: without 0x the address is not known to the filter
+    (MINING.replace("Deepvein Pool 840 84.00%", "Deepvein Pool 840 0 84.00%"), m1(), "PAYS_M1"),  # a cell that is just 0 is no address
     catch_all("Others"),
     catch_all("(Unidentified)"),
     catch_all("other (9 addresses)"),
@@ -988,9 +1048,9 @@ M1_CASES = [
     catch_all("0x0000000000000000000000000000000000000000"),
     catch_all("0000000000000000000x"),
     catch_all("Subtotal"),
-    (mining(name="Otherside Pool"), m1(name="Otherside Pool"), "PAYS_M1"),  # a name, not the word 'other'
-    (mining(name="Allnodes Pool"), m1(name="Allnodes Pool"), "PAYS_M1"),
-    (mining(name="Nanopool"), m1(name="Nanopool"), "PAYS_M1"),
+    (mining(name="Otherwell Pool"), m1(name="Otherwell Pool"), "PAYS_M1"),  # a name, not the word 'other'
+    (mining(name="Allgrove Pool"), m1(name="Allgrove Pool"), "PAYS_M1"),
+    (mining(name="Nanoquarry"), m1(name="Nanoquarry"), "PAYS_M1"),
     (mining(name="F2X"), m1(name="F2X"), "PAYS_M1"),  # three letters or digits, one of them a letter
     (mining(name="exm1qa7example0000000000000000000000001"), m1(name="exm1qa7example0000000000000000000000001"), "PAYS_M1"),
     (MINING, m1(name="Deepvein"), "PAYS_M1"),  # the pool's name as a whole word on the page
@@ -1012,7 +1072,15 @@ M1_CASES = [
     (MINING, m1(top=840, total=1000), "NO_PAY"),  # 1000 is not printed as such; the page says 1,000
     (mining(total="1000"), m1(top=840, total=1000), "PAYS_M1"),
     (MINING, m1(top=True), "NO_PAY"),
-    (MINING, m1(raw={"top_miner_name": "Deepvein Pool"}), "NO_PAY"),
+    (MINING, m1(raw={"top_miner_name": "Deepvein Pool"}), "UNREADABLE"),  # not the form that was asked for
+    (MINING, m1(raw={}), "UNREADABLE"),
+    (MINING.replace("Deepvein Pool 840", "Unknown miners 840"), m1(name="miners"), "NO_PAY"),  # part of a catch-all row's name
+    (MINING.replace("Deepvein Pool 840", "Unknown Pool 840"), m1(name="Pool"), "NO_PAY"),
+    (MINING.replace("Deepvein Pool 840", "Deepvein Pool (others) 840"), m1(), "NO_PAY"),  # the filter reads the whole row
+    (MINING.replace("last 1,000 blocks", "last 10 800 blocks").replace("840 84.00%", "450 4.2%"), m1(top="450", total="800"), "NO_PAY"),  # '800' is a group of 10 800
+    (MINING.replace("Deepvein Pool 840", "Deepvein Pool 1 840"), m1(), "NO_PAY"),  # '840' may be a group of 1 840
+    (MINING.replace("Deepvein Pool 840", "exm1qpool0001 840"), m1(name="exm1qpool0001"), "PAYS_M1"),  # an address that ends in digits is not a group
+    (MINING.replace("last 1,000 blocks", "last 600 blocks").replace("840 84.00%", "400 66.67%") + "Total 600 100%\n", m1(top="400", total="600"), "NO_PAY"),  # below min_blocks 1,000
     (MINING, "no json here", "UNREADABLE"),
     (MINING, m1(name="Quarry Pool", top="840"), "NO_PAY"),  # a name from one row with the count of another
     (MINING.replace("Unknown 70", "Unknown 840"), m1(name="Quarry Pool", top="840"), "NO_PAY"),
@@ -1043,7 +1111,7 @@ def test_known_limit_miner_written_text_pays_if_the_models_take_it(env, mod):
     file_m1(env)
     assert judge_m1(env, page=page, answer=m1(name="Quarry Pool", top="900"))["outcome"] == "PAYS_M1"
     prompt = mod._prompt_m1(SUBJ, page)
-    assert "pool tags" in prompt and "is not evidence" in prompt and "Use only the page's own table" in prompt
+    assert "could have written" in prompt and "are not evidence" in prompt and "Use only the page's own table" in prompt
 
 
 def test_m1_respects_the_bounty_min_blocks(env):
@@ -1453,6 +1521,113 @@ def test_known_limit_a_copy_wins_when_the_revealed_claim_fails_to_be_judged(env)
     file(env, who=env.charlie, at=T0 + 200)
     assert judge(env, who=env.charlie, at=T0 + 210)["state"] == "WON"
     assert env.c.get_claimable(env.copier) == str(POT) and env.c.get_claimable(env.hunter) == "0"
+
+
+def test_a_miner_with_every_block_pays_under_m1_next_to_its_share_of_one_hundred_percent(env):
+    page = MINING.replace("last 1,000 blocks", "last 600 blocks").replace("Deepvein Pool 840 84.00%\nQuarry Pool 90 9.00%\nUnknown 70 7.00%", "Deepvein Pool 600 100.00%")
+    post_m1(env, min_blocks=500)
+    file_m1(env)
+    assert judge_m1(env, page=page, answer=m1(top="600", total="600"))["outcome"] == "PAYS_M1"
+
+
+def test_a_total_that_may_be_one_group_of_a_longer_number_is_refused(env):
+    page = MINING.replace("last 1,000 blocks", "last 10 800 blocks").replace("840 84.00%", "450 4.2%")
+    post_m1(env, min_blocks=500)  # 800 would be enough blocks, and 450 of 800 would be a majority
+    file_m1(env)
+    assert judge_m1(env, page=page, answer=m1(top="450", total="800"))["outcome"] == "NO_PAY"
+
+
+def test_a_count_copied_into_both_fields_is_not_a_total(env):
+    page = MINING.replace("last 1,000 blocks", "last 2,000 blocks").replace("Deepvein Pool 840 84.00%", "Deepvein Pool 600 30.00%")
+    post_m1(env, min_blocks=500)
+    file_m1(env)
+    assert judge_m1(env, page=page, answer=m1(top="600", total="600"))["outcome"] == "NO_PAY"  # 600 is printed once: it is the count, not a total
+
+
+def test_known_limit_a_count_right_before_another_three_digit_column_is_refused(env):
+    """Stated in the contract's own description: '840 512' could be the number 840,512 written with a space."""
+    post_m1(env)
+    file_m1(env)
+    assert judge_m1(env, page=MINING.replace("840 84.00%", "840 512 MH/s 84.00%"))["outcome"] == "NO_PAY"
+
+
+def test_known_limit_under_m1_a_blind_earlier_filing_outranks_the_hunter_who_reveals(env):
+    """Stated in the contract's own description. Rule M1 has one possible claim, so a seal hides nothing there."""
+    post_m1(env)
+    file_m1(env, who=env.charlie, at=T0 + 60)  # filed blind and left alone
+    file_m1(env, who=env.bob, at=T0 + 900)
+    assert judge_m1(env, who=env.bob, at=T0 + 960)["state"] == "PROVISIONAL"
+    out = judge_m1(env, who=env.charlie, at=T0 + 1000)  # the page now pays, as the hunter's reveal showed
+    assert out["lead"] is True and out["state"] == "WON" and env.c.get_claimable(env.copier) == str(POT) and env.c.get_claimable(env.hunter) == "0"
+
+
+def test_known_limit_a_copy_wins_when_the_revealed_claim_is_judged_not_to_pay_once(env):
+    post(env)
+    file(env, who=env.bob, at=T0 + 60)
+    assert judge(env, who=env.bob, at=T0 + 100, answer=p1(extra="not_shown"))["outcome"] == "NO_PAY"  # one reading that finds nothing uses up the filing
+    file(env, who=env.charlie, at=T0 + 200)
+    assert judge(env, who=env.charlie, at=T0 + 210)["state"] == "WON"
+
+
+def test_a_filing_whose_30_minutes_have_run_out_cannot_be_judged_and_its_fee_stays_burned(env):
+    """What a filing processed very late on a quiet bounty comes to (the contract's description states that
+    limit; these tests process every transaction at its own time, so the lateness itself is not shown here)."""
+    post(env)
+    assert file(env, at=T0 + 60)["ok"] is True
+    mocks(env, BLOCK1, p1())
+    env.vm.sender = env.bob
+    env.vm.warp(iso(T0 + 61 + TTL))  # any judgement sent now is too late
+    with env.vm.expect_revert("no live filing"):
+        env.c.judge("1", "P1", 1, SALT)
+    assert balanced(env)["burned"] == str(FEE)
+
+
+def test_a_judgement_refused_after_the_window_has_ended_does_not_stop_the_payout(env):
+    post(env)
+    file(env, who=env.bob, at=T0 + 60, height=2)
+    file(env, who=env.charlie, at=T0 + 70)
+    assert judge(env, who=env.charlie, at=T0 + 100)["state"] == "PROVISIONAL"
+    end = T0 + 60 + TTL + MARGIN
+    mocks(env, block(2), p1(block="2"))
+    env.vm.sender = env.bob
+    env.vm.warp(iso(end))
+    with env.vm.expect_revert("this bounty is WON"):  # refused, so nothing it did is kept, the win included
+        env.c.judge("1", "P1", 2, SALT)
+    assert get(env)["stored_state"] == "PROVISIONAL" and env.c.get_claimable(env.copier) == "0"
+    assert env.c.finalize("1")["winner"] == env.copier
+    with env.vm.expect_revert("nothing to finalize"):
+        env.c.finalize("1")
+    assert env.c.get_claimable(env.copier) == str(POT) and balanced(env)["credited"] == str(POT)
+
+
+ODD = [None, True, 0, -1, 2**200, "", "x" * 5000, b"bytes", [], ["1"], {}, {"a": 1}]
+
+
+def test_payable_calls_never_raise_whatever_they_are_given(env):
+    post(env)
+    paid = 0
+    for i, odd in enumerate(ODD):
+        env.vm.sender = env.bob
+        for call in (lambda: env.c.file_claim(odd, seal(env.bob)), lambda: env.c.file_claim("1", odd), lambda: env.c.file_claim(odd, odd)):
+            env.vm.warp(iso(T0 + 60 + i))
+            env.vm.value = FEE
+            out = call()
+            paid += FEE
+            assert out["ok"] is False and out["refunded"] == str(FEE), (odd, out)
+        for position in range(6):
+            args = ["NO_FOUNDER_REWARD", SUBJ, TPL, "", EXP, 1000]
+            args[position] = odd
+            env.vm.value = POT
+            out = env.c.post_bounty(*args)
+            paid += POT
+            if out["ok"] is False:
+                assert out["refunded"] == str(POT), (position, odd, out)
+            else:  # an odd value that is valid for that position ("" as the mining page): the pot is locked, and counted below
+                assert out["pot"] == str(POT), (position, odd, out)
+    env.vm.value = 0
+    env.paid_in += paid
+    t = balanced(env)
+    assert t["burned"] == "0" and get(env)["filings"] == []
 
 
 def test_a_reveal_sent_before_the_filing_is_on_record_is_refused(env):
@@ -1976,6 +2151,32 @@ def test_spaced(mod):
     assert mod._quote_ok("Founders allocation 2,000,000.00000000 EXM 100 confirmations", "100", lines) is True
     assert mod._quote_ok("Dev fund 75 EXM and 2 000 more", "2", lines) is False
     assert mod._quote_ok("Dev fund 75 EXM and 2 000 more", "75", lines) is True
+    assert mod._quote_ok("Dev fund 75 EXM and 2", "2", lines) is False  # decided on the page line, however short the quote
+    more = [("0 500,000.00 exm", "500,000.00", False), ("addr0001 840 84.0%", "840", False), ("ab 12 840 x", "840", True), ("total 500 100%", "500", False),
+            ("total 500 100 x", "500", True), ("2,000 500 exm", "500", False), ("12.5 500 exm", "500", False), ("pool 450 4.2%", "450", False),
+            ("last 10 800 blocks", "800", True), ("last 10 800 blocks", "10", True), ("pool01 840 84%", "840", False), ("1 125.00000000 exm", "125.00000000", True), ("9999 125.5 exm", "125.5", False),
+            ("pool 5,400 840 x", "5,400", False), ("pool 5,400 840 x", "840", False), ("12.5 500 exm", "12.5", False), ("1000 500 exm", "1000", False),  # a full number is no group
+            ("pool 840 100.0%", "840", False), ("total 840 100.00%", "840", False), ("pool 840 100%", "840", False), ("pool 840 100.00 x", "840", True), ("pool 840 100.00", "840", True),
+            ("0 500.00000000 exm", "500.00000000", False), ("07 500.5 exm", "500.5", False), ("10 500.5 exm", "500.5", True), ("1 000 500.00 exm", "500.00", True),
+            ("x 000 500.00 exm", "500.00", True), ("pool 840 512 mh/s", "840", True), ("2 000.50 exm", "2", True), ("2 0005 exm", "2", False),
+            ("2 00", "2", False), ("0.123 456 78 exm", "0.123", True), ("0.123 exm", "0.123", False), ("500.00000000 144 confirmations", "500.00000000", False),
+            ("08:15:42 500.5 exm", "500.5", False), ("at 42 500.5 exm", "500.5", True), ("output 1:1 500.00 exm", "500.00", True), ("0:12 500.00 exm", "500.00", False),
+            ("0.123 456 78 exm", "456", True), ("3.5 456 exm", "456", False), ("1,123 456.5 exm", "456.5", False),
+            ("1 500,000.5 exm", "500,000.5", False), ("pool12 840 84%", "840", False), ("12 840 84%", "840", True)]
+    for token, null in (("0x0000\u20260000", True), ("0x0", True), ("0x000000000000000000000000000000000000dead", True), ("0x0000...dead", True), ("(0x0000...0000)", True),
+                        ("0x", False), ("0", False), ("0x00a0", False), ("exm1q0x00", False), ("dead", False), ("0xdead000000000000000042069420694206942069", False)):
+        assert mod._null_address(token) is null, token
+    assert mod._clear("deepvein pool\u00b7840\u00b784.00%", "840") is False  # stated: a middle dot between two numbers joins them
+    for slashed in ("hidden/all 840", "chain/all 840", "main/autres 840", "n/a 840", "pool (n/a) 840"):
+        assert mod._catch_all(slashed) is True, slashed
+    assert mod._catch_all("deepvein/quarry 840") is False and mod._miner_name("Deepvein/Quarry") == "deepvein/quarry" and mod._miner_name("Hidden/All") is None
+    odd = [mod._fold("Stra\u00dfe \u0130stanbul fund 750 EXM and 2 000 more")]  # letters whose folded form has another length
+    assert mod._quote_ok("Stra\u00dfe \u0130stanbul fund 750 EXM", "750", odd) is True and mod._quote_ok("\u0130stanbul fund 750 EXM and 2", "2", odd) is False
+    for text, number, want in more:
+        assert mod._spaced(text, text.index(number), number) is want, (text, number)
+    assert mod._clear("total 500 100% of 500 blocks", "500") is True and mod._clear("last 10 800 blocks", "800") is False and mod._clear("no number", "5") is False
+    assert mod._catch_all("deepvein pool 840") is False and mod._catch_all("pool (others) 840") is True and mod._catch_all("poolunknown") is True
+    assert mod._catch_all("n/a 840") is True and mod._catch_all("nanoquarry 840 84.00%") is False
 
 
 def test_fold_and_miner_name(mod):
@@ -1985,9 +2186,11 @@ def test_fold_and_miner_name(mod):
                 "other (9 addresses)", "Total", "all miners", "Rest of network", "solo: 40 addresses", "(N/A)", "-none-",
                 "ab", "a-b", "123", "1 2 3", "—", "pool/unknown", "unknown_pool", "pool2 others"):
         assert mod._miner_name(bad) is None, bad
-    for bad in ("0x0000", "0x", "x00", "UnknownPool", "anonymiser", "Miscellany", "pool (unlabeled)", "\u5176\u4ed6", "not listed", "No Fee Pool"):
+    for bad in ("0x0000", "0x", "x00", "UnknownPool", "PoolUnknown", "anonymiser", "Miscellany", "pool (unlabeled)", "\u5176\u4ed6", "not listed", "No Fee Pool",
+                "0x000000000000000000000000000000000000dEaD", "0xdead", "Smaller pools", "0x0000\u20260000", "0x0000...0000", "0x0000\u2026dEaD", "0x00..00",
+                "0x0000000000000000000000000000000000000000 (Zero Address)", "Burn address", "0x0000\u2026dEaD (burned)", "Burnt coins", "0000\u2026dEaD", "x0\u20260"):
         assert mod._miner_name(bad) is None, bad
-    for good in ("abc", "a1b", "Otherwise", "Totally Pool", "restless", "nano", "1ab", "0x00a0", "Notable Pool", "Nobel", "Summit", "Smallville"):
+    for good in ("abc", "a1b", "Otherwise", "Totally Pool", "restless", "nano", "1ab", "0x00a0", "Notable Pool", "Notary", "Summit", "Smallridge"):
         assert mod._miner_name(good) is not None, good
 
 

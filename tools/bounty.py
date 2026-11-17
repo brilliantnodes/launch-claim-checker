@@ -191,8 +191,29 @@ def read(c, addr, fn, args=None, tries=6):
 
 
 def deploy(c) -> dict:
+    """One deployment only. If the gateway fails while it is being confirmed, the deployment this
+    account sent is looked for on the chain; it is never sent again."""
+    from datetime import datetime
+
     code = (ROOT / "contracts" / "launch_claim_bounties.py").read_text()
-    h = c.deploy_contract(code=code)
+    t0 = time.time()
+    try:
+        h = c.deploy_contract(code=code)
+    except Exception as e:
+        h, me = None, c.account.address.lower()
+        for _ in range(12):
+            time.sleep(10)
+            for t in rpc(c, "sim_getTransactionsForAddress", [c.account.address]) or []:
+                try:
+                    at = datetime.fromisoformat(str(t.get("created_at")).replace("Z", "+00:00")).timestamp()
+                except Exception:
+                    continue
+                if at >= t0 - 30 and str(t.get("from_address", "")).lower() == me and (t.get("data") or {}).get("contract_code"):
+                    h = t["hash"]
+            if h:
+                break
+        if h is None:
+            raise RuntimeError(f"the deployment was not confirmed and no transaction was found on the chain: {str(e)[:200]}") from e
     t = wait(c, h)
     addr = (t.get("data") or {}).get("contract_address") or t.get("to_address")
     return {"tx": h, "address": addr, **{k: v for k, v in summary(t).items() if k != "returned"}}
