@@ -1,0 +1,10 @@
+{
+ "digest": "27fb82e1ebdaec84c85b6ee718cb312ba195cbb03f71b68272d20430a6aae930",
+ "fee": "0.02",
+ "tests": "357",
+ "tests_spoken": "Three hundred and fifty seven",
+ "mutants": "199",
+ "mutants_spoken": "One hundred and ninety nine",
+ "studio_tx": "47",
+ "bradbury_tx": "16"
+}

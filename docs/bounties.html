@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Claim bounties · Launch Claim Checker</title>
+    <meta name="description" content="Put test GEN behind a launch claim. The bounty pays the first person who shows, on the pinned explorer pages, that the claim is false. Decided by GenLayer validators." />
+    <link rel="icon" href="./logo.svg" type="image/svg+xml" />
+    <script type="module" crossorigin src="./assets/bounties--Ubt_J2F.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/defineChain-D1SuaLFt.js">
+    <link rel="modulepreload" crossorigin href="./assets/utils-p0bEcrd5.js">
+    <link rel="modulepreload" crossorigin href="./assets/withTimeout-Dg04Gd4W.js">
+    <link rel="modulepreload" crossorigin href="./assets/secp256k1-BM-95uel.js">
+    <link rel="modulepreload" crossorigin href="./assets/privateKeyToAccount-BIeTGulh.js">
+    <link rel="modulepreload" crossorigin href="./assets/config-CIFyQkAm.js">
+    <link rel="stylesheet" crossorigin href="./assets/config-CISUaMU9.css">
+    <link rel="stylesheet" crossorigin href="./assets/bounties-BY75j-AD.css">
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand">
+        <img src="./logo.svg" alt="" width="40" height="40" />
+        <div>
+          <h1>Claim bounties</h1>
+          <p class="sub">Launch Claim Checker: money behind a launch claim</p>
+        </div>
+      </div>
+      <div class="net" id="net"></div>
+    </header>
+
+    <main>
+      <p class="small"><a id="back" href="./">← Back to the free checker</a></p>
+      <p class="banner" id="net-banner" role="note" hidden></p>
+
+      <section class="card intro">
+        <p>
+          The checker says what two pages show. A <strong>bounty</strong> puts money behind it: test GEN held by the contract that pays the first
+          person who shows, on the explorer pages the poster pinned, that a launch claim is false.
+        </p>
+        <ol class="how">
+          <li><strong>Post.</strong> Anyone locks a pot behind one claim about one coin and pins the pages: a block page address with <code>{n}</code> for the block number, or one mining page. Hunters never supply an address.</li>
+          <li><strong>File.</strong> A hunter files a sealed claim: only a fingerprint (a sha256) of the rule, the block number and a secret salt goes on the chain, so nobody can read it. Filing costs 2% of the pot, at least 0.001 GEN, which is burned. The time the filing was sent fixes its place in the queue, and it can be judged for 30 minutes.</li>
+          <li><strong>Judge.</strong> Only the filer can open the claim, by revealing the rule, the block and the salt. Validators then read the pinned page. Each one's model fills in a short form and plain code checks every value against that validator's own copy of the page. They must agree on the amount exactly, or on the top miner by name.</li>
+          <li><strong>Pay.</strong> A filing that pays wins the whole pot as soon as no filing sent before it is still waiting to be judged. A claim cannot be read until its filer reveals it, and a copy made after that is filed later, so it ranks behind. With no winner, the poster takes the pot back 60 minutes after the expiry.</li>
+        </ol>
+        <p class="small"><a href="./claim-bounties-demo.mp4">Watch the 83-second video</a> · <a href="https://github.com/brilliantnodes/launch-claim-checker#claim-bounties">How it works, the tests and the live runs</a></p>
+        <p class="small">
+          <strong>Read this first.</strong> A bounty trusts its pinned pages: whoever controls that site can make a claim look true or false, and a poster can win its own bounty.
+          An unclaimed bounty proves nothing. A won bounty means the pinned pages showed this; it is not a finding about the coin.
+        </p>
+      </section>
+
+      <section class="card" id="accounts-card" aria-labelledby="acct-h">
+        <h2 id="acct-h">Accounts</h2>
+        <p class="small" id="acct-help">Temporary accounts live in this browser only and hold test GEN from Studio's faucet. Use one to post and another to hunt.</p>
+        <div class="acct" data-role="poster">
+          <strong>Poster</strong> <span class="addr" id="poster-addr">No account</span>
+          <span class="acct-actions"><button type="button" class="secondary" data-temp="poster">Use a temporary account</button> <button type="button" class="secondary" data-fund="poster">Get test GEN</button></span>
+          <p class="small" id="poster-bal"></p>
+        </div>
+        <div class="acct" data-role="hunter">
+          <strong>Hunter</strong> <span class="addr" id="hunter-addr">No account</span>
+          <span class="acct-actions"><button type="button" class="secondary" data-temp="hunter">Use a temporary account</button> <button type="button" class="secondary" data-fund="hunter">Get test GEN</button></span>
+          <p class="small" id="hunter-bal"></p>
+        </div>
+        <div class="acct" data-role="second">
+          <strong>Second hunter</strong> <span class="addr" id="second-addr">No account</span>
+          <span class="acct-actions"><button type="button" class="secondary" data-temp="second">Use a temporary account</button> <button type="button" class="secondary" data-fund="second">Get test GEN</button></span>
+          <p class="small" id="second-bal"></p>
+        </div>
+        <p class="error" id="acct-error" role="alert" hidden></p>
+      </section>
+
+      <section class="card" id="post-card" aria-labelledby="post-h">
+        <h2 id="post-h">Post a bounty</h2>
+        <form id="post-form" novalidate>
+          <label for="ctype">Claim</label>
+          <select id="ctype">
+            <option value="NO_PREMINE">No premine (pays on an extra allocation in blocks 0 to 100)</option>
+            <option value="NO_FOUNDER_REWARD">No founder reward (pays on an extra allocation in blocks 0 to 100)</option>
+            <option value="DECENTRALIZED_MINING">Decentralized mining (pays when one miner has most of the blocks)</option>
+            <option value="FAIR_LAUNCH">Fair launch (pays on either)</option>
+          </select>
+          <label for="subject">Coin name <span class="opt">(must be on every page read)</span></label>
+          <input id="subject" type="text" maxlength="40" placeholder="Examplecoin" />
+          <label for="tpl">Block page address, with {n} for the block number</label>
+          <input id="tpl" type="url" inputmode="url" maxlength="200" placeholder="https://explorer.example/block/{n}" />
+          <label for="mine">Mining page address</label>
+          <input id="mine" type="url" inputmode="url" maxlength="200" placeholder="https://explorer.example/mining" />
+          <div class="grid3">
+            <div><label for="minutes">Runs for (minutes)</label><input id="minutes" type="text" inputmode="numeric" value="15" /></div>
+            <div><label for="pot">Pot (test GEN)</label><input id="pot" type="text" inputmode="decimal" value="1" /></div>
+            <div><label for="minblocks">Blocks needed for the mining rule</label><input id="minblocks" type="text" inputmode="numeric" value="1000" /></div>
+          </div>
+          <div class="examples">
+            <span class="small">Try an example:</span>
+            <button type="button" class="link" data-example="exmFounder">Examplecoin, no founder reward</button>
+            <button type="button" class="link" data-example="exmMining">Examplecoin, decentralized mining</button>
+            <button type="button" class="link" data-example="ctlPremine">Controlcoin, no premine</button>
+          </div>
+          <p class="small">Examplecoin and Controlcoin are fictional. Their explorer pages are test pages hosted with this site: Examplecoin's block 1 pays its founders and one miner has most of its blocks; Controlcoin is clean.</p>
+          <p class="small">A bounty cannot be cancelled, shortened or topped up. Pin the narrowest pages you can, on an explorer you do not control.</p>
+          <p class="error" id="post-error" role="alert" hidden></p>
+          <button type="submit" id="btn-post">Post the bounty as Poster</button>
+        </form>
+      </section>
+
+      <section class="card" id="life" aria-labelledby="life-h" hidden>
+        <h2 id="life-h">Transaction progress</h2>
+        <p id="life-what"></p>
+        <ol class="steps" id="steps"></ol>
+        <p id="life-note" class="small" aria-live="polite"></p>
+        <p class="small" id="life-hash"></p>
+      </section>
+
+      <section class="card" aria-labelledby="list-h">
+        <div class="row">
+          <h2 id="list-h">Bounties</h2>
+          <button type="button" id="refresh" class="secondary">Refresh</button>
+        </div>
+        <p class="small" id="list-state" aria-live="polite">Loading…</p>
+        <div id="list"></div>
+      </section>
+
+      <section class="card" aria-labelledby="rules-h">
+        <h2 id="rules-h">The rules, read from the contract</h2>
+        <table class="rules" id="rules"></table>
+        <p class="small" id="totals"></p>
+        <h3>Limits</h3>
+        <ul class="how">
+          <li>Rule P1 is a model's reading with code checks, not a proof. It covers blocks 0 to 100 and the first 6,000 characters of a page. A coin with a disclosed developer fee in its early blocks pays out under it.</li>
+          <li>For the mining rule the hunter picks the moment, and pool names are written by miners. The more blocks a bounty asks for, the less luck can decide it. Rows such as "unknown" or "others" are refused by a word list, which is a filter, not a guarantee.</li>
+          <li>A reveal is public from the moment it is sent. If the judgement then fails (validators do not agree, or the page cannot be read three times, or the 30 minutes run out), someone else can file the same claim. Reveal once the filing shows in the list, and early enough to try again.</li>
+          <li>Amounts must be printed with a dot for decimals and commas, or nothing, between thousands. An amount written with spaces between groups, or right next to another number, is refused as ambiguous.</li>
+          <li>This browser keeps the salt of every sealed claim it files. If the browser's storage is cleared, a filing made here can no longer be judged and its fee is lost.</li>
+          <li>The network follows redirects without saying so. Pin pages on a site that does not redirect.</li>
+          <li>A judgement that ends without a majority changes nothing and costs only the network fee, so a filing can be tried again inside its 30 minutes.</li>
+          <li>Withdrawals reach the wallet when their transaction is finalized.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <span id="foot-contract"></span>
+      <span><a id="foot-repo" href="#">Source code</a></span>
+    </footer>
+
+  </body>
+</html>

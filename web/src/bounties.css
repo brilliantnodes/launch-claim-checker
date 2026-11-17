@@ -1,0 +1,18 @@
+/* Additions for the bounties page; the rest comes from style.css. */
+.acct { padding: 0.6rem 0.75rem; border: 1px dashed var(--line); border-radius: 8px; margin: 0.6rem 0; }
+.acct .addr { font: 0.85em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow-wrap: anywhere; color: var(--muted); margin: 0 0.5rem; }
+.acct-actions { display: inline-flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.35rem; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 0.75rem; }
+@media (max-width: 620px) { .grid3 { grid-template-columns: 1fr; } }
+input:disabled { opacity: 0.5; }
+.lead { border-top: 1px solid var(--line); margin-top: 0.6rem; padding-top: 0.6rem; }
+.lead q { overflow-wrap: anywhere; }
+.acts { border-top: 1px solid var(--line); margin-top: 0.6rem; padding-top: 0.4rem; }
+.act { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin: 0.5rem 0; }
+.act select.who { width: auto; padding: 0.35rem 0.5rem; }
+.act input.height { width: 4.5rem; padding: 0.35rem 0.5rem; }
+#life-what { font-weight: 600; margin: 0 0 0.5rem; }
+.facts { grid-template-columns: max-content minmax(0, 1fr); }
+.facts dd { overflow-wrap: anywhere; min-width: 0; }
+@media (max-width: 520px) { .facts { grid-template-columns: minmax(0, 1fr); } }
+.act button { white-space: normal; text-align: left; }

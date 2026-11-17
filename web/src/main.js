@@ -503,6 +503,7 @@ ca.target = "_blank";
 ca.rel = "noopener noreferrer";
 fc.append(ca);
 $("foot-repo").href = REPO_URL;
+$("to-bounties").href = `./bounties.html?net=${NET.key}`;
 syncClaimText();
 loadRecent();
 loadRules();

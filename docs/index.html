@@ -6,13 +6,14 @@
     <title>Launch Claim Checker</title>
     <meta name="description" content="Check a crypto launch claim against the announcement and a block explorer page. Verdicts are agreed by GenLayer validators and stored on chain." />
     <link rel="icon" href="./logo.svg" type="image/svg+xml" />
-    <script type="module" crossorigin src="./assets/index-C7pQhFA8.js"></script>
+    <script type="module" crossorigin src="./assets/main-DHdGljaJ.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/defineChain-D1SuaLFt.js">
     <link rel="modulepreload" crossorigin href="./assets/utils-p0bEcrd5.js">
     <link rel="modulepreload" crossorigin href="./assets/withTimeout-Dg04Gd4W.js">
-    <link rel="modulepreload" crossorigin href="./assets/defineChain-D1SuaLFt.js">
     <link rel="modulepreload" crossorigin href="./assets/secp256k1-BM-95uel.js">
     <link rel="modulepreload" crossorigin href="./assets/privateKeyToAccount-BIeTGulh.js">
-    <link rel="stylesheet" crossorigin href="./assets/index-CISUaMU9.css">
+    <link rel="modulepreload" crossorigin href="./assets/config-CIFyQkAm.js">
+    <link rel="stylesheet" crossorigin href="./assets/config-CISUaMU9.css">
   </head>
   <body>
     <header class="top">
@@ -38,6 +39,14 @@
           A verdict describes what the two pages you supply show at the time of the check. It is not a proof about anything outside those pages.
         </p>
         <p class="small">Runs on GenLayer Studio and on <a href="?net=bradbury">Testnet Bradbury Phase 2</a>; switch at the top of the page.</p>
+      </section>
+
+      <section class="card" aria-labelledby="bounty-h">
+        <h2 id="bounty-h">New: claim bounties</h2>
+        <p>
+          Put test GEN behind a launch claim. A bounty pays the first person who shows, on the explorer pages the poster pinned,
+          that the claim is false. <a href="./bounties.html" id="to-bounties">Open the bounties page</a>.
+        </p>
       </section>
 
       <section class="card" aria-labelledby="demo-h">

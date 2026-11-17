@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Claim bounties video stage</title>
+<style>
+:root { --bg: #0f1524; --bg2: #162040; --card: #182036; --ink: #eceef4; --muted: #a3acc0; --line: #2c3654; --accent: #fca311; --good: #7fd6a4; --good-bg: #173527; --bad: #ff9c92; --bad-bg: #44201c; --paper: #f6f4ef; --navy: #14213d; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); }
+#s { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: var(--ink); font-family: Inter, "DejaVu Sans", sans-serif;
+  background: radial-gradient(ellipse at 85% 12%, rgba(252,163,17,.16), transparent 52%), radial-gradient(ellipse at 6% 96%, rgba(127,214,164,.12), transparent 48%), linear-gradient(155deg, var(--bg), var(--bg2)); }
+section { position: absolute; inset: 0; display: none; padding: 150px 130px 110px; }
+section.on { display: block; }
+.bar { position: absolute; left: 130px; right: 130px; top: 56px; display: flex; justify-content: space-between; align-items: baseline; font-size: 26px; color: var(--muted); }
+.bar b { color: var(--ink); font-family: "Bitstream Charter", "DejaVu Serif", serif; font-size: 32px; font-weight: 700; }
+.bar i { font-style: normal; color: var(--accent); font-weight: 600; }
+.foot { position: absolute; left: 130px; right: 130px; bottom: 44px; font-size: 22px; color: var(--muted); display: flex; justify-content: space-between; }
+h1 { font-family: "Bitstream Charter", "DejaVu Serif", serif; font-weight: 700; font-size: 150px; line-height: 1.02; margin: 0; letter-spacing: -.01em; }
+h2 { font-family: "Bitstream Charter", "DejaVu Serif", serif; font-weight: 700; font-size: 66px; line-height: 1.08; margin: 0 0 40px; white-space: nowrap; letter-spacing: -.005em; }
+.lede { font-size: 40px; line-height: 1.35; color: var(--muted); max-width: 1500px; }
+.lede b, .amber { color: var(--accent); }
+.kicker { font-size: 30px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 26px; }
+.row { display: flex; gap: 56px; align-items: stretch; }
+.card { background: var(--card); border: 2px solid var(--line); border-radius: 22px; padding: 40px 44px; box-shadow: 0 30px 70px rgba(0,0,0,.35); }
+.paper { background: var(--paper); color: var(--navy); border-radius: 22px; padding: 44px 50px; box-shadow: 0 30px 70px rgba(0,0,0,.45); }
+.quote { font-family: "Bitstream Charter", "DejaVu Serif", serif; font-size: 66px; line-height: 1.15; font-weight: 700; }
+.small { font-size: 28px; color: var(--muted); line-height: 1.4; }
+.paper .small { color: #5b6477; }
+.mono { font-family: "DejaVu Sans Mono", monospace; }
+.pill { display: inline-block; font-weight: 700; font-size: 30px; padding: 10px 26px; border-radius: 40px; }
+.pill.good { background: var(--good-bg); color: var(--good); } .pill.bad { background: var(--bad-bg); color: var(--bad); } .pill.amberp { background: rgba(252,163,17,.16); color: var(--accent); }
+.big { font-family: "Bitstream Charter", "DejaVu Serif", serif; font-weight: 700; font-size: 110px; line-height: 1; font-variant-numeric: tabular-nums lining-nums; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 16px 34px; font-size: 34px; align-items: baseline; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; font-weight: 600; }
+.paper .kv dt { color: #5b6477; }
+ul.checks { list-style: none; margin: 0; padding: 0; font-size: 34px; line-height: 1.3; }
+ul.checks li { padding: 14px 0 14px 62px; position: relative; border-bottom: 2px solid var(--line); }
+ul.checks li:last-child { border-bottom: 0; }
+ul.checks li::before { content: "✓"; position: absolute; left: 6px; top: 10px; color: var(--good); font-weight: 700; font-size: 40px; }
+.dots { display: flex; gap: 22px; margin: 6px 0 26px; }
+.dots span { width: 74px; height: 74px; border-radius: 50%; background: var(--good-bg); border: 4px solid var(--good); display: flex; align-items: center; justify-content: center; color: var(--good); font-weight: 700; font-size: 34px; }
+.browser { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 40px 90px rgba(0,0,0,.55), 0 0 0 2px rgba(255,255,255,.14); }
+.browser .bb { background: #e8ebf3; height: 54px; display: flex; align-items: center; gap: 11px; padding: 0 20px; color: #46506b; font-size: 22px; }
+.browser .bb u { width: 16px; height: 16px; border-radius: 50%; background: #e5484d; display: inline-block; }
+.browser .bb u:nth-child(2) { background: #f5b301; } .browser .bb u:nth-child(3) { background: #2fb36b; }
+.browser .bb span { flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 70px; }
+.browser .shot { overflow: hidden; background: #f6f4ef; }
+.browser img { display: block; width: 100%; }
+.tl { position: relative; margin-top: 30px; height: 330px; }
+.tl .axis { position: absolute; left: 0; right: 0; top: 118px; height: 6px; background: var(--line); border-radius: 3px; }
+.tl .ev { position: absolute; top: 0; width: 400px; text-align: center; font-size: 30px; line-height: 1.3; }
+.tl .ev .tick { width: 30px; height: 30px; border-radius: 50%; margin: 104px auto 16px; background: var(--accent); }
+.tl .ev.b .tick { background: var(--muted); }
+.tl .ev b { display: block; font-size: 34px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px; margin-top: 16px; }
+.grid4 .card { padding: 34px 34px 38px; }
+.grid4 .big { font-size: 104px; color: var(--accent); }
+.grid4 .small { margin-top: 14px; font-size: 29px; }
+.center { text-align: center; }
+.hi { background: rgba(252,163,17,.3); border-radius: 6px; padding: 0 6px; }
+</style>
+</head>
+<body>
+<div id="s">
+  <div class="bar"><b>Launch Claim Checker</b><span>Claim bounties · <i>test GEN only, fictional coins</i></span></div>
+
+  <section id="title" style="padding-top:270px">
+    <div class="kicker">New in Launch Claim Checker</div>
+    <h1>Claim bounties</h1>
+    <p class="lede" style="margin-top:44px;font-size:54px;color:var(--ink)">Money behind a launch claim.</p>
+    <p class="lede" style="margin-top:26px">An intelligent contract on GenLayer, by Brilliant Nodes.</p>
+  </section>
+
+  <section id="problem" style="padding-top:215px">
+    <h2>A claim is cheap. A bounty is not.</h2>
+    <div class="row" style="margin-top:20px">
+      <div class="paper" style="flex:1.05">
+        <div class="small" style="margin-bottom:22px">Examplecoin (fictional) announces:</div>
+        <div class="quote">“No premine.<br>No founder reward.”</div>
+      </div>
+      <div class="card" style="flex:1">
+        <div class="small">Anyone can lock a pot behind it</div>
+        <div class="big" style="margin:16px 0 26px;color:var(--accent)">1 GEN</div>
+        <div class="small" style="font-size:33px;color:var(--ink)">It pays the first person who shows, on the explorer pages the poster pinned, that the claim is <b class="amber">false</b>.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="seal-a" style="padding-top:215px">
+    <h2>1 · The hunter files a sealed claim</h2>
+    <div class="row">
+      <div class="paper" style="flex:1">
+        <div class="small" style="margin-bottom:26px">What the hunter knows, and keeps to itself</div>
+        <dl class="kv"><dt>Rule</dt><dd>P1: coins beyond the block reward</dd><dt>Block</dt><dd>1</dd><dt>Salt</dt><dd class="mono">random, 32 hex characters</dd></dl>
+      </div>
+      <div class="card" style="flex:1;opacity:.35">
+        <div class="small" style="margin-bottom:26px">What goes on chain</div>
+        <div class="mono" style="font-size:38px;line-height:1.35;word-break:break-all;color:var(--muted)">…</div>
+      </div>
+    </div>
+  </section>
+  <section id="seal-b" style="padding-top:215px">
+    <h2>1 · The hunter files a sealed claim</h2>
+    <div class="row">
+      <div class="paper" style="flex:1;opacity:.55">
+        <div class="small" style="margin-bottom:26px">What the hunter knows, and keeps to itself</div>
+        <dl class="kv"><dt>Rule</dt><dd>P1: coins beyond the block reward</dd><dt>Block</dt><dd>1</dd><dt>Salt</dt><dd class="mono">random, 32 hex characters</dd></dl>
+      </div>
+      <div class="card" style="flex:1;border-color:var(--accent)">
+        <div class="small" style="margin-bottom:26px">What goes on chain: only a fingerprint (sha256)</div>
+        <div class="mono" style="font-size:38px;line-height:1.35;word-break:break-all;color:var(--accent)" data-k="digest"></div>
+        <div style="margin-top:34px"><span class="pill amberp">filing fee burned: <span data-k="fee"></span> GEN</span></div>
+        <div class="small" style="margin-top:22px">Nobody can read it or copy it. It ranks by the time it was sent.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="judge-a">
+    <h2>2 · Reveal, and validators read the page</h2>
+    <div class="row">
+      <div class="browser" style="flex:1.15">
+        <div class="bb"><u></u><u></u><u></u><span>checker.brilliantnodes.com/…/examplecoin/block/1.html</span></div>
+        <div class="shot" style="height:600px"><img src="build/shot_block.jpg" alt=""></div>
+      </div>
+      <div class="card" style="flex:.85">
+        <div class="small" style="margin-bottom:10px">Each validator, on its own</div>
+        <div class="dots"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+        <div class="small" style="font-size:33px;color:var(--ink)">renders the pinned page, and its model fills in a short form: block number, the extra amount, the line that shows it.</div>
+      </div>
+    </div>
+  </section>
+  <section id="judge-b">
+    <h2>2 · Reveal, and validators read the page</h2>
+    <div class="row">
+      <div class="browser" style="flex:1.15">
+        <div class="bb"><u></u><u></u><u></u><span>checker.brilliantnodes.com/…/examplecoin/block/1.html</span></div>
+        <div class="shot" style="height:600px"><img src="build/shot_block.jpg" alt=""></div>
+      </div>
+      <div class="card" style="flex:.85;border-color:var(--good)">
+        <div class="small" style="margin-bottom:8px">Plain code decides, on every validator</div>
+        <ul class="checks">
+          <li>the block number is printed on the page</li>
+          <li>the amount parses exactly</li>
+          <li>the line stands on that validator's own copy</li>
+          <li>validators agree on the amount, exactly</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="pay">
+    <h2>3 · A claim that pays wins the pot</h2>
+    <div class="row">
+      <div class="browser" style="flex:1.25">
+        <div class="bb"><u></u><u></u><u></u><span>checker.brilliantnodes.com/bounties.html</span></div>
+        <div class="shot" style="height:600px"><img src="build/shot_won.jpg" alt=""></div>
+      </div>
+      <div class="card" style="flex:.75">
+        <span class="pill bad">Claim shown false</span>
+        <div class="small" style="margin:30px 0 8px">Agreed by the validators, exactly</div>
+        <div class="big" style="font-size:92px">2,000,000</div>
+        <div class="small" style="margin-top:8px">coins to the founders in block 1</div>
+        <div class="small" style="margin-top:34px;font-size:33px;color:var(--ink)">The hunter withdraws the pot:<br><b class="amber" style="font-size:54px">1 GEN</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="queue" style="padding-top:215px">
+    <h2>Two claims that pay? The one sent first wins.</h2>
+    <p class="lede">Even when the other one is judged first.</p>
+    <div class="tl">
+      <div class="axis"></div>
+      <div class="ev" style="left:0"><div class="tick"></div><b>Hunter files</b>sealed, place 1</div>
+      <div class="ev b" style="left:420px"><div class="tick"></div><b>Second hunter files</b>sealed, place 2</div>
+      <div class="ev b" style="left:840px"><div class="tick"></div><b>Second is judged first</b>it leads, provisionally</div>
+      <div class="ev" style="left:1260px"><div class="tick"></div><b>Hunter is judged</b>takes the lead and wins</div>
+    </div>
+    <p class="small" style="margin-top:36px">From the live run on GenLayer Studio, bounty 4. The second hunter got nothing.</p>
+  </section>
+
+  <section id="survive" style="padding-top:215px">
+    <h2>A true claim keeps its bounty</h2>
+    <div class="row">
+      <div class="paper" style="flex:1">
+        <div class="small" style="margin-bottom:22px">Controlcoin (fictional): “No premine.”</div>
+        <dl class="kv"><dt>Block 1 shows</dt><dd>only the 50 CTL block reward</dd><dt>Outcome</dt><dd>NO_PAY</dd><dt>The hunter</dt><dd>loses its filing fee</dd></dl>
+      </div>
+      <div class="card" style="flex:1">
+        <span class="pill good">Claim held</span>
+        <div class="small" style="margin-top:30px;font-size:35px;color:var(--ink)">Sixty minutes after the expiry, the poster took the pot back.</div>
+        <div class="small" style="margin-top:26px">An unclaimed bounty proves nothing. A won bounty means the pinned pages showed it.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proof" style="padding-top:215px">
+    <h2>Built to be broken, then run live</h2>
+    <div class="grid4">
+      <div class="card"><div class="big" data-k="tests"></div><div class="small">tests, passing on both GenVM versions</div></div>
+      <div class="card"><div class="big" data-k="mutants"></div><div class="small">deliberate breaks of the contract, every one caught</div></div>
+      <div class="card"><div class="big" data-k="studio_tx"></div><div class="small">live transactions on GenLayer Studio, all as expected</div></div>
+      <div class="card"><div class="big" data-k="bradbury_tx"></div><div class="small">live transactions on Testnet Bradbury</div></div>
+    </div>
+    <p class="lede" style="margin-top:44px;font-size:34px">Pull payments only. No model runs in a call that takes GEN. Two independent reviews. Limits stated in the README.</p>
+  </section>
+
+  <section id="end" class="center" style="padding-top:300px">
+    <div class="kicker">Try it free, with test GEN</div>
+    <h1 style="font-size:112px">checker.brilliantnodes.com</h1>
+    <p class="lede" style="margin:46px auto 0;font-size:44px;color:var(--ink)">Claim bounties · Launch Claim Checker</p>
+    <p class="lede" style="margin:18px auto 0">Built on GenLayer by Brilliant Nodes</p>
+  </section>
+
+  <div class="foot"><span>Examplecoin and Controlcoin are fictional. Their explorer pages are test pages.</span><span>github.com/brilliantnodes/launch-claim-checker</span></div>
+</div>
+<script>
+function setup(d) { document.querySelectorAll("[data-k]").forEach((n) => { if (d[n.dataset.k] !== undefined) n.textContent = d[n.dataset.k]; }); }
+function show(id) { document.querySelectorAll("section").forEach((n) => n.classList.toggle("on", n.id === id)); }
+</script>
+</body>
+</html>

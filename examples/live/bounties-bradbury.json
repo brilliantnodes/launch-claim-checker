@@ -1,0 +1,950 @@
+{
+ "network": "testnet-bradbury-phase-2",
+ "chain_id": 4221,
+ "build": "bradbury/build/launch_claim_bounties.py (GenVM v0.6)",
+ "build_sha256": "4fd258f06c3ca30fc31d98ee160acce2abad0a4ae9450ce6951b19cfcaf02a48",
+ "accounts": {
+  "poster": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65",
+  "hunter": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e"
+ },
+ "steps": [
+  {
+   "n": 1,
+   "label": "1. Post a bounty: Examplecoin has no founder reward (pot 0.1 GEN)",
+   "who": "poster",
+   "from": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65",
+   "method": "post_bounty",
+   "args": [
+    "NO_FOUNDER_REWARD",
+    "Examplecoin",
+    "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html",
+    "",
+    1794944405,
+    1000
+   ],
+   "value": "100000000000000000",
+   "tx": "0xb517cc430c8d6e42887c79fd6afb06b1ebc8d2d5c22358315ae7d9f6e7fab91a",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794942913",
+   "seconds": 42,
+   "as_expected": true
+  },
+  {
+   "n": 2,
+   "label": "1. The hunter files a sealed claim (the fee is burned)",
+   "who": "hunter",
+   "from": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+   "method": "file_claim",
+   "args": [
+    "1",
+    "808fc9409a0a91db4a4cefe3cd4c78050c3ed2f1c0ac3d791bfb3088ebd01cd1"
+   ],
+   "value": "2000000000000000",
+   "tx": "0x2676c2f11a3b374154c3c5e069c731f98f823be925301abf4e7368f4c068c1fc",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794942963",
+   "seconds": 36,
+   "as_expected": true
+  },
+  {
+   "n": 3,
+   "label": "1. A reveal with another salt is refused",
+   "who": "hunter",
+   "from": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+   "method": "judge",
+   "args": [
+    "1",
+    "P1",
+    1,
+    "b1a5089d4d7130b0df29ffed609448af"
+   ],
+   "value": "0",
+   "tx": "0x08d7580022a6a2fa27690290900c5183d64d47b069b5145663e60612d385fd78",
+   "expected": "refused by the contract",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_ERROR",
+   "created": "1794943005",
+   "seconds": 33,
+   "as_expected": true
+  },
+  {
+   "n": 4,
+   "label": "1. Reveal and judge it: block 1 shows the founders' allocation",
+   "who": "hunter",
+   "from": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+   "method": "judge",
+   "args": [
+    "1",
+    "P1",
+    1,
+    "44004de3b9d0bc3f9811df94de1bbb6c"
+   ],
+   "value": "0",
+   "tx": "0x5a73291f2e96889aea9c6c7891ed13284f93c61b8518c0ec0af67a71999ffabc",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794943044",
+   "seconds": 60,
+   "as_expected": true
+  },
+  {
+   "n": 5,
+   "label": "2. Post a bounty: Examplecoin mining is decentralized (pot 0.1 GEN)",
+   "who": "poster",
+   "from": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65",
+   "method": "post_bounty",
+   "args": [
+    "DECENTRALIZED_MINING",
+    "Examplecoin",
+    "",
+    "https://checker.brilliantnodes.com/examples/bounty/examplecoin/mining.html",
+    1794944616,
+    1000
+   ],
+   "value": "100000000000000000",
+   "tx": "0xa5e9661ecc88c9a7da8bcc29fd799cfcc60881af4a8b9bd7ce86ab13aeb859ea",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794943120",
+   "seconds": 37,
+   "as_expected": true
+  },
+  {
+   "n": 6,
+   "label": "2. The hunter files a sealed claim under rule M1",
+   "who": "hunter",
+   "from": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+   "method": "file_claim",
+   "args": [
+    "2",
+    "1430f928ae3c01f0ca8cbd5445a00ce1ebccd7fe06a631dadbaef9d9c2bf4f7a"
+   ],
+   "value": "2000000000000000",
+   "tx": "0xdfdf861a73a1c2709fef27b251d1105b01b567ebcdce3977182eca078f2c1afd",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794943168",
+   "seconds": 36,
+   "as_expected": true
+  },
+  {
+   "n": 7,
+   "label": "2. Reveal and judge it: one miner has 840 of 1,000 blocks",
+   "who": "hunter",
+   "from": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+   "method": "judge",
+   "args": [
+    "2",
+    "M1",
+    0,
+    "d2ba7cb8012f13f455cf6f2cec81d853"
+   ],
+   "value": "0",
+   "tx": "0x9a9bb704bc507d1da5530dd631488a865cc1917794d8541102beac9b32b5b1f8",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794943215",
+   "seconds": 55,
+   "as_expected": true
+  },
+  {
+   "n": 8,
+   "label": "3. Post a bounty: Controlcoin has no premine (pot 0.05 GEN, 12 minutes)",
+   "who": "poster",
+   "from": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65",
+   "method": "post_bounty",
+   "args": [
+    "NO_PREMINE",
+    "Controlcoin",
+    "https://checker.brilliantnodes.com/examples/bounty/controlcoin/block/{n}.html",
+    "",
+    1794943998,
+    1000
+   ],
+   "value": "50000000000000000",
+   "tx": "0x7212e7884964e1f7ff23714264c5852a236c788ef49e29e6d4cb34ff0292d2ed",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794943335",
+   "seconds": 90,
+   "as_expected": true
+  },
+  {
+   "n": 9,
+   "label": "3. The hunter files a sealed claim on block 1",
+   "who": "hunter",
+   "from": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+   "method": "file_claim",
+   "args": [
+    "3",
+    "9718d258b5e507849b2be8de47bf49116daff6cae4855366c876e45c1ec39620"
+   ],
+   "value": "1000000000000000",
+   "tx": "0x62414aeb7c29dee98dbf3f291070d9ad2a01e743549a7f24d75b3a2d798c191e",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794943383",
+   "seconds": 29,
+   "as_expected": true
+  },
+  {
+   "n": 10,
+   "label": "3. Reveal and judge it: block 1 holds only the block reward",
+   "who": "hunter",
+   "from": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+   "method": "judge",
+   "args": [
+    "3",
+    "P1",
+    1,
+    "c1f1cc152c1b392a2e9887c3664b6819"
+   ],
+   "value": "0",
+   "tx": "0x646be6c9c7b99f05c68c5053ced6c8da7e07d3273dd8b5d3c478e7e7efdde98c",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794943424",
+   "seconds": 64,
+   "as_expected": true
+  },
+  {
+   "n": 11,
+   "label": "3. The same filing cannot be judged twice",
+   "who": "hunter",
+   "from": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+   "method": "judge",
+   "args": [
+    "3",
+    "P1",
+    1,
+    "c1f1cc152c1b392a2e9887c3664b6819"
+   ],
+   "value": "0",
+   "tx": "0x621a5ba7416a07160fd6ae4b3b3718793ed37361b77e624a0aaa35f1c268df7d",
+   "expected": "refused by the contract",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_ERROR",
+   "created": "1794943493",
+   "seconds": 35,
+   "as_expected": true
+  },
+  {
+   "n": 12,
+   "label": "4. The hunter withdraws both pots",
+   "who": "hunter",
+   "from": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+   "method": "withdraw",
+   "args": [
+    0
+   ],
+   "value": "0",
+   "tx": "0xccf0df26989513c244b9c77bfeae96ac1b11511de34913a2665628d85f566f4d",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794943530",
+   "seconds": 35,
+   "as_expected": true
+  },
+  {
+   "n": 13,
+   "label": "3. Reclaiming right after the expiry is refused",
+   "who": "poster",
+   "from": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65",
+   "method": "reclaim",
+   "args": [
+    "3"
+   ],
+   "value": "0",
+   "tx": "0x664561f00d0e9f667d3b996e5d6869898d36004d1892e966f24dffb19246d8d1",
+   "expected": "refused by the contract",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_ERROR",
+   "created": "1794944023",
+   "seconds": 40,
+   "as_expected": true
+  },
+  {
+   "n": 14,
+   "label": "3. The poster reclaims the pot",
+   "who": "poster",
+   "from": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65",
+   "method": "reclaim",
+   "args": [
+    "3"
+   ],
+   "value": "0",
+   "tx": "0xf8f0aa7729d8b7e9a351fb19a4d248405b8645bad2a1ba908c5384f628373bfa",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794947623",
+   "seconds": 41,
+   "as_expected": true
+  },
+  {
+   "n": 15,
+   "label": "3. The poster withdraws",
+   "who": "poster",
+   "from": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65",
+   "method": "withdraw",
+   "args": [
+    0
+   ],
+   "value": "0",
+   "tx": "0x26c6d4d32c4b198cf4dc47b96aa46fcb760355ce4085ef22f6937d70bec2620e",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "created": "1794947701",
+   "seconds": 67,
+   "as_expected": true
+  }
+ ],
+ "checks": [
+  {
+   "label": "1. Post a bounty: Examplecoin has no founder reward (pot 0.1 GEN): the bounty is on record",
+   "value": {
+    "new": true,
+    "pot": "100000000000000000",
+    "state": "OPEN",
+    "poster": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65"
+   },
+   "want": {
+    "new": true,
+    "pot": "100000000000000000",
+    "state": "OPEN",
+    "poster": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65"
+   },
+   "ok": true,
+   "at": 1794942959
+  },
+  {
+   "label": "1. The hunter files a sealed claim (the fee is burned): the sealed filing is on record and shows nothing about the claim",
+   "value": [
+    [
+     "LIVE",
+     "",
+     -1
+    ]
+   ],
+   "want": [
+    [
+     "LIVE",
+     "",
+     -1
+    ]
+   ],
+   "ok": true,
+   "at": 1794943001
+  },
+  {
+   "label": "1. Reveal and judge it: block 1 shows the founders' allocation: outcome on record",
+   "value": {
+    "outcome": "PAYS_P1",
+    "state": "WON"
+   },
+   "want": {
+    "outcome": "PAYS_P1",
+    "state": "WON"
+   },
+   "ok": true,
+   "at": 1794943106
+  },
+  {
+   "label": "1. won by the hunter on the agreed amount",
+   "value": {
+    "winner": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+    "agreed": {
+     "amount": "2000000",
+     "block": 1,
+     "outcome": "PAYS_P1"
+    }
+   },
+   "want": {
+    "winner": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+    "agreed": {
+     "outcome": "PAYS_P1",
+     "block": 1,
+     "amount": "2000000"
+    }
+   },
+   "ok": true,
+   "at": 1794943106
+  },
+  {
+   "label": "1. the leader's line, found by every accepting validator on its own copy of the page",
+   "value": {
+    "amount_as_printed": "2,000,000.00000000",
+    "line": "0 2,000,000.00000000 EXM Founders allocation address exm1qfounders00000000000000000000000"
+   },
+   "want": null,
+   "ok": true,
+   "at": 1794943106
+  },
+  {
+   "label": "1. the pot is credited to the hunter",
+   "value": "100000000000000000",
+   "want": "100000000000000000",
+   "ok": true,
+   "at": 1794943112
+  },
+  {
+   "label": "2. Post a bounty: Examplecoin mining is decentralized (pot 0.1 GEN): the bounty is on record",
+   "value": {
+    "new": true,
+    "pot": "100000000000000000",
+    "state": "OPEN",
+    "poster": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65"
+   },
+   "want": {
+    "new": true,
+    "pot": "100000000000000000",
+    "state": "OPEN",
+    "poster": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65"
+   },
+   "ok": true,
+   "at": 1794943165
+  },
+  {
+   "label": "2. The hunter files a sealed claim under rule M1: the sealed filing is on record and shows nothing about the claim",
+   "value": [
+    [
+     "LIVE",
+     "",
+     -1
+    ]
+   ],
+   "want": [
+    [
+     "LIVE",
+     "",
+     -1
+    ]
+   ],
+   "ok": true,
+   "at": 1794943207
+  },
+  {
+   "label": "2. Reveal and judge it: one miner has 840 of 1,000 blocks: outcome on record",
+   "value": {
+    "outcome": "PAYS_M1",
+    "state": "WON"
+   },
+   "want": {
+    "outcome": "PAYS_M1",
+    "state": "WON"
+   },
+   "ok": true,
+   "at": 1794943273
+  },
+  {
+   "label": "2. the agreed top miner is stored; block counts are not",
+   "value": {
+    "agreed": {
+     "outcome": "PAYS_M1",
+     "top_miner": "exm1qa7example0000000000000000000000001"
+    },
+    "counts_stored": false
+   },
+   "want": {
+    "agreed": {
+     "outcome": "PAYS_M1",
+     "top_miner": "exm1qa7example0000000000000000000000001"
+    },
+    "counts_stored": false
+   },
+   "ok": true,
+   "at": 1794943273
+  },
+  {
+   "label": "3. Post a bounty: Controlcoin has no premine (pot 0.05 GEN, 12 minutes): the bounty is on record",
+   "value": {
+    "new": true,
+    "pot": "50000000000000000",
+    "state": "OPEN",
+    "poster": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65"
+   },
+   "want": {
+    "new": true,
+    "pot": "50000000000000000",
+    "state": "OPEN",
+    "poster": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65"
+   },
+   "ok": true,
+   "at": 1794943379
+  },
+  {
+   "label": "3. The hunter files a sealed claim on block 1: the sealed filing is on record and shows nothing about the claim",
+   "value": [
+    [
+     "LIVE",
+     "",
+     -1
+    ]
+   ],
+   "want": [
+    [
+     "LIVE",
+     "",
+     -1
+    ]
+   ],
+   "ok": true,
+   "at": 1794943415
+  },
+  {
+   "label": "3. Reveal and judge it: block 1 holds only the block reward: outcome on record",
+   "value": {
+    "outcome": "NO_PAY",
+    "state": "OPEN"
+   },
+   "want": {
+    "outcome": "NO_PAY",
+    "state": "OPEN"
+   },
+   "ok": true,
+   "at": 1794943490
+  },
+  {
+   "label": "4. nothing is left credited to the hunter",
+   "value": "0",
+   "want": "0",
+   "ok": true,
+   "at": 1794943573
+  },
+  {
+   "label": "4. the hunter's wallet received the two pots, less the transaction's fee",
+   "value": {
+    "received_wei": "399799585200018116"
+   },
+   "want": null,
+   "ok": false,
+   "at": 1794943657,
+   "note": "Added after the run, the check itself left as recorded: its bound was wrong. It expected the wallet to rise by no more than the 0.2 GEN withdrawn. On Bradbury a wallet also gets back the unused part of earlier transactions' fee budgets, so it rose by more. The payout is checked on the transaction instead: the withdrawal carries exactly one transfer, 200000000000000000 wei to the hunter (tools/verify_bounties_bradbury.py reads it from the chain; tools/live_bounties_bradbury.py now checks that)."
+  },
+  {
+   "label": "3. views show the bounty as expired and unclaimed",
+   "value": "EXPIRED_UNCLAIMED",
+   "want": "EXPIRED_UNCLAIMED",
+   "ok": true,
+   "at": 1794944066
+  },
+  {
+   "label": "3. the pot is credited back to the poster",
+   "value": {
+    "state": "EXPIRED",
+    "credit": "50000000000000000"
+   },
+   "want": {
+    "state": "EXPIRED",
+    "credit": "50000000000000000"
+   },
+   "ok": true,
+   "at": 1794947671
+  },
+  {
+   "label": "at the end: burned equals the fees of the three filings taken",
+   "value": "5000000000000000",
+   "want": "5000000000000000",
+   "ok": true,
+   "at": 1794947842
+  },
+  {
+   "label": "at the end: nothing locked, nothing credited",
+   "value": {
+    "locked": "0",
+    "credited": "0"
+   },
+   "want": {
+    "locked": "0",
+    "credited": "0"
+   },
+   "ok": true,
+   "at": 1794947842
+  },
+  {
+   "label": "at the end: the contract's balance equals locked + credited + burned",
+   "value": {
+    "balance": "5000000000000000",
+    "accounted_for": "5000000000000000",
+    "bounties": 3,
+    "burned": "5000000000000000",
+    "credited": "0",
+    "locked": "0"
+   },
+   "want": null,
+   "ok": true,
+   "at": 1794947842
+  }
+ ],
+ "balances_at_start_wei": {
+  "poster": "3000000000000000000",
+  "hunter": "0"
+ },
+ "funding": {
+  "from": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65",
+  "to": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+  "wei": "1500000000000000000",
+  "tx": "0x540a6757828645fb723111a7a5ed55c57a182b1c5433de6950727af95fffcbe6",
+  "arrived": true
+ },
+ "deploy": {
+  "tx": "0x4bc07cfd2d316d7fc5fb2856a27abaebdec132349308fe62ecc6f6d15383555e",
+  "address": "0x8d2AA0F7eA864909391C76c6f55BddCdA64a614f",
+  "result": "MAJORITY_AGREE",
+  "execution": "FINISHED_WITH_RETURN",
+  "cost_wei": "100127637130010352"
+ },
+ "address": "0x8d2AA0F7eA864909391C76c6f55BddCdA64a614f",
+ "rules": {
+  "catch_all_stems": [
+   "unknown",
+   "unidentif",
+   "untagged",
+   "unlabel",
+   "unrecogni",
+   "unnamed",
+   "unattribut",
+   "anonym",
+   "miscellan"
+  ],
+  "catch_all_words": [
+   "unknown",
+   "unknowns",
+   "unidentified",
+   "untagged",
+   "unlabeled",
+   "unlabelled",
+   "unrecognized",
+   "unrecognised",
+   "unnamed",
+   "undefined",
+   "unspecified",
+   "unattributed",
+   "unk",
+   "tbd",
+   "noname",
+   "hidden",
+   "other",
+   "others",
+   "otherpools",
+   "otherminers",
+   "various",
+   "anonymous",
+   "miscellaneous",
+   "misc",
+   "rest",
+   "remaining",
+   "remainder",
+   "everyone",
+   "individual",
+   "individuals",
+   "independent",
+   "small",
+   "network",
+   "overall",
+   "combined",
+   "total",
+   "subtotal",
+   "sum",
+   "all",
+   "solo",
+   "none",
+   "null",
+   "na",
+   "no",
+   "not",
+   "coinbase",
+   "sonstige",
+   "andere",
+   "unbekannt",
+   "otros",
+   "otras",
+   "desconocido",
+   "autres",
+   "inconnu",
+   "altri",
+   "outros",
+   "\u0434\u0440\u0443\u0433\u0438\u0435",
+   "\u043d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u043e"
+  ],
+  "claim_rules": {
+   "DECENTRALIZED_MINING": [
+    "M1"
+   ],
+   "FAIR_LAUNCH": [
+    "P1",
+    "M1"
+   ],
+   "NO_FOUNDER_REWARD": [
+    "P1"
+   ],
+   "NO_PREMINE": [
+    "P1"
+   ]
+  },
+  "digest": "sha256(\"<bounty id>|<hunter address, lower case>|<rule>|<block number>|<salt>\") in lower-case hex",
+  "fee_bp": 200,
+  "fee_goes_to": "nobody (burned)",
+  "filing_ttl_seconds": 1800,
+  "max_height": 100,
+  "max_latest": 20,
+  "max_per_address": 200,
+  "max_term_seconds": 31622400,
+  "max_waiting_filings": 50,
+  "min_blocks_cap": 10000,
+  "min_blocks_floor": 500,
+  "min_bounty_wei": "10000000000000000",
+  "min_fee_wei": "1000000000000000",
+  "min_term_seconds": 600,
+  "page_chars": 6000,
+  "pay_condition": {
+   "M1": "the pinned mining page shows one named miner with more than half of at least min_blocks blocks",
+   "P1": "a block from 0 to 100 on the pinned block page creates coins for someone beyond the ordinary block reward"
+  },
+  "process_margin_seconds": 1800,
+  "queue": "filings rank by the network's creation time of their transaction, then by the order of processing",
+  "quote_max": 200,
+  "quote_min": 12,
+  "salt": "32 lower-case hex characters",
+  "soft_tries": 3,
+  "stored_fields": {
+   "everything else": "derived by code from transactions",
+   "lead.agreed": "agreed exactly by the validators",
+   "lead.leader_reading": "the leader's copy, checked by every accepting validator on its own copy of the page"
+  }
+ },
+ "bounties": {
+  "1": {
+   "as_of": 1794947842,
+   "block_url_template": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html",
+   "burned": "2000000000000000",
+   "claim_type": "NO_FOUNDER_REWARD",
+   "expires_at": 1794944405,
+   "fee": "2000000000000000",
+   "filed": 1,
+   "filings": [
+    {
+     "at": 1794942963,
+     "digest": "808fc9409a0a91db4a4cefe3cd4c78050c3ed2f1c0ac3d791bfb3088ebd01cd1",
+     "height": 1,
+     "hunter": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+     "live": false,
+     "rule": "P1",
+     "seq": 1,
+     "status": "PAYS",
+     "tries": 3,
+     "us": 1794942963000000
+    }
+   ],
+   "hosts": [
+    "checker.brilliantnodes.com"
+   ],
+   "id": "1",
+   "lead": {
+    "agreed": {
+     "amount": "2000000",
+     "block": 1,
+     "outcome": "PAYS_P1"
+    },
+    "filed_at": 1794942963,
+    "height": 1,
+    "hunter": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+    "judged_at": 1794943044,
+    "leader_reading": {
+     "amount_as_printed": "2,000,000.00000000",
+     "line": "0 2,000,000.00000000 EXM Founders allocation address exm1qfounders00000000000000000000000"
+    },
+    "note": "validators agreed on the amount exactly; the line is the leader's, and it stands on one line of every accepting validator's own copy of the page",
+    "rule": "P1",
+    "seq": 1,
+    "url": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/1.html",
+    "us": 1794942963000000
+   },
+   "live_filings": 0,
+   "log": [
+    {
+     "at": 1794943044,
+     "height": 1,
+     "hunter": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+     "outcome": "PAYS_P1",
+     "rule": "P1",
+     "seq": 1,
+     "what": "JUDGED"
+    }
+   ],
+   "meaning": "a won bounty means the pinned pages showed this; it is not a finding about the coin",
+   "min_blocks": 1000,
+   "mining_url": "",
+   "pays_on": {
+    "P1": "a block from 0 to 100 on the pinned block page creates coins for someone beyond the ordinary block reward"
+   },
+   "posted_at": 1794942913,
+   "poster": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65",
+   "pot": "100000000000000000",
+   "pot_held": "0",
+   "reclaim_from": 1794948005,
+   "state": "WON",
+   "stored_state": "WON",
+   "subject_name": "Examplecoin",
+   "subject_note": "written by the poster; not verified",
+   "window_end": 1794943044,
+   "won_at": 1794943044
+  },
+  "2": {
+   "as_of": 1794947848,
+   "block_url_template": "",
+   "burned": "2000000000000000",
+   "claim_type": "DECENTRALIZED_MINING",
+   "expires_at": 1794944616,
+   "fee": "2000000000000000",
+   "filed": 1,
+   "filings": [
+    {
+     "at": 1794943168,
+     "digest": "1430f928ae3c01f0ca8cbd5445a00ce1ebccd7fe06a631dadbaef9d9c2bf4f7a",
+     "height": 0,
+     "hunter": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+     "live": false,
+     "rule": "M1",
+     "seq": 1,
+     "status": "PAYS",
+     "tries": 3,
+     "us": 1794943168000000
+    }
+   ],
+   "hosts": [
+    "checker.brilliantnodes.com"
+   ],
+   "id": "2",
+   "lead": {
+    "agreed": {
+     "outcome": "PAYS_M1",
+     "top_miner": "exm1qa7example0000000000000000000000001"
+    },
+    "filed_at": 1794943168,
+    "height": 0,
+    "hunter": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+    "judged_at": 1794943215,
+    "note": "validators agreed on the top miner by name; each one's own copy showed it with more than half of at least min_blocks blocks; the counts are not stored, because on a live page they differ by a few blocks between validators",
+    "rule": "M1",
+    "seq": 1,
+    "url": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/mining.html",
+    "us": 1794943168000000
+   },
+   "live_filings": 0,
+   "log": [
+    {
+     "at": 1794943215,
+     "height": 0,
+     "hunter": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+     "outcome": "PAYS_M1",
+     "rule": "M1",
+     "seq": 1,
+     "what": "JUDGED"
+    }
+   ],
+   "meaning": "a won bounty means the pinned pages showed this; it is not a finding about the coin",
+   "min_blocks": 1000,
+   "mining_url": "https://checker.brilliantnodes.com/examples/bounty/examplecoin/mining.html",
+   "pays_on": {
+    "M1": "the pinned mining page shows one named miner with more than half of at least min_blocks blocks"
+   },
+   "posted_at": 1794943120,
+   "poster": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65",
+   "pot": "100000000000000000",
+   "pot_held": "0",
+   "reclaim_from": 1794948216,
+   "state": "WON",
+   "stored_state": "WON",
+   "subject_name": "Examplecoin",
+   "subject_note": "written by the poster; not verified",
+   "window_end": 1794943215,
+   "won_at": 1794943215
+  },
+  "3": {
+   "as_of": 1794947855,
+   "block_url_template": "https://checker.brilliantnodes.com/examples/bounty/controlcoin/block/{n}.html",
+   "burned": "1000000000000000",
+   "claim_type": "NO_PREMINE",
+   "expires_at": 1794943998,
+   "fee": "1000000000000000",
+   "filed": 1,
+   "filings": [
+    {
+     "at": 1794943383,
+     "digest": "9718d258b5e507849b2be8de47bf49116daff6cae4855366c876e45c1ec39620",
+     "height": 1,
+     "hunter": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+     "live": false,
+     "rule": "P1",
+     "seq": 1,
+     "status": "NO_PAY",
+     "tries": 3,
+     "us": 1794943383000000
+    }
+   ],
+   "hosts": [
+    "checker.brilliantnodes.com"
+   ],
+   "id": "3",
+   "lead": null,
+   "live_filings": 0,
+   "log": [
+    {
+     "at": 1794943424,
+     "height": 1,
+     "hunter": "0x5F66Ae07460d52CfdE405b2193be55Ba39E2750e",
+     "outcome": "NO_PAY",
+     "rule": "P1",
+     "seq": 1,
+     "what": "JUDGED"
+    },
+    {
+     "at": 1794947623,
+     "what": "RECLAIMED"
+    }
+   ],
+   "meaning": "a won bounty means the pinned pages showed this; it is not a finding about the coin",
+   "min_blocks": 1000,
+   "mining_url": "",
+   "pays_on": {
+    "P1": "a block from 0 to 100 on the pinned block page creates coins for someone beyond the ordinary block reward"
+   },
+   "posted_at": 1794943335,
+   "poster": "0xCB172A4A39E9B4293E8c2E813480DaDA1881EA65",
+   "pot": "50000000000000000",
+   "pot_held": "0",
+   "reclaim_from": 1794947598,
+   "state": "EXPIRED",
+   "stored_state": "EXPIRED",
+   "subject_name": "Controlcoin",
+   "subject_note": "written by the poster; not verified",
+   "window_end": 0,
+   "won_at": 0
+  }
+ },
+ "balances_at_end_wei": {
+  "poster": "1299240570499990942",
+  "hunter": "1694244334049989648"
+ },
+ "summary": {
+  "transactions": 16,
+  "as_expected": 15,
+  "steps": 15,
+  "checks_ok": 19,
+  "checks": 20
+ }
+}

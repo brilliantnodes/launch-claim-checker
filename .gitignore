@@ -4,3 +4,7 @@ __pycache__/
 artifacts/
 .env
 *.pyc
+tools/video/build/
+tools/video/*.mp4
+*.claims.json
+*.key
