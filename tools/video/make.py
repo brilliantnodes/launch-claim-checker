@@ -39,7 +39,7 @@ SCENES = [
      "The validators agreed on the amount exactly, and the hunter won the pot."),
     ("queue", ["queue"], 0, 5.0, "If two claims pay, the one that was sent first wins, even when the other is judged first."),
     ("survive", ["survive"], 0, 5.0, "And a true claim keeps its bounty. Control coin's claim held, so the poster took the pot back."),
-    ("proof", ["proof"], 0, 7.0, "{tests_spoken} tests. {mutants_spoken} deliberate breaks, every one caught. Independent reviews, on record. "
+    ("proof", ["proof"], 0, 7.0, "{tests_spoken} tests. {mutants_spoken} deliberate breaks, every one caught. Seven reviews by separate A.I. sessions, on record. "
      "And live runs on Gen Layer Studio, and on the Bradbury test net."),
     ("end", ["end"], 0, 4.5, "Try it free, with test GEN, at checker dot brilliant nodes dot com."),
 ]

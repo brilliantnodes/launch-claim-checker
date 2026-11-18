@@ -47,7 +47,7 @@ The thresholds are returned by the `get_rules` view, so a verdict can be audited
 The checker says what two pages show. A **claim bounty** puts money behind that: GEN held by a second contract, [`contracts/launch_claim_bounties.py`](contracts/launch_claim_bounties.py), that pays the first person who shows, on the explorer pages the poster pinned, that a launch claim is false. The checker contract is unchanged.
 
 - **Try it:** https://checker.brilliantnodes.com/bounties.html (GenLayer Studio, free temporary accounts) · [Bradbury view](https://checker.brilliantnodes.com/bounties.html?net=bradbury) (read-only)
-- **Video (84 seconds, with voice-over):** https://checker.brilliantnodes.com/claim-bounties-demo.mp4
+- **Video (86 seconds, with voice-over):** https://checker.brilliantnodes.com/claim-bounties-demo.mp4
 - **Contract on Studio:** [`0x583995CE8814C987e888070352A3F1d3AF9BBDca`](https://explorer-studio.genlayer.com/address/0x583995CE8814C987e888070352A3F1d3AF9BBDca) · [open it in GenLayer Studio](https://studio.genlayer.com/?import-contract=0x583995CE8814C987e888070352A3F1d3AF9BBDca)
 - **Contract on Testnet Bradbury Phase 2:** [`0xc437e39BA9e51282a259c814e2d4d9CcEF6c257b`](https://scan.bradbury.genlayer.com/address/0xc437e39BA9e51282a259c814e2d4d9CcEF6c257b)
 - **What changed since the accepted version:** [`MILESTONE.md`](MILESTONE.md)
@@ -57,7 +57,7 @@ Test GEN only. Examplecoin and Controlcoin, their pools and their explorer pages
 ### Try it in two minutes
 
 1. Open https://checker.brilliantnodes.com/bounties.html. No wallet is needed.
-2. Under **Accounts**, click **Use a temporary account** for the Poster and for the Hunter. Each gets test GEN from Studio's faucet.
+2. Under **Accounts**, click **Use a temporary account** and then **Get test GEN** for the Poster and for the Hunter. The GEN comes from Studio's faucet.
 3. Under **Post a bounty**, click the example **Examplecoin, no founder reward**, then **Post the bounty as Poster**.
 4. On the new bounty, click **File block claim** (as Hunter, block 1). The chain now shows a digest, not the block.
 5. Click **Judge**: the page reveals the claim. The validators read Examplecoin's block 1, which pays its founders 2,000,000 EXM, and the bounty is won. Click **Withdraw** next to the Hunter's balance.
@@ -84,7 +84,7 @@ Outcomes are `PAYS_P1`, `PAYS_M1`, `NO_PAY` (the filing is used up), `WRONG_PAGE
 
 - **Pull payments.** Every payout, refund and refused payment is a credit that its owner takes with `withdraw()`. No call sends GEN to anyone but the caller.
 - **No model where GEN arrives.** `post_bounty` and `file_claim`, the two calls that take GEN, run no model and read no page, and do not raise for any value of their arguments: a refused payment is credited straight back.
-- **Every wei accounted for.** `totals()` returns locked, credited and burned GEN; their sum equals the contract's balance (checked at the end of both live runs). GEN sent with a call that takes none, or with a wrong number of arguments, stays in the contract outside that sum.
+- **What `totals()` covers.** `totals()` returns locked, credited and burned GEN: every wei paid in through `post_bounty` and `file_claim`. Their sum equalled the contract's balance at the end of both live runs. GEN sent with a call that takes none, or with a wrong number of arguments, stays in the contract outside that sum.
 - **Time is the transaction's own.** Whether a filing or a judgement was sent in time is decided by the transaction's timestamp, so nobody can make an in-time claim late by getting another transaction processed first. The bounty's clock is the latest timestamp that bounty has seen. It never runs backwards and only releases money, retires filings whose 60 minutes have passed, and refuses a filing that arrives too late to be judged.
 - **Measured, with transactions.** What the contract relies on about the network was measured on Studio with a small probe contract, [`tools/probes/probe.py`](tools/probes/probe.py): the transaction time a contract sees, what happens to GEN sent with a call that raises or that takes none, sha256, how `web.render` returns a table row, a missing page and a redirect. The eight measurements and their transaction hashes are in [`examples/live/network-probes-studio.json`](examples/live/network-probes-studio.json). On Bradbury the creation time of a transaction is stamped in whole seconds; that is read from the transactions of the Bradbury run.
 
@@ -106,20 +106,21 @@ Outcomes are `PAYS_P1`, `PAYS_M1`, `NO_PAY` (the filing is used up), `WRONG_PAGE
 
 - **A bounty trusts its pinned pages.** Whoever controls that site can make a claim look true or false, and the network follows redirects without saying so. A poster can also win its own bounty. An unclaimed bounty proves nothing; a won bounty means the pinned pages showed it.
 - **Both rules are a model's reading with code checks, not a proof.** Whether a block "creates coins beyond the ordinary block reward", which amount on the page that is, which row of a mining page is the top miner and which number is the total: those are the model's readings. Code then checks that every value is printed on the validator's own copy; it cannot see a majority of models taking a header for a miner. Both rules read the first 6,000 characters of a page; P1 covers blocks 0 to 100. A coin with a disclosed developer fee in its early blocks pays out under P1.
-- **Number formats.** Amounts and block counts must be printed with a dot for decimals and commas, or nothing, between thousands. An amount with exactly three decimals, no comma and a whole part other than 0 ("2000000.125") is refused, because "12.450" is 12,450 in much of Europe. A number that could be one group of a longer number written with spaces is refused as ambiguous: "2" in "2 000 000"; "500.00" right after another short number, as in "1 500.00", also when that "1" is an output index or a rank; a number of up to three digits right before a three-digit column, as in "840 512 MH/s"; an amount with exactly three decimals right before another number, as in "0.125 3 confirmations". The page need not have written anything with spaces for this to apply, and for rule P1 it is enough that the page line has the amount once in such a place. A middle dot between two numbers joins them like a comma. A true allocation or count printed in one of these ways cannot be claimed, and neither can an allocation whose page line is shorter than 12 characters.
-- **For M1 the hunter picks the moment, and pool names are written by miners.** The catch-all word list is a filter, not a guarantee, in both directions: a label in another language, or an unusual one, can pass it, and a real name that contains a listed word is refused. Of burn addresses it knows only the all-zero address and the 0x…dead address. Text a pool writes into a page can pay if every validator's model takes it for the table; the prompt tells the models not to.
+- **Number formats.** Amounts and block counts must be printed with a dot for decimals and commas, or nothing, between thousands. An amount with exactly three decimals, no comma and a whole part other than 0 ("2000000.125") is refused, because "12.450" is 12,450 in much of Europe. A number that could be one group of a longer number written with spaces is refused as ambiguous: "2" in "2 000 000"; "500.00" right after another short number, as in "1 500.00", also when that "1" is an output index or a rank; a number of up to three digits right before a three-digit column, as in "840 512 MH/s"; an amount with exactly three decimals right before another number, as in "0.125 3 confirmations". The page need not have written anything with spaces for this to apply, and for rule P1 it is enough that the page line has the amount once in such a place. A middle dot directly between two digits joins them into one number, which is then not read. A true allocation or count printed in one of these ways cannot be claimed, and neither can an allocation whose page line is shorter than 12 characters.
+- **For M1 the hunter picks the moment, and pool names are written by miners.** The catch-all word list is a filter, not a guarantee, in both directions: a label in another language, or an unusual one, can pass it, and a real name that contains a listed word is refused. Of burn addresses it knows only the all-zero address and the 0x…dead address, and only written with 0x; the same addresses without 0x are not known to it. Text a pool writes into a page can pay if a majority of the validators' models take it for the table; the prompt tells the models not to.
 - **What a seal hides.** A sealed filing does not show which block it is about, nor which rule where a bounty pays on both; most claim types pay on one rule only. Under M1 there is only one possible claim, so a seal hides nothing there. A filing made blind and kept live (it costs the fee every 30 minutes) outranks a later hunter whose reveal shows that the mining page now pays. The same holds under P1 for a poster who knows which block pays.
 - **M1 and luck.** A miner below half can show above half in one window by chance. With a true share of 45%, the chance is about 0.07% over 1,000 blocks and about 1.1% over 500 (binomial); at 48% it is about 9.7% and 17%. A hunter can look at many windows during a bounty's term, so the chance over the whole term is higher. The more blocks a bounty asks for, the less luck decides. A pot larger than the cost of renting a majority of the hash rate for `min_blocks` blocks pays for exactly that.
 - **What P1 does not cover.** Token mints outside the first 101 blocks and instamines are not covered. For a coin whose first blocks are already mined, the answer is known the day the bounty is posted: such a bounty is a public statement with money behind it, not a contest.
 - **A reveal is public.** It is public from the moment it is sent, even if the call is refused or the validators do not agree. If the filer's own judgement then does not pay (no majority, a reading that finds nothing, three judgements that end with the page unreadable, the wrong page or a model answer out of form, or the 30 minutes run out), someone else can file the same claim and win. Reveal once the filing is on record, and early enough to try again.
 - **A filing processed late can be refused.** A filing that is processed only after another filing has been judged to pay (the bounty is then provisional or won) is refused and refunded, even if it was sent earlier. On a bounty nobody has touched for a while the bounty's clock lags, and a filing processed very late can still be taken.
-- **Withdrawals on Bradbury** need an external-message fee allocation for the transfer to the caller's own address (as in `tools/bradbury/gl.mjs`). One sent without it can be dropped by the network, and the amount withdrawn is then gone: the credit is cleared and the GEN stays in the contract, outside `totals()`. A withdrawal reaches the wallet when its transaction is finalized.
+- **Withdrawals on Bradbury** need an external-message fee allocation for the transfer to the caller's own address (as in `tools/bradbury/gl.mjs`). One sent without it may be dropped by the network; the amount withdrawn would then be gone: the credit is cleared and the GEN stays in the contract, outside `totals()`. Every withdrawal on record carries the allocation, so no such transaction is on record. A withdrawal reaches the wallet when its transaction is finalized.
 - **Appeals** were not exercised in the live runs.
-- **Where each limit is stated.** All of the above are in this README. The contract's own description states those that concern the contract. The site shows the ones a user of the page needs.
+- **The example pages were written for these tests.** They state the allocation in a sentence as well as in the table. No bounty judgement has been run on a real explorer page yet; the checker contract has been (see [Checker live runs](#checker-live-runs-on-genlayer-studio)).
+- **Where each limit is stated.** All of the above are in this README. The contract's own description states the limits of the rules, the seal, the money and the time. M1 and luck, what P1 does not cover, the developer-fee case and miner-written text are stated only here. The Bradbury build carries no descriptions; they are stripped before packing. The site shows the limits a user of the page needs.
 
 ### Who would post a bounty
 
-- **A project team**, on its own launch claims: a pot that anyone can take by showing the claim is false says more than the sentence "no premine" does.
+- **A project team**, on its own launch claims: a pot that anyone can take by showing the claim is false says more than the sentence "no premine" does. That holds when the bounty is pinned to an explorer the team does not run and is posted before the first 101 blocks are mined; otherwise it is a statement, not a contest.
 - **Someone who has to vouch for a coin**: a listing desk, a pool or a community fund can pay for the look before it lists, mines or funds, and only pays if something is found.
 - **Us.** Brilliant Nodes mines new proof-of-work coins and already runs every candidate's claims through the checker. A bounty is the next step for a claim that matters to a decision.
 
@@ -128,15 +129,17 @@ No outside party has posted a bounty yet. Everything on record was done by us wi
 ### Tests and reviews
 
 ```bash
+pip install -r requirements.txt                         # genlayer-test 0.29.2 and the linter, as for the checker's tests
 PYTHONPATH=. pytest tests/direct/test_bounties.py      # 419 tests, web and model mocked (GenVM v0.2, as on Studio)
-tools/test_v6.sh /path/to/venv                          # the same tests on GenVM v0.6 against the packed Bradbury build
+pip install --pre genlayer-test==0.30.0rc2              # in a separate virtualenv, for GenVM v0.6
+tools/test_v6.sh /path/to/that/venv                     # the same tests on GenVM v0.6 against the packed Bradbury build
 PYTHONPATH=. python tools/mutate_bounties.py            # 239 deliberate breaks of the contract; the tests catch every one
 genvm-lint check contracts/launch_claim_bounties.py
 ```
 
 - The tests cover every refusal, every boundary second of the time rules, the validator agreement rules (including leaders that lie), sealed filings and wrong reveals, the queue with transactions processed out of the order they were sent, the limits listed above as they are (tests named `test_known_limit_...`), and a seeded random walk that checks after every step that all GEN paid in is locked, credited, burned or withdrawn, and that a won bounty's winner is the earliest-sent filing judged to pay.
 - `tools/mutate_bounties.py` changes the contract in 239 ways, one at a time (a check removed, a boundary moved by one), and confirms that the tests fail each time. The few changes that make no difference to what the contract does are listed, with the reason, at the top of that file.
-- **Reviews.** The design and the code were reviewed six times before this version, each time by a separate AI reviewer session (Claude) that was given a written brief and the repository and had not seen the work being done. The contract was built by an AI session as well, working for Brilliant Nodes. The first code review found three real holes (a copier processed first could win; block counts stored that no validator had checked; payouts on "unknown" rows); the fixes are what made filings sealed. [`reviews/README.md`](reviews/README.md) records each review: what it was asked, its verdict, what it found and what changed.
+- **Reviews.** The design, the code and this repository were reviewed seven times, each time by a separate AI reviewer session (Claude) that was given a written brief and the repository and had not seen the work being done. The contract was built by an AI session as well, working for Brilliant Nodes. No person outside Brilliant Nodes and no other model has reviewed it. The first code review found three real holes (a copier processed first could win; block counts stored that no validator had checked; payouts on "unknown" rows); the fix for the first is what made filings sealed. [`reviews/README.md`](reviews/README.md) records each review: what it was asked, its verdict, what it found and what changed.
 
 ### Live runs
 
@@ -149,7 +152,7 @@ Every transaction of both runs is in the record files, and a script checks each 
 | Transactions after the deployment | 46 | 41 |
 | Came out as expected | 46 of 46 | 41 of 41 |
 | Checks against the contract's views | 16 of 16 | 46 of 46 |
-| Validators | 5 per transaction. Studio accepts a transaction as soon as a majority has voted: the record shows 3 to 5 of 5 agreeing at that moment | 5 per transaction; on the 8 judgements, where each validator's own model reads the page, 3 to 5 of 5 gave the leader's result |
+| Validators | 5 per transaction. Studio accepts a transaction as soon as a majority has voted: the record shows 3 to 5 of 5 agreeing at that moment | 5 per transaction; on the 8 judgements, where each validator renders the page itself (in 7 its model then reads it; in one the page does not exist), 3 to 5 of 5 gave the leader's result |
 | Record | [`examples/live/bounties-studio.json`](examples/live/bounties-studio.json) | [`examples/live/bounties-bradbury.json`](examples/live/bounties-bradbury.json) |
 
 **The same seven cases on both networks** (17 Nov 2026, UTC), with the validators' own models reading the pages. Studio returns what a call returned; Bradbury transactions carry no return value, so there every step is recorded with the chain's consensus result, each validator's vote and the execution result, and with what the contract's views show afterwards.
@@ -164,7 +167,7 @@ Every transaction of both runs is in the record files, and a script checks each 
 
 **Withdrawals.** On Studio the hunter, the poster and the copier withdrew what was credited to them; the contract's balance fell by exactly those amounts, and for the first withdrawal the run also checked that the pot arrived in the hunter's wallet (Studio [0x4843…fdf7](https://explorer-studio.genlayer.com/tx/0x4843c81d86a3a46e58dff84bc0753b269c9aebd3e4d91acb3a849e3748aefdf7)). On Bradbury each withdrawal carries exactly one transfer, to its own sender: four pots to the hunter (Bradbury [0xfb31…2f68](https://scan.bradbury.genlayer.com/tx/0xfb31b5b62ca6c7a581f2665f8db750456dbff00eda45c94817df9d179de02f68)), its two refused payments to the copier (Bradbury [0x3e62…7dcb](https://scan.bradbury.genlayer.com/tx/0x3e62a19104d99d5a9ce66ed915182dd011f11eca5f57fccb6c9c002072a27dcb)) and the reclaimed pot to the poster (Bradbury [0x2f05…bc5a](https://scan.bradbury.genlayer.com/tx/0x2f05d9e37bdf986fed31cab121b90aaee9003569905cb497f0af23b9892cbc5a)).
 
-At the end of both runs the contract's balance equalled locked + credited + burned, and the burned amount equalled the fees of the ten filings taken. All 46 Studio transactions and all 41 Bradbury transactions came out as expected, and so did every check against the contract's views (16 on Studio, 46 on Bradbury). Bradbury judgements, where validators read the page, took 34 to 210 seconds.
+At the end of both runs the contract's balance equalled locked + credited + burned, and the burned amount equalled the fees of the ten filings taken. All 46 Studio transactions and all 41 Bradbury transactions came out as expected, and so did every check against the contract's views (16 on Studio, 46 on Bradbury). The 8 Bradbury judgements took 34 to 210 seconds (41 to 210 where a model read a page).
 
 ```bash
 python -m venv venv-live && source venv-live/bin/activate   # its own environment: the test tools pin an older genlayer-py
@@ -172,10 +175,10 @@ pip install genlayer-py==0.18.0
 python tools/verify_bounties.py                         # the Studio record against the chain
 (cd tools/bradbury && npm ci)
 python tools/verify_bounties_bradbury.py                # the Bradbury record against the chain
-python tools/bounty.py latest                           # LCB_ADDRESS=<contract>; post, file, judge, finalize, reclaim, withdraw from the command line
+LCB_ADDRESS=0x583995CE8814C987e888070352A3F1d3AF9BBDca python tools/bounty.py latest   # the same client posts, files, judges, finalizes, reclaims and withdraws
 ```
 
-Both verifiers read only. They check that the deployed code is this repository's code byte for byte (on Bradbury: that the build is what `tools/port_bradbury.py --pack` makes from the source, and that the deployed code is that build), and that every recorded transaction is on the chain with the recorded sender, method and arguments (decoded from the call data on the chain), consensus result, validator votes and execution result. They recompute every digest from the revealed rule, block and salt, read every bounty's final state from the contract, and compare the contract's balance with `totals()`.
+Both verifiers read only. They check that the deployed code is this repository's code byte for byte (on Bradbury: that the build is what `tools/port_bradbury.py --pack` makes from the source, and that the deployed code is that build), and that every recorded transaction is on the chain with the recorded sender, method and arguments (decoded from the call data on the chain), consensus result, validator votes and execution result. They recompute the digest of every filing that was judged from the revealed rule, block and salt, read every bounty's final state from the contract, and compare the contract's balance with `totals()`.
 
 ## Why this needs GenLayer
 
@@ -271,7 +274,7 @@ cd web && npm install && npm run dev     # local
 npm run build                            # writes ../docs
 ```
 
-The bounties page (`web/bounties.html`, `web/src/bounties.js`) was tested the same way in headless Chrome against the live contract: post, file a sealed claim, reveal and judge, withdraw, the refusal messages, a judgement asked for after the browser's storage was cleared, no sideways scrolling at 320, 393 and 810 pixels, and the read-only Bradbury view.
+The bounties page (`web/bounties.html`, `web/src/bounties.js`) was driven in headless Chrome against the live contract by `tools/site_flow.py`: post, file a sealed claim, reveal and judge, withdraw (record: `examples/live/bounties-site-studio.json`). The refusal messages, a judgement asked for after the browser's storage was cleared, no sideways scrolling at 320, 393 and 810 pixels, and the read-only Bradbury view were checked in the same browser; no record is kept of those.
 
 After a new deployment, set the contract addresses in `web/src/config.js`.
 

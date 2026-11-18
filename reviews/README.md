@@ -2,9 +2,9 @@
 
 The bounties contract, its tests, the site and these documents were built by an AI session (Claude, Anthropic) working for Brilliant Nodes. Before each step forward the work went to a **separate reviewer session**: another Claude session, started fresh with a written brief and read access to the repository, that had not seen the work being done and was asked to find what was wrong. A reviewer could run the tests and write its own. No reviewer changed the repository.
 
-This file records each review: what it was asked, its verdict, what it found and what changed. Reviews 1 to 5 are recorded here by the builder from the reviewers' reports; the reports themselves were not kept word for word. Review 6 is kept word for word in [`06-check-of-the-last-fixes.md`](06-check-of-the-last-fixes.md). The scripts and tests the reviewers wrote for themselves are in [`probes/`](probes/), as they left them.
+This file records each review: what it was asked, its verdict, what it found and what changed. Reviews 1 to 5 and review 7 are recorded here by the builder from the reviewers' reports; those reports were not kept word for word. Review 6 is kept word for word in [`06-check-of-the-last-fixes.md`](06-check-of-the-last-fixes.md). The scripts and tests the reviewers wrote for themselves are in [`probes/`](probes/), as they left them, except for the two changes noted at the end of this file.
 
-All reviews are of 17 and 18 November 2026.
+Reviews 1 to 6 were done on 17 November 2026 (UTC), before the deployment of 22:25 UTC that the live runs on record used; review 6 ended after midnight in Dubai (UTC+4) and carries that date. Review 7 was done after those runs, on the published repository.
 
 | # | What was reviewed | Verdict |
 |---|---|---|
@@ -14,12 +14,13 @@ All reviews are of 17 and 18 November 2026.
 | 4 | The contract, before submission | ready with changes, no blockers |
 | 5 | The repository, the site and the video, before submission | ready with changes |
 | 6 | The changes made after reviews 4 and 5 | fix first; fixed and checked twice more; at the end no code change was needed to deploy |
+| 7 | The published repository, the site and the video, after the live runs | ready with changes; every figure and every transaction link checked out |
 
 ## 1. The design
 
-Asked: would this design pay the wrong person, lose money, or be gamed? Verdict: not ready as written.
+Asked: would this design pay the wrong person, lose money, or be gamed? Verdict: not ready as written, 5 blockers.
 
-What changed:
+Among the changes:
 
 - Hunters no longer send a page address. The poster pins the pages when posting.
 - Claims are no longer free. Every filing pays a fee, and the fee is burned, so nobody gains from a failed claim: not the poster, not the contract's owner (there is none).
@@ -89,10 +90,29 @@ Asked: check only those changes for mistakes, new holes and false statements. Ve
 
 The first answer was "fix first": a zero address printed in its shortened form (`0x0000…0000`) was accepted as a miner, so rule M1 could pay on it. It also listed honest rows that were refused (an output index 0 before an amount, a count before "100.00%"), two ways a wrong model reading could pay (a count copied into both fields), eight sentences of the description that were false or lacked a caveat, and tests that did not protect what their names said.
 
-All of it was fixed, and the reviewer checked the fixes twice more. The second answer found the same zero-address hole where the row has a label next to the address, and three places where a fix let a refused case through; its own tested patch was applied as it stood. The third answer was "words only", with one further one-line fix, which was taken as tested. The contract that was deployed for the live runs on record parses, with descriptions blanked, to the same code as the reviewer's last tested copy.
+All of it was fixed, and the reviewer checked the fixes twice more. The second answer found the same zero-address hole where the row has a label next to the address, and three more cases that paid and should not: one that a fix had let through, two that the fixes had not reached. Its own tested patch was applied as it stood. The third answer was "words only", with one further one-line fix, which was taken as tested. The contract that was deployed for the live runs on record parses, with descriptions blanked, to the same code as the reviewer's last tested copy.
 
 What stays open is stated as a limit: a zero address written without `0x`, and burn addresses other than the `0x…dead` one, are not known to the filter; a majority of validators' models taking a header for a miner cannot be seen by code.
 
+## 7. The published repository, after the live runs
+
+Asked: read everything a GenLayer reviewer would see, rerun what can be rerun, and list every statement that is wrong, stale, overstated or not backed. Verdict: ready with changes.
+
+Confirmed by running: both test suites and the GenVM v0.6 run; the mutation list against the contract and the log of its last full run; both verifiers with no mismatch; all 63 transaction links in the README and MILESTONE.md against the records; the ten transactions of the page run and the eight network measurements against the chain; the binomial figures; the live site on both networks.
+
+Changed because of it, in the documents only (the deployed contract was not touched):
+
+- The two-minute walkthrough left out the **Get test GEN** click.
+- "Every wei accounted for" said more than `totals()` covers; it now says what it covers.
+- The README now says which limits are stated only there, that a zero address without `0x` is not known to the filter, and that the example pages were written for these tests and state the allocation in a sentence.
+- The front-end section claimed tests of the page that have no record; it now says which have one.
+- "8 judgements where a model reads the page": in one of them the page does not exist and no model runs. The judgement times are now given both ways.
+- The video said "independent reviews". It now says who reviewed. The README and MILESTONE.md say that no person outside Brilliant Nodes and no other model has reviewed the work.
+- This file: the dates, the wording of review 6's second answer, the note on the probes, and the reviewer's last tested copy of the contract, which is now in [`probes/check-of-the-last-fixes/`](probes/check-of-the-last-fixes/).
+- Smaller points: the digest's full inputs in MILESTONE.md; "the digest of every filing that was judged"; install lines before the test commands; the milestone pinned to a branch.
+
+Its three weakest points: the live runs read only our own test pages; the reviews are the builder's own; a team that pins its own explorer proves nothing with a bounty. All three are now said plainly where the README makes the claim.
+
 ## The reviewers' probes
 
-[`probes/`](probes/) holds the tests and scripts three of the reviewers wrote for their own use. They are scratch work, written against the build of that moment and with the paths of the machine they ran on; they are kept as a record and are not part of the test suite. Two files that were built around real pool names were left out, and in one list of test labels two real pool names were replaced by invented ones: this repository names no real project.
+[`probes/`](probes/) holds the tests and scripts three of the reviewers wrote for their own use, and the copy of the contract that review 6 tested last (`probes/check-of-the-last-fixes/contract_as_last_tested.py`; with descriptions blanked it parses to the same code as `contracts/launch_claim_bounties.py`, which `probes/check-of-the-last-fixes/same_code.py` shows). They are scratch work, written against the build of that moment and with the paths of the machine they ran on; they are kept as a record and are not part of the test suite. Two files that were built around real pool names were left out, and in one list of test labels two real pool names were replaced by invented ones: this repository names no real project.

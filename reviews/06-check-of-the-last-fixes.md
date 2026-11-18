@@ -1,6 +1,6 @@
 # Review 6: check of the changes made after reviews 4 and 5
 
-18 November 2026. A separate reviewer session (Claude), started fresh with a written brief and read access to the repository. It was asked to check only the changes made after reviews 4 and 5: the rewritten number-ambiguity rule, the catch-all filter, the mining rule's row checks, the handling of a model answer that lacks a field, the mining prompt, the contract's description and the new tests. It worked in its own scratch copy and changed nothing in the repository.
+17 November 2026, UTC (after midnight in Dubai, UTC+4), before the deployment of 22:25 UTC that the live runs on record used. A separate reviewer session (Claude), started fresh with a written brief and read access to the repository. It was asked to check only the changes made after reviews 4 and 5: the rewritten number-ambiguity rule, the catch-all filter, the mining rule's row checks, the handling of a model answer that lacks a field, the mining prompt, the contract's description and the new tests. It worked in its own scratch copy and changed nothing in the repository.
 
 Its report is below, word for word. "Item 4" and the other item numbers are those of its brief (1 `_spaced`, 2 `_clear`, 3 `_quote_ok`, 4 `_catch_all` and `_miner_name`, 5 `_interpret_m1`, 6 `_read`, 7 the M1 prompt, 8 the description, 9 the tests). Where the report names two real mining pools in one test input, the names are replaced here by `[a real pool name]`: this repository names no real project. What was done about each point follows the report.
 
@@ -164,7 +164,7 @@ Both live rows still pay.
 
 One code case that pays wrongly, as asked: the glued form above ("Miner:0x0000…0000 840 84.00%" gives PAYS_M1 on a zero-address row). A one-line fix in `_catch_all`, tested in scratch (412/412, glued form gives NO_PAY, live row still pays): split the text on every character that is not a letter, digit, '.' or '…' instead of on spaces. The form without 0x still pays after that. If you take the fix, drop "or glued to a label" from the corrected sentence.
 
-**Done:** the one-line fix was taken as the reviewer tested it, and the corrected sentences were used. With descriptions blanked, the contract that was then deployed parses to the same code as the reviewer's last tested copy. A zero address written without 0x, and burn addresses other than the 0x...dead one, are still not known to the filter; the contract's description and the README say so, and a test case marked as a known limit holds it.
+**Done:** the one-line fix was taken as the reviewer tested it, and the corrected sentences were used. With descriptions blanked, the contract that was then deployed parses to the same code as the reviewer's last tested copy, which is kept in [`probes/check-of-the-last-fixes/`](probes/check-of-the-last-fixes/) with a script that shows it. A zero address written without 0x, and burn addresses other than the 0x...dead one, are still not known to the filter; the contract's description and the README say so, and a test case marked as a known limit holds it.
 
 ## Where this leaves the contract
 
