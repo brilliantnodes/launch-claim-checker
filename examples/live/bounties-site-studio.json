@@ -1,0 +1,369 @@
+{
+ "page": "https://checker.brilliantnodes.com/bounties.html",
+ "network": "GenLayer Studio (studionet)",
+ "started_utc": "2026-11-17T23:43:21Z",
+ "steps": [
+  {
+   "n": 1,
+   "click": "Example 'Examplecoin, no founder reward', then 'Post the bounty as Poster'",
+   "page_says": "Accepted by a majority of validators.",
+   "tx": "0x7f78d76ea9ef5026412eceadb4c844f484d5885af1ae179ad79fa343ef9d6281",
+   "on_chain": {
+    "from": "0xAAA7D45dDfF7288F85e9385F99B4f007BaBbeEB5",
+    "to": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
+    "value": "1000000000000000000",
+    "method": "post_bounty",
+    "args": [
+     "NO_FOUNDER_REWARD",
+     "Examplecoin",
+     "https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html",
+     "",
+     1794959922,
+     1000
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "expires_at": 1794959922,
+     "fee": "20000000000000000",
+     "id": "8",
+     "ok": true,
+     "pot": "1000000000000000000"
+    },
+    "created_at": "2026-11-17T23:43:43.673792+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 2,
+   "click": "'File block claim' on the new bounty, as Hunter, block 1",
+   "page_says": "Accepted. The sealed claim is filing 1; the chain shows only its fingerprint. 0.02 GEN was burned. Have it judged within 30 minutes: that reveals the claim.",
+   "tx": "0x42c69bcc78f96b9ff2038565317002ff237ab5ccc5251347c17680a8b3a40744",
+   "on_chain": {
+    "from": "0xF87358760F122B1503c44Ea33B08b60510e83582",
+    "to": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
+    "value": "20000000000000000",
+    "method": "file_claim",
+    "args": [
+     "8",
+     "024c8c04a106df2c8bbc4498d222718ff80d909b7c5801f57475ea8a98120712"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "burned": "20000000000000000",
+     "judge_by": 1794960835,
+     "ok": true,
+     "seq": 1
+    },
+    "created_at": "2026-11-17T23:43:55.818569+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 3,
+   "click": "'Judge': the page reveals the rule, block and salt it kept",
+   "page_says": "Accepted. Outcome PAYS_P1: the block creates coins beyond the ordinary block reward. The bounty is won and the pot is credited.",
+   "tx": "0x3494407f65ece845385bd7072e4aa0fe801228985bebebdf475256277fac5d6c",
+   "on_chain": {
+    "from": "0xF87358760F122B1503c44Ea33B08b60510e83582",
+    "to": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
+    "value": "0",
+    "method": "judge",
+    "args": [
+     "8",
+     "P1",
+     1,
+     "97abfe1e844dbed173b4ee72b9de174b"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "lead": true,
+     "ok": true,
+     "outcome": "PAYS_P1",
+     "seq": 1,
+     "state": "WON"
+    },
+    "created_at": "2026-11-17T23:44:08.088802+00:00",
+    "rotations": 1,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 4,
+   "click": "Example 'Examplecoin, decentralized mining', then 'Post the bounty as Poster'",
+   "page_says": "Accepted by a majority of validators.",
+   "tx": "0x624b9283e6a7c40e64841bddb97512ceb7d71f9032884707ce9303c6d8af5eb7",
+   "on_chain": {
+    "from": "0xAAA7D45dDfF7288F85e9385F99B4f007BaBbeEB5",
+    "to": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
+    "value": "1000000000000000000",
+    "method": "post_bounty",
+    "args": [
+     "DECENTRALIZED_MINING",
+     "Examplecoin",
+     "",
+     "https://checker.brilliantnodes.com/examples/bounty/examplecoin/mining.html",
+     1794960079,
+     1000
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "expires_at": 1794960079,
+     "fee": "20000000000000000",
+     "id": "9",
+     "ok": true,
+     "pot": "1000000000000000000"
+    },
+    "created_at": "2026-11-17T23:46:20.536068+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 5,
+   "click": "'File mining claim' on the new bounty, as Hunter",
+   "page_says": "Accepted. The sealed claim is filing 1; the chain shows only its fingerprint. 0.02 GEN was burned. Have it judged within 30 minutes: that reveals the claim.",
+   "tx": "0xfe1a5bcd748b399b80748868dee45aa15e3e3f519e00facd5356a95765197fb0",
+   "on_chain": {
+    "from": "0xF87358760F122B1503c44Ea33B08b60510e83582",
+    "to": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
+    "value": "20000000000000000",
+    "method": "file_claim",
+    "args": [
+     "9",
+     "523205f8d250b254df769746d54472948642a8e0699182913273753f1f85eb24"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "burned": "20000000000000000",
+     "judge_by": 1794960992,
+     "ok": true,
+     "seq": 1
+    },
+    "created_at": "2026-11-17T23:46:32.621561+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 6,
+   "click": "'Judge'",
+   "page_says": "Accepted. Outcome PAYS_M1: one named miner has more than half of the blocks. The bounty is won and the pot is credited.",
+   "tx": "0xe6809aa650298e381c405683f85d1517d870f1dc28530f61349411ae1da67ea1",
+   "on_chain": {
+    "from": "0xF87358760F122B1503c44Ea33B08b60510e83582",
+    "to": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
+    "value": "0",
+    "method": "judge",
+    "args": [
+     "9",
+     "M1",
+     0,
+     "4cf2a2f4e1114948670bd2dba1e0d5f6"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "lead": true,
+     "ok": true,
+     "outcome": "PAYS_M1",
+     "seq": 1,
+     "state": "WON"
+    },
+    "created_at": "2026-11-17T23:46:44.603284+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 7,
+   "click": "Example 'Controlcoin, no premine', then 'Post the bounty as Poster'",
+   "page_says": "Accepted by a majority of validators.",
+   "tx": "0xa29be69df715cacde5376af16dae98061e294e3e2bab4ce4004da4607cea586b",
+   "on_chain": {
+    "from": "0xAAA7D45dDfF7288F85e9385F99B4f007BaBbeEB5",
+    "to": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
+    "value": "1000000000000000000",
+    "method": "post_bounty",
+    "args": [
+     "NO_PREMINE",
+     "Controlcoin",
+     "https://checker.brilliantnodes.com/examples/bounty/controlcoin/block/{n}.html",
+     "",
+     1794960136,
+     1000
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "expires_at": 1794960136,
+     "fee": "20000000000000000",
+     "id": "10",
+     "ok": true,
+     "pot": "1000000000000000000"
+    },
+    "created_at": "2026-11-17T23:47:18.004542+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 4,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 8,
+   "click": "'File block claim' on the new bounty, as Hunter, block 1",
+   "page_says": "Accepted. The sealed claim is filing 1; the chain shows only its fingerprint. 0.02 GEN was burned. Have it judged within 30 minutes: that reveals the claim.",
+   "tx": "0x0f72ec3559af57e88bd774c2d5a3cae5d17b2baeaba109df4085acefb8d602af",
+   "on_chain": {
+    "from": "0xF87358760F122B1503c44Ea33B08b60510e83582",
+    "to": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
+    "value": "20000000000000000",
+    "method": "file_claim",
+    "args": [
+     "10",
+     "39d8ee3eeddd7595613295c515dd3cba9e8dac396045127b2c7982ba70cecc5b"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "burned": "20000000000000000",
+     "judge_by": 1794961054,
+     "ok": true,
+     "seq": 1
+    },
+    "created_at": "2026-11-17T23:47:34.656933+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 9,
+   "click": "'Judge'",
+   "page_says": "Accepted. Outcome NO_PAY: the page does not show what the rule needs; the filing is used up.",
+   "tx": "0xcc7675c5b46ed3356b7a21796c27a600603a5501f358c74dd35e43a30ac2626b",
+   "on_chain": {
+    "from": "0xF87358760F122B1503c44Ea33B08b60510e83582",
+    "to": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
+    "value": "0",
+    "method": "judge",
+    "args": [
+     "10",
+     "P1",
+     1,
+     "efd41e3f3376d83b1748477199976dd7"
+    ],
+    "status": "ACCEPTED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "ok": true,
+     "outcome": "NO_PAY",
+     "seq": 1,
+     "state": "OPEN"
+    },
+    "created_at": "2026-11-17T23:47:49.776711+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 10,
+   "click": "'Withdraw' next to the Hunter's balance",
+   "page_says": "Accepted: 2 GEN is on its way. It reaches the wallet when the transaction is finalized.",
+   "tx": "0x4db217acb589cf1c0eff4bba60c619e4185c8187a60b949e694bd948cd610c3b",
+   "on_chain": {
+    "from": "0xF87358760F122B1503c44Ea33B08b60510e83582",
+    "to": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
+    "value": "0",
+    "method": "withdraw",
+    "args": [
+     0
+    ],
+    "status": "ACCEPTED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "amount": "2000000000000000000",
+     "left": "0",
+     "ok": true
+    },
+    "created_at": "2026-11-17T23:48:18.287987+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  }
+ ],
+ "page_errors": [],
+ "contract": "0x583995CE8814C987e888070352A3F1d3AF9BBDca",
+ "accounts": {
+  "poster": "0xAAA7D45dDfF7288F85e9385F99B4f007BaBbeEB5",
+  "hunter": "0xF87358760F122B1503c44Ea33B08b60510e83582"
+ },
+ "filing_as_the_page_shows_it_before_the_reveal": "Filings kept (1)\nFiling 1: sealed claim by 0xF873\u20263582, sent 2026-11-17 23:43 UTC: live, sealed",
+ "bounty_1_as_the_page_shows_it": "WON\nNo founder reward: Examplecoin\n#8 \u00b7 pot 1 GEN\n\nThe coin's name was written by the poster and is not verified.\n\nPinned site\nchecker.brilliantnodes.com\nBlock pages\nhttps://checker.brilliantnodes.com/examples/bounty/examplecoin/block/{n}.html\nPays when\na block from 0 to 100 on the pinned block page creates coins for someone beyond the ordinary block reward\nFiling fee\n0.02 GEN, burned\nPosted by\n0xAAA7D45dDfF7288F85e9385F99B4f007BaBbeEB5\nTakes filings until\n2026-11-17 23:58 UTC\nFilings\n1 (0.02 GEN burned)\nWon by 0xF873\u20263582 (filing 1)\n\nAgreed by the validators: block 1 creates 2000000 coins beyond the block reward. The leader's line, found on every accepting validator's copy: 0 2,000,000.00000000 EXM Founders allocation address exm1qfounders00000000000000000000000\n\nPage read: https://checker.brilliantnodes.com/examples/bounty/examplecoin/block/1.html\n\nThis means the pinned page showed it.",
+ "bounty_3_as_the_page_shows_it": "OPEN\nNo premine: Controlcoin\n#10 \u00b7 pot 1 GEN\n\nThe coin's name was written by the poster and is not verified.\n\nPinned site\nchecker.brilliantnodes.com\nBlock pages\nhttps://checker.brilliantnodes.com/examples/bounty/controlcoin/block/{n}.html\nPays when\na block from 0 to 100 on the pinned block page creates coins for someone beyond the ordinary block reward\nFiling fee\n0.02 GEN, burned\nPosted by\n0xAAA7D45dDfF7288F85e9385F99B4f007BaBbeEB5\nTakes filings until\n2026-11-18 00:02 UTC\nPot can go back from\n2026-11-18 01:02 UTC\nFilings\n1 (0.02 GEN burned)\nFilings kept (1)\nFile as\nPoster\nHunter\nSecond hunter\nblock\nFile block claim (0.02 GEN)\nReveal and judge the live filing of\nPoster\nHunter\nSecond hunter\nJudge",
+ "totals_after": {
+  "accounted_for": "2230000000000000000",
+  "bounties": 10,
+  "burned": "230000000000000000",
+  "credited": "0",
+  "locked": "2000000000000000000"
+ },
+ "summary": {
+  "clicks_that_sent_a_transaction": 10,
+  "as_expected": 10,
+  "page_errors": 0
+ }
+}

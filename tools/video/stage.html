@@ -110,7 +110,7 @@ ul.checks li::before { content: "✓"; position: absolute; left: 6px; top: 10px;
         <div class="small" style="margin-bottom:26px">What goes on chain: only a fingerprint (sha256)</div>
         <div class="mono" style="font-size:38px;line-height:1.35;word-break:break-all;color:var(--accent)" data-k="digest"></div>
         <div style="margin-top:34px"><span class="pill amberp">filing fee burned: <span data-k="fee"></span> GEN</span></div>
-        <div class="small" style="margin-top:22px">Nobody can read it or copy it. It ranks by the time it was sent.</div>
+        <div class="small" style="margin-top:22px">It does not show which block the claim is about. It ranks by the time it was sent.</div>
       </div>
     </div>
   </section>
@@ -198,10 +198,10 @@ ul.checks li::before { content: "✓"; position: absolute; left: 6px; top: 10px;
     <div class="grid4">
       <div class="card"><div class="big" data-k="tests"></div><div class="small">tests, passing on both GenVM versions</div></div>
       <div class="card"><div class="big" data-k="mutants"></div><div class="small">deliberate breaks of the contract, every one caught</div></div>
-      <div class="card"><div class="big" data-k="studio_tx"></div><div class="small">live transactions on GenLayer Studio, all as expected</div></div>
-      <div class="card"><div class="big" data-k="bradbury_tx"></div><div class="small">live transactions on Testnet Bradbury</div></div>
+      <div class="card"><div class="big" data-k="studio_tx"></div><div class="small">live transactions on GenLayer Studio</div></div>
+      <div class="card"><div class="big" data-k="bradbury_tx"></div><div class="small">live transactions on Testnet Bradbury, the same seven cases</div></div>
     </div>
-    <p class="lede" style="margin-top:44px;font-size:34px">Pull payments only. No model runs in a call that takes GEN. Two independent reviews. Limits stated in the README.</p>
+    <p class="lede" style="margin-top:44px;font-size:34px">Every transaction checked against the chain. Pull payments only. Independent reviews on record. Limits stated in the README.</p>
   </section>
 
   <section id="end" class="center" style="padding-top:300px">

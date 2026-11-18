@@ -32,14 +32,14 @@ SCENES = [
     ("title", ["title"], 0, 4.0, "Launch Claim Checker now has claim bounties. Money, behind a launch claim."),
     ("problem", ["problem"], 0, 6.0, "A new coin says: no premine. Anyone can lock a pot behind that claim. "
      "It pays the first person who shows, on the explorer pages the poster pinned, that the claim is false."),
-    ("seal", ["seal-a", "seal-b"], 0.3, 6.0, "A hunter files a sealed claim. Only its fingerprint goes on chain, so nobody can read it, or copy it. The filing fee is burned."),
+    ("seal", ["seal-a", "seal-b"], 0.3, 6.0, "A hunter files a sealed claim. Only its fingerprint goes on chain. It does not show which block the claim is about. The filing fee is burned."),
     ("judge", ["judge-a", "judge-b"], 0.5, 8.0, "Then the hunter reveals the claim. Gen Layer validators each read the pinned page. "
      "Their models fill in a short form, and plain code checks every value against the validator's own copy."),
     ("pay", ["pay"], 0, 6.0, "Block one of the fictional Example coin pays its founders two million coins. "
      "The validators agreed on the amount exactly, and the hunter won the pot."),
     ("queue", ["queue"], 0, 5.0, "If two claims pay, the one that was sent first wins, even when the other is judged first."),
     ("survive", ["survive"], 0, 5.0, "And a true claim keeps its bounty. Control coin's claim held, so the poster took the pot back."),
-    ("proof", ["proof"], 0, 7.0, "{tests_spoken} tests. {mutants_spoken} deliberate breaks, every one caught. Two independent reviews. "
+    ("proof", ["proof"], 0, 7.0, "{tests_spoken} tests. {mutants_spoken} deliberate breaks, every one caught. Independent reviews, on record. "
      "And live runs on Gen Layer Studio, and on the Bradbury test net."),
     ("end", ["end"], 0, 4.5, "Try it free, with test GEN, at checker dot brilliant nodes dot com."),
 ]
