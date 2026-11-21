@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>&quot;No premine&quot;, &quot;fair launch&quot;: who checks the promises new coins make? A proposal for claim bounties | Brilliant Nodes</title>
+<meta name="description" content="A reward anyone can win by showing, from public blockchain pages, that a new coin&#x27;s launch promise is false.">
+<meta property="og:title" content="&quot;No premine&quot;, &quot;fair launch&quot;: who checks the promises new coins make? A proposal for claim bounties">
+<meta property="og:description" content="A reward anyone can win by showing, from public blockchain pages, that a new coin&#x27;s launch promise is false.">
+<meta property="og:type" content="article">
+<style>
+  :root { --ink:#1b1d21; --muted:#5d636e; --line:#e3e5e8; --accent:#2f5bd3; --bg:#fbfbfa; }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink:#e7e8ea; --muted:#a0a6b0; --line:#2c3038; --accent:#8fb0ff; --bg:#15171b; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+         font:18px/1.7 Georgia, "Iowan Old Style", "Times New Roman", serif; }
+  header, main, footer { max-width:720px; margin:0 auto; padding:0 22px; }
+  header { padding-top:28px; font:14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--muted); }
+  header a { color:var(--muted); text-decoration:none; }
+  header a:hover { color:var(--accent); }
+  h1 { font-size:2.1rem; line-height:1.2; margin:28px 0 8px; letter-spacing:-0.01em; }
+  h2 { font:700 1.25rem/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; margin:2.2em 0 .5em; }
+  p, li { margin:.7em 0; }
+  ul, ol { padding-left:1.4em; }
+  a { color:var(--accent); overflow-wrap:anywhere; }
+  em { color:inherit; }
+  table { border-collapse:collapse; width:100%; font-size:.9em; margin:1em 0; }
+  th, td { border-bottom:1px solid var(--line); padding:.45em .5em; text-align:left; vertical-align:top; }
+  code { font-size:.85em; }
+  footer { margin-top:48px; padding-bottom:40px; border-top:1px solid var(--line);
+           font:14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--muted); }
+  footer p { margin:14px 0 0; }
+</style>
+</head>
+<body>
+<header><a href="https://checker.brilliantnodes.com/">&larr; Launch Claim Checker</a> &middot; Brilliant Nodes</header>
+<main>
+<article>
+<h1>&quot;No premine&quot;, &quot;fair launch&quot;: who checks the promises new coins make? A proposal for claim bounties</h1>
+<p><em>Brilliant Nodes · November 2026</em></p>
+<h2>Promises without verification</h2>
+<p>Thousands of new crypto tokens launch every year, and many of them advertise themselves with a few short promises:</p>
+<ul>
+<li><strong>"No premine"</strong>: the team did not create coins for itself before the public could take part.</li>
+<li><strong>"No founder reward"</strong>: no share of each new block goes to the founders.</li>
+<li><strong>"Fair launch"</strong> or <strong>"decentralised mining"</strong>: nobody had a head start, and no single miner dominates.</li>
+</ul>
+<p>These promises matter. They tell a buyer whether insiders hold a large hidden stake they could sell, or whether one party could control the network. And broken promises cost money: Chainalysis found that crypto scams took in <strong>at least $14 billion in 2025</strong>, with the final figure expected to be higher as more fraudulent wallets are identified [1].</p>
+<h2>The verification gap</h2>
+<p>The good news is that many of these promises can be <strong>checked against the blockchain itself</strong>. A block explorer, a public website showing every block, will show whether the first blocks created coins for someone beyond the normal reward, and which miners found recent blocks. The bad news is that <strong>almost nobody looks</strong>:</p>
+<ul>
+<li>Checking takes time and some technical knowledge.</li>
+<li>The people with the strongest incentive to look (exchanges about to list a coin, mining pools, investors) each check privately, if at all, and their results are not shared or verifiable.</li>
+<li>Nobody is paid to look, so the cost of checking falls on whoever cares most, while everyone else free-rides.</li>
+<li>A project's own statement can never prove itself, yet it is often the only "evidence" in circulation.</li>
+</ul>
+<p>The result is a market for promises with no built-in way to test them.</p>
+<h2>An alternative approach</h2>
+<p>We propose <strong>claim bounties</strong>: anyone can put money behind a specific promise, and that money goes to the first person who shows, from public blockchain pages, that the promise is false.</p>
+<ol>
+<li><strong>Post.</strong> A poster picks one claim about one coin ("no founder reward" for coin X), deposits a reward, and fixes in advance which explorer pages will be used as evidence. Hunters cannot substitute their own pages.</li>
+<li><strong>File, sealed.</strong> A hunter who believes the claim is false files a sealed entry: only a fingerprint of their evidence goes on record, so nobody can copy the idea before it is judged. Filing costs a small fee (2% of the pot) to discourage spam.</li>
+<li><strong>Judge.</strong> The hunter reveals the evidence. Several independent machines each read the pinned explorer page and copy the relevant facts, and fixed rules decide. For a premine claim: does an early block (0 to 100) create coins beyond the ordinary reward, and exactly how many? For a mining claim: does one named miner have more than half of the blocks inspected? The readers must agree exactly on the amount, or on the miner's name.</li>
+<li><strong>Pay.</strong> If the evidence holds, the hunter wins the whole pot; the earliest valid filing wins. If nobody shows the claim is false before the bounty expires, the poster takes the money back.</li>
+</ol>
+<p>The design follows one principle: <strong>machines read, rules decide</strong>. A language model copies what the page says; code checks every copied value against the page itself and refuses rows labelled "unknown", "others" or a burn address, so a misleading page cannot trigger a payout.</p>
+<p>Who would post a bounty? A <strong>project team</strong> that wants its promise to carry weight: a pot anyone can win by proving it false says more than the sentence alone. A <strong>listing desk, pool or community fund</strong> that must vouch for a coin before supporting it, and pays only if something is found. And <strong>miners like us</strong>, who must decide quickly whether a new coin is what it claims to be.</p>
+<p>The prototype extends an earlier claim checker and runs on GenLayer, a blockchain in which several validators read the evidence page independently and must agree before anything is paid.</p>
+<h2>Demonstrated evidence</h2>
+<p>We ran seven fictional cases on two public test networks: a premine claim proven false (block 1 paid the founders 2,000,000 coins), a mining-concentration claim proven false (one miner had 840 of 1,000 blocks), a true claim that kept its bounty, two competing hunters where the first sender won, and several refusals. All 46 transactions on the first network and 41 on the second came out as expected. The software passes 419 automated tests for the bounty contract, and 239 of 239 deliberate breaks of the code were caught.</p>
+<h2>Limitations</h2>
+<p>A bounty trusts the explorer pages its poster pinned; whoever controls that site could make a claim look true or false. A poster can win its own bounty. Both rules depend on a model's reading of the page, checked by code but not a mathematical proof. With mining concentration, chance matters: a miner with a true 45% share shows above half in a 500-block window about 1.1% of the time. And our runs used pages we wrote for testing.</p>
+<h2>Questions for further research</h2>
+<ol>
+<li><strong>Trustworthy evidence sources.</strong> How can a bounty pin evidence that no single party controls? Reading several independent explorers, or querying blockchain nodes directly, would reduce the trust placed in one website.</li>
+<li><strong>More claim types.</strong> Token allocations, vesting schedules, team wallet movements and "audited" claims are all common promises. Which of them can be expressed as checkable rules over public data?</li>
+<li><strong>Incentive design.</strong> How large must a pot be to attract hunters, and how should fees and the seal be tuned so that bounties are neither spammed nor front-run?</li>
+<li><strong>Statistical claims.</strong> For "decentralised mining", how many blocks should a bounty require so that luck cannot decide it, and could the rule itself be stated as a statistical test?</li>
+<li><strong>Pre-launch commitments.</strong> A bounty posted before a coin's first blocks are mined is a genuine test; one posted later is a statement about the past. Could launch platforms make such bounties a standard part of a launch?</li>
+<li><strong>Real-world validation.</strong> Running the rules against real explorer pages for real launches, and comparing with manual audits, would measure their reliability.</li>
+</ol>
+<p>We would value input from exchanges, mining pools, auditors and anyone researching crypto fraud.</p>
+<h2>References and materials</h2>
+<ol>
+<li>Decrypt, reporting Chainalysis, <em>AI, impersonation drove crypto scam losses to record $17 billion in 2025</em>: <a rel="noopener" href="https://decrypt.co/354624/ai-impersonation-drove-crypto-scam-losses-record-17-billion-2025-chainalysis">https://decrypt.co/354624/ai-impersonation-drove-crypto-scam-losses-record-17-billion-2025-chainalysis</a></li>
+<li>Source code and full technical documentation (open source, MIT): <a rel="noopener" href="https://github.com/brilliantnodes/launch-claim-checker">https://github.com/brilliantnodes/launch-claim-checker</a></li>
+<li>Interactive demo: <a rel="noopener" href="https://checker.brilliantnodes.com/bounties.html">https://checker.brilliantnodes.com/bounties.html</a></li>
+<li>Video (86 s): <a rel="noopener" href="https://checker.brilliantnodes.com/claim-bounties-demo.mp4">https://checker.brilliantnodes.com/claim-bounties-demo.mp4</a></li>
+</ol>
+<p><em>Examplecoin, Controlcoin, their pools and explorer pages are fictional. Test tokens only. Not investment advice.</em></p>
+</article>
+</main>
+<footer>
+<p>Written by Brilliant Nodes. Open-source prototype; test tokens only; not investment advice.
+<a href="https://checker.brilliantnodes.com/">Back to Launch Claim Checker</a>.</p>
+</footer>
+</body>
+</html>
