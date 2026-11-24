@@ -12,7 +12,7 @@ Two made-up explorers with different layouts, on two different domains:
 explorers both correct block 1 (no extra allocation after all), and Driftcoin's
 Blockfield page alone does. They are used to show an overturned challenge and a
 challenge that is not confirmed. Turncoin and Veercoin repeat those two stories
-for the Bradbury run. Every coin, address, pool and figure is invented.
+for the Bradbury run, and Swaycoin and Tiltcoin for a second Bradbury run. Every coin, address, pool and figure is invented.
 """
 import sys
 from pathlib import Path
@@ -30,8 +30,12 @@ COINS = {
     # the same two stories again, for the Bradbury run (the Studio run's corrected pages stay as they were)
     "Turncoin": ("TRN", "trn1q", "1,200,000.00000000", "1,200,000"),
     "Veercoin": ("VER", "ver1q", "4,100,000.00000000", "4,100,000"),
+    # and once more, for the second Bradbury run of the fixed build
+    "Swaycoin": ("SWY", "swy1q", "900,000.00000000", "900,000"),
+    "Tiltcoin": ("TLT", "tlt1q", "2,600,000.00000000", "2,600,000"),
 }
-CORRECTABLE = {"flipcoin": ("a", "b"), "driftcoin": ("b",), "turncoin": ("a", "b"), "veercoin": ("b",)}
+CORRECTABLE = {"flipcoin": ("a", "b"), "driftcoin": ("b",), "turncoin": ("a", "b"), "veercoin": ("b",),
+               "swaycoin": ("a", "b"), "tiltcoin": ("b",)}
 
 
 def page_a(coin, ticker, pre, alloc, corrected=False):
