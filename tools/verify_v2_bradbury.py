@@ -18,7 +18,9 @@
    requester, and each bond is in its recorded final state with the recorded
    amount. (A Bradbury transaction as the node returns it does not carry the
    GEN sent with it; the record shows each refusal by the credit it left.)
-6. The contract's balance equals locked + credited.
+   The verdict and rule of every check, and every re-check's verdict and rule,
+   are read from the contract again and compared with what the run read.
+6. The contract's balance equals locked + credited + burned.
 
 A throwaway key is made for the reads (or BRADBURY_READ_KEY names one);
 nothing is signed or sent. Exit code 1 on any mismatch.
@@ -180,6 +182,18 @@ def main() -> int:
     # 5. every check and every bond, as the contract shows them now
     for case, c in rec["cases"].items():
         got = node("read", addr, "get_check", json.dumps([c["id"]]))["result"]
+        for chk in rec.get("checks", []):  # what the run read from the views, read again now
+            lab, want = chk["label"], chk.get("want")
+            if not lab.startswith(f"case {case}: "):
+                continue
+            if " is " in lab and lab.split(": ", 1)[1].startswith("check ") and isinstance(want, list):
+                if [got["result"]["verdict"], got["result"]["rule"]] != want[:2]:
+                    bad.append(f"case {case}: stored {got['result']['verdict']} {got['result']['rule']}, the run read {want[:2]}")
+            if "re-check found" in lab:
+                rc = got["bond"].get("recheck") or {}
+                now_ = [rc.get("verdict"), rc.get("rule")] if isinstance(want, list) else rc.get("rule")
+                if now_ != want:
+                    bad.append(f"case {case}: re-check stored {now_}, the run read {want}")
         if str(got["requester"]).lower() != rec["accounts"]["requester"].lower():
             bad.append(f"case {case}: check {c['id']} was requested by {got['requester']}")
         want = rec.get("final_states", {}).get(case)
@@ -194,8 +208,8 @@ def main() -> int:
     # 6. money
     t = node("read", addr, "totals", "[]")["result"]
     held = node("balance", addr)["result"]
-    if str(held) != t["accounted_for"]:
-        bad.append(f"balance {held} differs from locked + credited = {t['accounted_for']}")
+    if str(held) != t["accounted_for"] or int(t["accounted_for"]) != int(t["locked"]) + int(t["credited"]) + int(t.get("burned", 0)):
+        bad.append(f"balance {held} differs from locked + credited + burned = {t['accounted_for']}")
 
     print(f"{len(rec['steps'])} transactions, the deployed code, {len(rec['cases'])} checks and the balance checked against the chain; {len(bad)} mismatches")
     for who, wei in transfers:

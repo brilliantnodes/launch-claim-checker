@@ -7,8 +7,11 @@
 Three testnet wallets whose keys stay in files outside the repository, never
 printed: LCC2_KEYS/lcc_v2_bradbury.key (the requester, which deployed the
 contract) and lcc2_bradbury_challenger{1,2}.key (made here if missing and
-funded from the requester). The contract was deployed with the 600-second
-floor for all four windows.
+funded from the requester). The windows the contract was deployed with are
+given as LCC2_WINDOWS (bond, challenge, grace, re-check; default 600 each, the
+floor). LCC2_COINS names the two coins of the overturned and the not-confirmed
+stories (default turncoin,veercoin). A re-check the validators did not agree on
+(nothing decided) is sent again while its window leaves time for one.
 
 Bradbury transactions carry no return value. Every step is recorded with the
 chain's own outcome (consensus result, execution result, each validator's
@@ -44,6 +47,9 @@ _args = [a for a in sys.argv[1:] if not a.startswith("--")]
 OUT = Path(_args[0]) if _args else ROOT / "examples" / "live" / "v2-bradbury.json"
 BUILD = ROOT / "bradbury" / "build" / "launch_claim_checker_v2.py"
 ADDRESS = os.environ.get("LCC2_BRADBURY", "0x106980F7bA1C2101488b99f13df51b07C0DAAc16")
+WINDOWS = [int(x) for x in os.environ.get("LCC2_WINDOWS", "600,600,600,600").split(",")]
+COIN_C, COIN_D = os.environ.get("LCC2_COINS", "turncoin,veercoin").split(",")
+OPTIONAL = set(filter(None, os.environ.get("LCC2_OPTIONAL_CASES", "").split(",")))  # unbonded cases the run may skip
 DEPLOY_TX = os.environ.get("LCC2_BRADBURY_DEPLOY", "0x0cb38f6ec9f127292493ed40da22a3b8496d42121baf6c5ca40deda692a6eea0")
 G = 10**18
 BOND = G // 10
@@ -64,7 +70,7 @@ ADDR = {r: create_account(KEY[r].read_text().strip()).address for r in ROLES}
 
 rec = {"network": "testnet-bradbury-phase-2", "chain_id": 4221, "build": "bradbury/build/launch_claim_checker_v2.py (GenVM v0.6)",
        "build_sha256": hashlib.sha256(BUILD.read_bytes()).hexdigest(), "address": ADDRESS, "deploy_tx": DEPLOY_TX,
-       "windows_seconds": [600] * 4, "bond_wei": str(BOND), "accounts": ADDR, "steps": [], "checks": [], "page_changes": [], "cases": {}}
+       "windows_seconds": WINDOWS, "bond_wei": str(BOND), "accounts": ADDR, "steps": [], "checks": [], "page_changes": [], "cases": {}}
 if RESUME:
     rec = json.loads(OUT.read_text())
     assert rec["accounts"] == ADDR, "the record was made with other keys"
@@ -201,10 +207,10 @@ def step(label, role, fn, args, value=0, raises=False, credited_back=False, paye
 
 
 def new_check(case, args, verdict, rule):
-    """A check, then its id from the views. If the validators did not agree (nothing recorded), once more."""
+    """A check, then its id from the views. If the validators did not agree (nothing recorded), up to twice more."""
     if case in rec["cases"]:
         return rec["cases"][case]["id"]
-    for attempt in ("", " (retry)"):
+    for attempt in ("", " (retry)", " (retry 2)"):
         before = int(read("get_count"))
         row = step(f"case {case} check{attempt}", "requester", "check_claim", args)
         if row["result"] != "MAJORITY_AGREE":
@@ -224,7 +230,12 @@ def new_check(case, args, verdict, rule):
         check(f"case {case}: check {cid} is {verdict} {rule}", [v["result"]["verdict"], v["result"]["rule"], v["requester"].lower(), v.get("coin_name") or args[2]],
               [verdict, rule, ADDR["requester"].lower(), args[2]])
         return cid
-    raise SystemExit(f"case {case}: no agreed check after two attempts")
+    if case in OPTIONAL:  # recorded as it went; the run goes on so the bonded cases keep their windows
+        rec.setdefault("skipped", []).append({"case": case, "why": "no agreed check after three attempts", "at": int(time.time())})
+        save()
+        print(f"case {case}: no agreed check after three attempts; skipped", flush=True)
+        return None
+    raise SystemExit(f"case {case}: no agreed check after three attempts")
 
 
 def correct_pages(coin):
@@ -253,9 +264,16 @@ def due():
     _busy[0] = True
     try:
         for case, key, off, label, role, fn, kw in OUTCOMES:
-            if label in DONE or f"bond case {case}" not in DONE:
+            if f"bond case {case}" not in DONE:
                 continue
             t = rec["cases"][case].get("times") or times(case)
+            if label in DONE:
+                # a re-check nobody agreed on decided nothing: once more while the window leaves time for it
+                if fn != "recheck" or DONE[label]["result"] == "MAJORITY_AGREE" or label.endswith(" (again)"):
+                    continue
+                label += " (again)"
+                if label in DONE or time.time() > int(t["rc_end"]) - 420:
+                    continue
             if time.time() >= int(t[key]) + off:
                 step(label, role, fn, [rec["cases"][case]["id"]], **kw)
     finally:
@@ -286,7 +304,7 @@ for r in ROLES[1:]:
         rec.setdefault("funding", []).append({"to": ADDR[r], "wei": str(3 * G), "tx": d.get("hash"), "arrived": balance(ADDR[r]) >= before + 3 * G})
         save()
         print("funded", r, rec["funding"][-1], flush=True)
-check("contract rules: four windows of 600 s", lambda: read("get_rules")["windows_seconds"], {"bond_win": 600, "ch_win": 600, "grace": 600, "rc_win": 600})
+check(f"contract rules: windows of {WINDOWS} s", lambda: read("get_rules")["windows_seconds"], dict(zip(("bond_win", "ch_win", "grace", "rc_win"), WINDOWS)))
 
 OUTCOMES += [
     ("B", "close", 5, "challenge B after the window", "challenger2", "challenge", {"value": BOND, "credited_back": True}),
@@ -311,23 +329,23 @@ bond("B")
 step("challenge B with the wrong amount", "challenger1", "challenge", [rec["cases"]["B"]["id"]], BOND - 1, credited_back=True)
 step("settle B too early", "challenger1", "settle", [rec["cases"]["B"]["id"]], raises=True)
 
-new_check("C", [A_URL.format(c="turncoin"), B_URL.format(c="turncoin"), "Turncoin", "NO_FOUNDER_REWARD", ""], *P1)
+new_check("C", [A_URL.format(c=COIN_C), B_URL.format(c=COIN_C), COIN_C.capitalize(), "NO_FOUNDER_REWARD", ""], *P1)
 bond("C")
 step("challenge C by challenger1", "challenger1", "challenge", [rec["cases"]["C"]["id"]], BOND)
-correct_pages("turncoin")
+correct_pages(COIN_C)
 
-new_check("D", [A_URL.format(c="veercoin"), B_URL.format(c="veercoin"), "Veercoin", "NO_FOUNDER_REWARD", ""], *P1)
+new_check("D", [A_URL.format(c=COIN_D), B_URL.format(c=COIN_D), COIN_D.capitalize(), "NO_FOUNDER_REWARD", ""], *P1)
 bond("D")
 step("challenge D by challenger2", "challenger2", "challenge", [rec["cases"]["D"]["id"]], BOND)
-correct_pages("veercoin")
+correct_pages(COIN_D)
 
 new_check("E", [A_URL.format(c="examplecoin"), B_URL.format(c="examplecoin"), "Examplecoin", "NO_PREMINE", ""], *P1)
 bond("E")
 step("challenge E by challenger1", "challenger1", "challenge", [rec["cases"]["E"]["id"]], BOND)
 step("recheck E too early", "challenger1", "recheck", [rec["cases"]["E"]["id"]], raises=True)
 
-new_check("F-mining", [A_MINE, B_MINE, "Examplecoin", "DECENTRALIZED_MINING", ""], "CONTRADICTED", "BOTH:M1")
-step("bond on a mining verdict", "requester", "bond", [rec["cases"]["F-mining"]["id"]], BOND, credited_back=True)
+if new_check("F-mining", [A_MINE, B_MINE, "Examplecoin", "DECENTRALIZED_MINING", ""], "CONTRADICTED", "BOTH:M1"):
+    step("bond on a mining verdict", "requester", "bond", [rec["cases"]["F-mining"]["id"]], BOND, credited_back=True)
 new_check("F-disagree", [A_URL.format(c="splitcoin"), B_URL.format(c="splitcoin"), "Splitcoin", "NO_FOUNDER_REWARD", ""], "UNDETERMINED", "D1_EXPLORERS_DISAGREE")
 step("bond on explorers that disagree", "requester", "bond", [rec["cases"]["F-disagree"]["id"]], BOND, credited_back=True)
 new_check("F-fair", [A_URL.format(c="examplecoin"), B_URL.format(c="examplecoin"), "Examplecoin", "FAIR_LAUNCH", "Fair launch"], *P1)
@@ -335,7 +353,14 @@ step("bond on a FAIR_LAUNCH verdict", "requester", "bond", [rec["cases"]["F-fair
 
 # ------------------------------------------------------------------ outcomes, each as soon as it is due
 
-while any(o[3] not in DONE for o in OUTCOMES):
+def again_due(o):
+    """A re-check that decided nothing, with time left in its window for one more."""
+    lab = o[3] + " (again)"
+    return (o[5] == "recheck" and o[3] in DONE and DONE[o[3]]["result"] != "MAJORITY_AGREE" and lab not in DONE
+            and time.time() <= int(rec["cases"][o[0]]["times"]["rc_end"]) - 420)
+
+
+while any(o[3] not in DONE or again_due(o) for o in OUTCOMES):
     due()
     left = [int(rec["cases"][o[0]]["times"][o[1]]) + o[2] - time.time() for o in OUTCOMES if o[3] not in DONE]
     if left:

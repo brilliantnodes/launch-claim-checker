@@ -241,7 +241,22 @@ check_view("case D re-check: the explorers disagree", (v["D"]["bond"].get("reche
 check_view("challengers of case A", [x.lower() for x in read(C["requester"], rec["address"], "get_challengers", [ids["A"]])] == [ADDR["challenger1"].lower(), ADDR["challenger2"].lower()], None)
 t = read(C["requester"], rec["address"], "totals", [])
 check_view("totals: nothing locked or credited; half of case C's bond burned", t["locked"] == "0" and t["credited"] == "0" and t["burned"] == str(BOND // 2), t)
-check_view("contract balance equals the burned GEN", balance(C["requester"], rec["address"]) == BOND // 2, balance(C["requester"], rec["address"]))
+def settled_balance():
+    """Studio makes each withdrawal's transfer as a transaction of its own, a little after the withdrawal: read the
+    balance until it stops changing (up to five minutes)."""
+    last, reads = None, 0
+    while reads < 11:
+        now = balance(C["requester"], rec["address"])
+        reads += 1
+        if now == BOND // 2 or now == last:
+            break
+        last = now
+        time.sleep(30)
+    return now, reads
+
+
+held, reads = settled_balance()
+check_view("contract balance equals the burned GEN", held == BOND // 2, {"balance": held, "reads": reads})
 check_view("case C: half the bond burned", v["C"]["bond"].get("burned") == BOND // 2, v["C"]["bond"].get("burned"))
 check_view("case F-wrong-page stored in short form", read(C["requester"], rec["address"], "get_check", [rec["cases"]["F-wrong-page"]["id"]])["result"]["a"].keys() <= {"cls", "rule"}, None)
 rec["summary"] = {"steps": len(rec["steps"]), "steps_as_expected": sum(1 for s in rec["steps"] if s["as_expected"]),

@@ -15,7 +15,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 A_URL = "https://checker.brilliantnodes.com/v2/{c}-block-1.html"
 B_URL = "https://brilliantnodes.github.io/demo-explorer/{c}/block-1.html"
-CORRECTABLE = {"flipcoin": ("a", "b"), "driftcoin": ("b",), "turncoin": ("a", "b"), "veercoin": ("b",)}
+CORRECTABLE = {"flipcoin": ("a", "b"), "driftcoin": ("b",), "turncoin": ("a", "b"), "veercoin": ("b",),
+               "swaycoin": ("a", "b"), "tiltcoin": ("b",)}  # as in tools/make_v2_pages.py
 MARK_A, MARK_B = "Correction (fictional)", "Data correction (fictional)"
 SIGN = "\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01PmboiXeSxAX9LMvc5cn1bn\n"
 

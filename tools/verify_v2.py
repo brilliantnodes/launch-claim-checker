@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check a Studio live-run record of LaunchClaimCheckerV2 against the chain. Reads only.
 
-    python tools/verify_v2.py examples/live/v2-studio-money.json [examples/live/v2-studio-checks.json ...]
+    python tools/verify_v2.py [examples/live/v2-studio.json examples/live/v2-site-studio.json]
 
 For each record:
 1. The code deployed by the recorded deployment transaction is, byte for
@@ -13,9 +13,13 @@ For each record:
    on the chain), and has the recorded consensus result, validator votes,
    execution result, return value and creation time.
 3. Every check the record numbers is on the contract now with the recorded
-   verdict and rule; each bonded case is in its recorded final state.
-4. The contract's balance equals locked + credited (totals()), and the
-   record's own expectations all held.
+   verdict and rule; every decided re-check is stored with the verdict and rule
+   its transaction returned; each bonded case is in its recorded final state.
+4. The contract's balance equals locked + credited + burned (totals()), and
+   every check the run made against the views passed.
+For a page click-through record (examples/live/v2-site-studio.json) the same is
+done from the record's on_chain entries, and the page contract's deployed code
+is compared with the source.
 
 A throwaway key is made for the reads; nothing is signed or sent. Exit code 1 on any mismatch.
 """
@@ -83,27 +87,76 @@ def verify(path: Path, c) -> list:
             v = read(c, addr, "get_check", [r["id"]])
             if [v["result"]["verdict"], v["result"]["rule"]] != [r["verdict"], r["rule"]]:
                 bad.append(f"check {r['id']}: now {v['result']['verdict']} {v['result']['rule']}, recorded {r['verdict']} {r['rule']}")
+        if s["fn"] == "recheck" and isinstance(r, dict) and r.get("decided"):
+            v = read(c, addr, "get_check", [s["args"][0]])
+            rc = v["bond"].get("recheck") or {}
+            if [rc.get("verdict"), rc.get("rule"), v["bond"]["state"]] != [r["verdict"], r["rule"], r["state"]]:
+                bad.append(f"re-check of check {s['args'][0]}: stored {rc.get('verdict')} {rc.get('rule')} {v['bond']['state']}, returned {r}")
     for case, final in (rec.get("final_states") or {}).items():
         v = read(c, addr, "get_check", [rec["cases"][case]["id"]])
         if v["bond"]["state"] != final:
             bad.append(f"case {case}: bond now {v['bond']['state']}, recorded {final}")
     t = read(c, addr, "totals", [])
     held = balance(c, addr)
-    if held != int(t["locked"]) + int(t["credited"]):
-        bad.append(f"balance {held} != locked {t['locked']} + credited {t['credited']}")
+    if held != int(t["accounted_for"]) or int(t["accounted_for"]) != int(t["locked"]) + int(t["credited"]) + int(t.get("burned", 0)):
+        bad.append(f"balance {held} != locked {t['locked']} + credited {t['credited']} + burned {t.get('burned', 0)}")
+    reread = {n.get("supersedes"): n for n in rec.get("after_the_run", [])}
     for chk in rec.get("checks", []):
-        if not chk["ok"]:
-            bad.append(f"record check failed: {chk['label']}")
-    print(f"{path.name}: contract {addr}, {len(rec['steps'])} transactions, balance {held} wei = locked + credited: {'OK' if not bad else 'MISMATCH'}")
+        if chk["ok"]:
+            continue
+        n = reread.get(chk["label"])
+        if n and n.get("balance_wei") is not None and int(n["balance_wei"]) == held:
+            # the run read the balance too soon; the reading noted after the run is what the chain shows now
+            print(f"  note: the run's check '{chk['label']}' failed; read after the run, and now, the balance is {held} wei")
+            continue
+        bad.append(f"record check failed: {chk['label']}")
+    print(f"{path.name}: contract {addr}, {len(rec['steps'])} transactions, balance {held} wei = locked + credited + burned"
+          f" ({t.get('burned', 0)} burned): {'OK' if not bad else 'MISMATCH'}")
+    return bad
+
+
+def verify_site(path: Path, c) -> list:
+    """A page click-through record: each click's transaction as the record has it, and the page contract's code."""
+    rec = json.loads(path.read_text())
+    addr, bad = rec["contract"], []
+    if "deploy" in rec:
+        d = tx(c, rec["deploy"]["tx"])
+        code = base64.b64decode(((d.get("data") or {}).get("contract_code")) or "")
+        if code != (ROOT / "contracts" / "launch_claim_checker_v2.py").read_bytes():
+            bad.append("the page contract's deployed code differs from contracts/launch_claim_checker_v2.py")
+        made = (d.get("data") or {}).get("contract_address") or d.get("to_address")
+        if str(made).lower() != addr.lower():
+            bad.append(f"the deployment made {made}, the record says {addr}")
+    else:
+        bad.append("the record has no deployment transaction for the page contract")
+    for s in rec["steps"]:
+        t = tx(c, s["tx"])
+        got = summary(t)
+        oc = s.get("on_chain") or {}
+        try:
+            call = calldata.decode(base64.b64decode((t.get("data") or {}).get("calldata") or ""))
+        except Exception:
+            call = {}
+        if call.get("method", call.get("")) != oc.get("method"):
+            bad.append(f"click {s['n']}: method on chain {call.get('method', call.get(''))}, recorded {oc.get('method')}")
+        for key in ("result", "execution", "returned", "votes"):
+            if plain(got.get(key)) != plain(oc.get(key)):
+                bad.append(f"click {s['n']}: {key} on chain {got.get(key)!r}, recorded {oc.get(key)!r}")
+        if str(t.get("to_address", "")).lower() != addr.lower():
+            bad.append(f"click {s['n']}: sent to {t.get('to_address')}")
+        if not s.get("as_expected"):
+            bad.append(f"click {s['n']}: the record says not as expected")
+    print(f"{path.name}: page contract {addr}, {len(rec['steps'])} clicks: {'OK' if not bad else 'MISMATCH'}")
     return bad
 
 
 def main() -> int:
-    paths = [Path(p) for p in sys.argv[1:]] or [ROOT / "examples" / "live" / "v2-studio-money.json", ROOT / "examples" / "live" / "v2-studio-checks.json"]
+    paths = [Path(p) for p in sys.argv[1:]] or [ROOT / "examples" / "live" / "v2-studio.json", ROOT / "examples" / "live" / "v2-site-studio.json"]
     c, _acct = client()
     bad = []
     for p in paths:
-        bad += [f"{p.name}: {b}" for b in verify(p, c)]
+        fn = verify_site if "clicks_that_sent_a_transaction" in json.dumps(json.loads(p.read_text()).get("summary", {})) else verify
+        bad += [f"{p.name}: {b}" for b in fn(p, c)]
     for b in bad:
         print("  -", b)
     return 1 if bad else 0
