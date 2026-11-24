@@ -31,10 +31,14 @@ def run_check(address, announcement_url, explorer_url, claim_type, claim_text=""
     account = create_account(key) if key else create_account()
     client = create_client(chain=studionet, account=account)
     before = client.read_contract(address=address, function_name="get_count", args=[])
+    # Studio refuses transactions without a fee distribution since late Nov 2026 (genlayer-py >= 0.19);
+    # the fee deposit needs test GEN, which Studio's faucet gives.
+    client.provider.make_request(method="sim_fundAccount", params=[account.address, 10 * 10**18])
     tx = client.write_contract(
         address=address,
         function_name="check_claim",
         args=[announcement_url, explorer_url, claim_type, claim_text],
+        fees=client.estimate_transaction_fees(),
     )
     status, started = "PENDING", time.time()
     while time.time() - started < timeout:
