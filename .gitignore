@@ -10,3 +10,4 @@ tools/video/*.mp4
 *.key
 tools/video-v2/build/
 tools/video-v2/*.mp4
+tools/video-v3/build/
