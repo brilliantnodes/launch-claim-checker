@@ -216,11 +216,11 @@ async function send(who, functionName, args, value, what) {
   } else if (ans && functionName === "challenge") {
     $("life-note").textContent = `Accepted. Challenger ${ans.challenger}. A re-check can be sent from ${when(ans.recheck_from)}.`;
   } else if (ans && functionName === "recheck") {
-    $("life-note").textContent = ans.decided ? `Accepted. The re-check found ${ans.verdict} (${ans.rule}): the bond is ${STATE_LABEL[ans.state] || ans.state}.` : `Accepted, but nothing was decided: ${ans.why}.`;
+    $("life-note").textContent = ans.decided ? `Accepted. The re-check found ${ans.verdict} (${ans.rule}): the bond is ${STATE_LABEL[ans.state] || ans.state}.${ans.state === "OVERTURNED" ? " Half the bond is burned; the challengers share the rest." : ""}` : `Accepted, but nothing was decided: ${ans.why}.`;
   } else if (ans && functionName === "settle") {
     $("life-note").textContent = `Accepted. The bond is ${STATE_LABEL[ans.state] || ans.state}.`;
   } else if (ans && functionName === "collect") {
-    $("life-note").textContent = BigInt(ans.credited || "0") > 0n ? `Accepted. ${gen(ans.credited)} credited; withdraw it under Accounts.` : "Accepted. This outcome gives this account nothing (an upheld check keeps the challengers' deposits).";
+    $("life-note").textContent = BigInt(ans.credited || "0") > 0n ? `Accepted. ${gen(ans.credited)} credited; withdraw it under Accounts.` : `Accepted. This outcome (${STATE_LABEL[ans.state] || ans.state}) gives this account nothing.`;
   } else if (ans && functionName === "withdraw") {
     $("life-note").textContent = `Accepted: ${gen(ans.amount)} is on its way. It reaches the wallet when the transaction is finalized.`;
   } else {
@@ -251,6 +251,9 @@ document.querySelectorAll("[data-example]").forEach((b) => b.addEventListener("c
 }));
 const checkError = (m) => { $("check-error").textContent = m; $("check-error").hidden = !m; };
 const host = (u) => { try { return new URL(u).hostname; } catch { return ""; } };
+// The contract's domain rule: the last two labels of a host, three for names such as co.uk; all *.github.io are one domain.
+const SECOND_LEVEL = ["co", "com", "net", "org", "gov", "edu", "ac"];
+const domainOf = (h) => { const l = h.split("."); return l.length >= 3 && l[l.length - 1].length === 2 && SECOND_LEVEL.includes(l[l.length - 2]) ? l.slice(-3).join(".") : l.slice(-2).join("."); };
 $("check-form").addEventListener("submit", async (ev) => {
   ev.preventDefault();
   checkError("");
@@ -258,7 +261,7 @@ $("check-form").addEventListener("submit", async (ev) => {
   if (!who) return checkError("Choose a requester account first, and get test GEN for it.");
   const a = $("url-a").value.trim(), b = $("url-b").value.trim(), coin = $("coin").value.trim();
   if (!/^https:\/\//i.test(a) || !/^https:\/\//i.test(b)) return checkError("Both explorer addresses must start with https://.");
-  if (host(a) === host(b)) return checkError("The two explorers must be on different domains.");
+  if (domainOf(host(a)) === domainOf(host(b))) return checkError(`The two explorers must be on different domains (both are on ${domainOf(host(a))}).`);
   if (coin.length < 4) return checkError("Name the coin (4 to 40 characters), as both pages write it.");
   await send(who, "check_claim", [a, b, coin, $("ctype").value, $("ctext").value.trim()], 0n, `Check "${CLAIM_LABEL[$("ctype").value]}" for ${coin} on ${host(a)} and ${host(b)}`);
 });
@@ -269,9 +272,9 @@ const CLAIM_LABEL = { NO_PREMINE: "No premine", NO_FOUNDER_REWARD: "No founder r
 const VERDICT_CLASS = { SUPPORTED: "supported", CONTRADICTED: "contradicted", UNDETERMINED: "undetermined" };
 const STATE_LABEL = { NONE: "no bond", BONDED: "bonded", UPHELD: "upheld", OVERTURNED: "overturned", NOT_CONFIRMED: "not confirmed", RELEASED: "released" };
 const RULE_TEXT = {
-  "BOTH:P1": "both explorers show an extra allocation in block 1",
-  "BOTH:P2": "both explorers show block 1 with only the miner reward",
-  "BOTH:M1": "on both explorers one miner has more than half of the blocks",
+  "BOTH:P1": "both explorers show the same extra allocation in the same early block (0 to 100)",
+  "BOTH:P2": "both explorers show block 0 or 1 with only the miner reward",
+  "BOTH:M1": "on both explorers the same miner has more than half of the blocks",
   "BOTH:M2": "on both explorers the largest miner has a third of the blocks or less",
   D1_EXPLORERS_DISAGREE: "the two explorers do not show the same thing",
   W1_WRONG_PAGE: "a page is not the page the claim needs (another block, or the coin is not named)",
@@ -280,6 +283,7 @@ const RULE_TEXT = {
 };
 const CLS_TEXT = { SUPPORTS: "supports the claim", CONTRADICTS: "contradicts the claim", WRONG_PAGE: "wrong page", UNCLEAR: "unclear" };
 let rules = null;
+const typedBond = new Map(); // bond amounts typed on the page survive the list's refresh
 
 function pageLine(label, url, p) {
   const li = el("li");
@@ -325,6 +329,7 @@ function checkCard(c, challengers) {
     add("Challenges until", `${when(t.close)} (${inMin(t.close)})`);
     if (bd.n > 0) add("Re-check window", `${when(t.rc_open)} to ${when(t.rc_end)}`);
     if (bd.recheck) add("Re-check found", `${bd.recheck.verdict} (${bd.recheck.rule}) at ${when(bd.recheck.at)}`);
+    if (bd.burned) add("Burned", `${gen(bd.burned)} (half the bond, out of everyone's reach)`);
   }
   card.append(facts);
   if (bd.recheck) {
@@ -335,12 +340,14 @@ function checkCard(c, challengers) {
   if (BRADBURY) return card;
 
   const box = el("div", "acts"), now = nowS();
-  const bondable = (rules?.bondable || ["BOTH:P1", "BOTH:P2"]).includes(r.rule);
+  const bondable = (rules?.bondable || ["BOTH:P1", "BOTH:P2"]).includes(r.rule) && (rules?.bondable_claims || ["NO_PREMINE", "NO_FOUNDER_REWARD"]).includes(c.claim_type);
+  const mine = roles.requester && same(roles.requester.address, c.requester);
   const bondWin = Number(rules?.windows_seconds?.bond_win || 600);
   const min = BigInt(rules?.min_bond_wei || "10000000000000000");
-  if (bd.state === "NONE" && bondable && now < c.t0 + bondWin) {
+  if (bd.state === "NONE" && bondable && mine && now < c.t0 + bondWin) {
     const row = el("div", "act");
-    const amt = el("input", "height"); amt.value = "1"; amt.setAttribute("aria-label", "Bond in test GEN"); amt.style.width = "5rem";
+    const amt = el("input", "height"); amt.value = typedBond.get(c.id) || "1"; amt.setAttribute("aria-label", "Bond in test GEN"); amt.style.width = "5rem";
+    amt.addEventListener("input", () => typedBond.set(c.id, amt.value));
     const b = el("button", "secondary", "Bond as Requester");
     b.type = "button";
     b.addEventListener("click", () => {
@@ -355,8 +362,11 @@ function checkCard(c, challengers) {
   if (bd.state === "BONDED" && !bd.recheck) {
     const row = el("div", "act");
     if (now <= t.close) {
-      row.append(act("Challenge as Challenger", "challenger1", "challenge", BigInt(bd.amount), `Challenger deposits ${gen(bd.amount)} against check ${c.id}`, c));
-      row.append(act("Challenge as Second challenger", "challenger2", "challenge", BigInt(bd.amount), `Second challenger deposits ${gen(bd.amount)} against check ${c.id}`, c));
+      for (const [role, label] of [["challenger1", "Challenger"], ["challenger2", "Second challenger"]]) {
+        const who = roles[role];
+        if (who && (same(who.address, c.requester) || challengers.some((x) => same(x, who.address)))) continue; // cannot challenge
+        row.append(act(`Challenge as ${label}`, role, "challenge", BigInt(bd.amount), `${label} deposits ${gen(bd.amount)} against check ${c.id}`, c));
+      }
     }
     if (bd.n > 0 && now >= t.rc_open && now <= t.rc_end) row.append(act("Re-check now", "challenger1", "recheck", 0n, `Re-check check ${c.id}: every validator reads both pages again`, c));
     if ((bd.n === 0 && now >= t.rc_open) || (bd.n > 0 && now >= t.nc_from)) row.append(act("Settle", "challenger1", "settle", 0n, `Settle the bond on check ${c.id}`, c));
@@ -367,7 +377,8 @@ function checkCard(c, challengers) {
     const row = el("div", "act");
     for (const role of Object.keys(roles)) {
       const who = roles[role];
-      if (who && (same(who.address, c.requester) || challengers.some((x) => same(x, who.address)))) row.append(act(`Collect as ${ROLE_LABEL[role]}`, role, "collect", 0n, `${ROLE_LABEL[role]} collects what check ${c.id} gives it`, c));
+      const isReq = who && same(who.address, c.requester);
+      if (who && ((isReq && !bd.req_collected) || (!isReq && challengers.some((x) => same(x, who.address))))) row.append(act(`Collect as ${ROLE_LABEL[role]}`, role, "collect", 0n, `${ROLE_LABEL[role]} collects what check ${c.id} gives it`, c));
     }
     if (row.childNodes.length) box.append(row);
   }
@@ -398,8 +409,9 @@ async function loadRules() {
     const rows = [
       ["Bondable verdicts", rules.bondable.join(", ")],
       ["Claims", rules.claim_types.join(", ")],
-      ["Upheld", "the requester gets the bond back plus every challenger's deposit"],
-      ["Overturned", "each challenger gets its deposit back plus an equal share of the bond"],
+      ["Bondable claims", (rules.bondable_claims || []).join(", ")],
+      ["Upheld", `${rules.upheld || "the same fact again"}: the requester gets the bond back plus every challenger's deposit`],
+      ["Overturned", rules.overturned || "half the bond is burned; each challenger gets its deposit back and an equal share of the rest"],
       ["Not confirmed", "everyone gets back what they put in"],
       ["Released", "no challenger: the requester gets the bond back"],
       ["P1, extra allocation", `an output in blocks 0 to ${rules.max_height} beyond the block reward, printed on the page`],
@@ -409,7 +421,7 @@ async function loadRules() {
     ];
     $("rules").replaceChildren(...rows.map(([k, v]) => { const tr = el("tr"); tr.append(el("th", null, k), el("td", null, v)); return tr; }));
     const t = await read("totals");
-    $("totals").textContent = `${t.checks} checks so far. Locked in bonds and challenges: ${gen(t.locked)}. Credited, waiting to be withdrawn: ${gen(t.credited)}.`;
+    $("totals").textContent = `${t.checks} checks so far. Locked in bonds and challenges: ${gen(t.locked)}. Credited, waiting to be withdrawn: ${gen(t.credited)}. Burned: ${gen(t.burned || "0")}.`;
   } catch (e) {
     $("totals").textContent = `Could not read the rules: ${short(e)}`;
   }

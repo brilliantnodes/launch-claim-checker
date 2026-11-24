@@ -8,7 +8,7 @@ export const NETWORKS = {
     name: "GenLayer Studio (studionet)",
     contract: "0x81351f3e6e7c9CFC41573Ca9962b17f70C9AFFB8",
     bounties: "0x583995CE8814C987e888070352A3F1d3AF9BBDca", // LaunchClaimBounties; set after each deployment
-    checkerV2: "0x0239d9Dcf10F3D868F00d37b2363794c0715A866", // LaunchClaimCheckerV2 for the page (600-second windows); set after each deployment
+    checkerV2: "0xE9f2cA19bf87110fc188030264beb1c0c0C9Dd57", // LaunchClaimCheckerV2 for the page (600-second windows); set after each deployment
     explorer: "https://explorer-studio.genlayer.com",
   },
   bradbury: {
@@ -17,7 +17,7 @@ export const NETWORKS = {
     name: "GenLayer Testnet Bradbury Phase 2",
     contract: "0x963920f38a46c0Dc9592889a4B783FFAaEc6dA9C",
     bounties: "0xc437e39BA9e51282a259c814e2d4d9CcEF6c257b",
-    checkerV2: "0xC1b4AD9cd4D1609461B6eabbBb78a0B1F4FC8E22",
+    checkerV2: "0x106980F7bA1C2101488b99f13df51b07C0DAAc16",
     explorer: "https://scan.bradbury.genlayer.com",
     rpc: "https://rpc-bradbury.genlayer.com",
     chainId: 4221,
