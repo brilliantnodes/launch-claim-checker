@@ -83,25 +83,25 @@ def ans(**kw) -> str:
 
 
 def p1a(**over):
-    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000.00000000", evidence_line=A_LINE, reward_amount="", reward_line="")
+    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000.00000000", evidence_line=A_LINE, reward_amount="", reward_line="", top_miner_name="", top_miner_blocks="", blocks_inspected="")
     d.update(over)
     return ans(**d)
 
 
 def p1b(**over):
-    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000", evidence_line=B_LINE, reward_amount="", reward_line="")
+    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000", evidence_line=B_LINE, reward_amount="", reward_line="", top_miner_name="", top_miner_blocks="", blocks_inspected="")
     d.update(over)
     return ans(**d)
 
 
 def p2a(**over):
-    d = dict(block_number="1", extra_allocation="no", allocation_amount="", evidence_line="", reward_amount="50.00000000", reward_line=A_REWARD)
+    d = dict(block_number="1", extra_allocation="no", allocation_amount="", evidence_line="", reward_amount="50.00000000", reward_line=A_REWARD, top_miner_name="", top_miner_blocks="", blocks_inspected="")
     d.update(over)
     return ans(**d)
 
 
 def p2b(**over):
-    d = dict(block_number="1", extra_allocation="no", allocation_amount="", evidence_line="", reward_amount="50", reward_line=B_REWARD)
+    d = dict(block_number="1", extra_allocation="no", allocation_amount="", evidence_line="", reward_amount="50", reward_line=B_REWARD, top_miner_name="", top_miner_blocks="", blocks_inspected="")
     d.update(over)
     return ans(**d)
 
@@ -237,7 +237,8 @@ def times(tb=T0 + 60):
 def balanced(e):
     t = e.c.totals()
     out = sum(v for _a, v in e.sent.items)
-    assert int(t["locked"]) + int(t["credited"]) + out == e.paid_in
+    assert int(t["locked"]) + int(t["credited"]) + int(t["burned"]) + out == e.paid_in
+    assert int(t["accounted_for"]) == int(t["locked"]) + int(t["credited"]) + int(t["burned"])
     return t
 
 
@@ -273,14 +274,15 @@ def test_both_explorers_show_a_majority_miner_contradicted(env):
 
 def test_both_explorers_show_a_spread_supported(env):
     assert check(env, "M2")["rule"] == "BOTH:M2"
-    assert env.c.get_check("1")["result"]["a"]["miner"] == "alpha pool"
+    r = env.c.get_check("1")["result"]
+    assert r["a"] == {"cls": "SUPPORTS", "rule": "M2"} == r["b"]  # no miner stored for M2 (ties would split honest validators)
 
 
 def test_explorers_that_disagree_are_recorded_as_such(env):
     out = check(env, pb=B_P2, ab=p2b())
     assert out["verdict"] == "UNDETERMINED" and out["rule"] == "D1_EXPLORERS_DISAGREE"
     r = env.c.get_check("1")["result"]
-    assert r["a"]["cls"] == "CONTRADICTS" and r["b"]["cls"] == "SUPPORTS"
+    assert r["a"] == {"cls": "CONTRADICTS", "rule": "P1"} and r["b"] == {"cls": "SUPPORTS", "rule": "P2"}  # short form: no amount, block or line
 
 
 def test_mining_explorers_that_disagree(env):
@@ -519,7 +521,7 @@ def test_upheld_requester_collects_bond_and_deposits(env):
 
 
 def test_overturned_challengers_share_the_bond_exactly(env):
-    bv = G // 100 + 1  # B mod 3 == 2
+    bv = G // 100 + 5  # (B - B div 2) mod 3 == 2
     check(env)
     bond(env, value=bv)
     pay(env, "bond", "1", 0, env.alice, T0 + 61)  # refused: already bonded (value 0)
@@ -529,9 +531,11 @@ def test_overturned_challengers_share_the_bond_exactly(env):
     out = recheck(env, rc_open, pa=A_P2, pb=B_P2, aa=p2a(), ab=p2b())
     assert out["state"] == "OVERTURNED" and out["verdict"] == "SUPPORTED"
     got = [int(call(env, "collect", who=w, at=rc_open + 5)["credited"]) for w in (env.bob, env.charlie, env.dave)]
-    q, r = divmod(bv, 3)
-    assert r == 2 and got == [bv + q + 1, bv + q + 1, bv + q]  # the first B mod n challengers one wei more
-    assert sum(got) == 4 * bv
+    burn = bv // 2
+    q, r = divmod(bv - burn, 3)
+    assert r == 2 and got == [bv + q + 1, bv + q + 1, bv + q]  # half the bond burned; the first ones one wei more
+    assert sum(got) == 4 * bv - burn and env.c.totals()["burned"] == str(burn)
+    assert env.c.get_check("1")["bond"]["burned"] == burn
     assert call(env, "collect", who=env.alice, at=rc_open + 6)["credited"] == "0"
     c = env.c.get_check("1")
     assert c["result"]["verdict"] == "CONTRADICTED" and c["bond"]["recheck"]["verdict"] == "SUPPORTED"
@@ -671,12 +675,19 @@ def test_validator_refuses_a_different_miner(env):
     assert env.vm.run_validator() is False
 
 
-def test_undetermined_agrees_on_class_and_d1_only(env):
-    check(env, ab=p1b(extra_allocation="not_shown"))  # leader: D2
-    mocks(env, A_P1, B_P1.replace("Examplecoin", "Othercoin"), p1a(), p1b())  # this validator: W1
+def test_undetermined_agrees_on_the_reason_and_each_page_class(env):
+    check(env, ab=p1b(extra_allocation="not_shown"))  # leader: D2 (A contradicts by P1, B shows nothing)
+    assert env.c.get_check("1")["result"] == {"verdict": "UNDETERMINED", "rule": "D2_NOT_SHOWN_BY_BOTH",
+                                              "a": {"cls": "CONTRADICTS", "rule": "P1"}, "b": {"cls": "NOTHING"}}
+    mocks(env, A_P1, B_P1, p1a(), p1b(extra_allocation="not_shown"))  # this validator: the same
     assert env.vm.run_validator() is True
+    mocks(env, A_P1, B_P1.replace("Examplecoin", "Othercoin"), p1a(), p1b())  # this validator: W1
+    assert env.vm.run_validator() is False
     mocks(env, A_P1, B_P2, p1a(), p2b())  # this validator: D1
     assert env.vm.run_validator() is False
+    mocks(env, A_P1.replace(A_LINE, A_LINE.replace("2,000,000", "3,000,000")), B_P1, p1a(allocation_amount="3,000,000.00000000",
+          evidence_line=A_LINE.replace("2,000,000", "3,000,000")), p1b(extra_allocation="not_shown"))  # same classes, another amount: agrees,
+    assert env.vm.run_validator() is True  # and no amount was stored that this validator did not see
 
 
 def test_unreadable_agreed_only_when_the_validator_cannot_read_a_page_either(env):
@@ -779,7 +790,7 @@ def test_m1_unit(env, mod):
 
 def test_m2_unit(env, mod):
     lines = L(mod, A_SPREAD)
-    assert mod._m2(J(m2()), lines)["miner"] == "alpha pool"
+    assert mod._m2(J(m2()), lines) == {"cls": "SUPPORTS", "rule": "M2"}
     over = A_SPREAD.replace("Last 200 blocks", "Last 150 blocks").replace("Total 200", "Total 150")
     rows = [{"name": n, "blocks": b} for n, b in (("Beta Pool", "45"), ("Gamma Pool", "40"), ("Delta Pool", "35"), ("Other", "30"), ("Alpha Pool", "50"))]
     assert mod._m2(J(m2(rows=rows, blocks_inspected="150")), L(mod, over)) is None  # rows add up to 200 of 150

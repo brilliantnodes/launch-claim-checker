@@ -22,31 +22,39 @@ different domains, with a bonded challenge.
      same block and the same amount); SUPPORTED needs both to support by the
      same rule. One page against the other is UNDETERMINED,
      D1_EXPLORERS_DISAGREE. FAIR_LAUNCH is never SUPPORTED.
-  2. BOND. The requester may put GEN behind a BOTH:P1 or BOTH:P2 verdict
-     (early-block history, which does not move) within BOND_WIN of the check.
+  2. BOND. The requester may put GEN behind a BOTH:P1 or BOTH:P2 verdict on
+     NO_PREMINE or NO_FOUNDER_REWARD (early-block history, which does not
+     move) within BOND_WIN of the check. FAIR_LAUNCH cannot be bonded: it is
+     never SUPPORTED, so its bond could never be overturned.
   3. CHALLENGE. Until CH_WIN after the bond, anyone but the requester's
      address may challenge by depositing exactly the bond, once per address.
      There is no cap on the number of challengers.
   4. RECHECK. From GRACE after the challenge window closes, for RC_WIN,
      anyone may have the validators read both pages again under the same
-     rules. Same verdict: UPHELD, the requester collects the bond and every
-     deposit. The opposite verdict: OVERTURNED, each challenger collects its
-     deposit and an equal share of the bond (the first B mod n challengers one
-     wei more). Not definite: NOT CONFIRMED, everyone collects their own. A
-     reading with an unreadable page decides nothing. No agreed re-check by
-     RC_WIN + GRACE: settle makes it NOT CONFIRMED. No challenger: settle
-     RELEASES the bond to the requester from GRACE after the window closes.
+     rules. The same fact again (same rule; for P1 the same block and amount,
+     for P2 the same block): UPHELD, the requester collects the bond and every
+     deposit. The opposite verdict (BOTH:P1 <-> BOTH:P2): OVERTURNED, half the
+     bond (rounded down) is burned, and each challenger collects its deposit
+     and an equal share of the other half (where it does not divide evenly,
+     the first challengers one wei more), so a requester who challenges itself from other addresses
+     still loses at least half. Anything else: NOT CONFIRMED, everyone
+     collects their own. A reading where a page is unreadable or does not show
+     the coin (an error page, a page moved) decides nothing. No decided
+     re-check by RC_WIN + GRACE: settle makes it NOT CONFIRMED. No
+     challenger: settle RELEASES the bond from GRACE after the window closes.
 
 What validators agree on: the verdict and rule exactly; per page the class
 and rule; for P1 the block and amount exactly, the leader's line standing on
-each validator's own copy; for P2 the block; for M rules the miner by name.
-Each validator's own counts decide its own reading; no count or share is
-passed on or stored. For UNDETERMINED only the class, and whether the two
-explorers disagree (D1); other reasons are the leader's reading.
+each validator's own copy; for P2 the block; for M1 the miner by name (the
+same miner on both explorers). Each validator's own counts decide its own
+reading; no count or share is passed on or stored. An UNDETERMINED result is
+passed on and stored in short form: the reason and each page's class and
+rule, all of which every accepting validator reached itself. A model answer
+out of form makes that page unreadable.
 
 Money: bond and challenge run no model and never raise; a refused payment is
 credited back. Every payout is a credit taken with withdraw(). totals() is
-what the contract accounts for; GEN sent with a call that takes none, or with
+what the contract accounts for (locked + credited + burned); GEN sent with a call that takes none, or with
 a call that fails before the contract runs, is outside it.
 
 Time: whether bond and challenge were sent in time is judged on the
@@ -57,7 +65,9 @@ Stated plainly: a verdict says what the two pages showed, not the truth about
 a coin. The requester picks both pages; one operator can run two domains; the
 network follows redirects silently. P rules do not see allocations made in a
 genesis state rather than as block payouts, nor blocks a page does not show.
-Mining verdicts read live pages and cannot be bonded.
+Mining verdicts read live pages and cannot be bonded. Whoever controls one
+of the two explorers can keep a re-check from deciding, which ends the bond
+NOT CONFIRMED (everyone gets their own money back).
 """
 
 import json
@@ -84,10 +94,18 @@ MAX_COUNT = 10**9
 MAX_AMOUNT_DIGITS = 40
 MAX_LATEST = 20
 MAX_PER_ADDRESS = 200
-REMAINDER = "(the rest)"
 
 CLAIM_TYPES = ("NO_PREMINE", "NO_FOUNDER_REWARD", "FAIR_LAUNCH", "DECENTRALIZED_MINING")
 STOP_WORDS = ("block", "blocks", "coin", "coins", "chain", "explorer", "miner", "miners", "pool", "pools", "height", "hash", "network", "token", "tokens")
+# A coin name made only of these words (or of numbers) is refused: it would stand near the top of almost any explorer page.
+GENERIC_WORDS = STOP_WORDS + (
+    "coinbase", "mainnet", "testnet", "devnet", "main", "test", "net", "transaction", "transactions", "tx", "txs", "output", "outputs",
+    "input", "inputs", "reward", "rewards", "genesis", "address", "addresses", "wallet", "scan", "scanner", "info", "stats", "home",
+    "search", "the", "of", "explorers", "blockchain", "crypto", "ledger", "mining", "pow", "pos", "latest", "new", "number", "no",
+    "total", "confirmations", "fee", "fees", "size", "time", "date", "status",
+)
+BONDABLE_CLAIMS = ("NO_PREMINE", "NO_FOUNDER_REWARD")  # FAIR_LAUNCH is never SUPPORTED, so a bond on it could never be overturned
+OPPOSITE = {"BOTH:P1": "BOTH:P2", "BOTH:P2": "BOTH:P1"}
 SECOND_LEVEL = ("co", "com", "net", "org", "gov", "edu", "ac")
 CLASSES = ("CONTRADICTS", "SUPPORTS", "NOTHING", "WRONG_PAGE", "UNREADABLE")
 PAGE_RULES = {"CONTRADICTS": ("P1", "M1"), "SUPPORTS": ("P2", "M2")}
@@ -475,7 +493,8 @@ def _name_problem(name) -> str:
         return "coin_name must be 4 to 40 characters"
     if not all(c in LOWER + LOWER.upper() + DIGITS + " -" for c in name) or not any(c in LOWER + LOWER.upper() for c in name):
         return "coin_name must be letters, digits, spaces or hyphens, with at least one letter"
-    if name.casefold() in STOP_WORDS:
+    words = name.replace("-", " ").casefold().split()
+    if all(w in GENERIC_WORDS or all(c in DIGITS for c in w) for w in words):
         return "coin_name is too generic: " + name
     return ""
 
@@ -489,10 +508,16 @@ def _amount_text(v):
     return v if isinstance(v, str) else None
 
 
+def _block_printed(lines: list, h: int) -> bool:
+    """The block number stands on a line of the page that also says 'block' or 'height' (a lone '1' elsewhere, as in
+    'Confirmations: 1', does not count)."""
+    n = str(h)
+    return any(_stands(line, n) and ("block" in line or "height" in line) for line in lines)
+
+
 def _p1(ans: dict, lines: list):
-    page = "\n".join(lines)
     h = _parse_count(ans.get("block_number"))
-    if h is None or h > MAX_HEIGHT or not _stands(page, str(h)):
+    if h is None or h > MAX_HEIGHT or not _block_printed(lines, h):
         return None
     if str(ans.get("extra_allocation", "")).strip().lower() != "yes":
         return None
@@ -505,9 +530,8 @@ def _p1(ans: dict, lines: list):
 
 
 def _p2(ans: dict, lines: list):
-    page = "\n".join(lines)
     h = _parse_count(ans.get("block_number"))
-    if h is None or h > 1 or not _stands(page, str(h)):
+    if h is None or h > 1 or not _block_printed(lines, h):
         return None
     if str(ans.get("extra_allocation", "")).strip().lower() != "no":
         return None
@@ -554,7 +578,7 @@ def _m2(ans: dict, lines: list):
     total_f = _fold(total_text)
     if not any(not _spaced(line, i, total_f) for line in lines for i in _places(line, total_f)):
         return None
-    used, counts, best = set(), [], None
+    used, counts = set(), []
     for r in rows:
         if not isinstance(r, dict):
             return None
@@ -568,17 +592,12 @@ def _m2(ans: dict, lines: list):
             return None
         used.add(at)
         counts.append(n)
-        if best is None or n > best[0]:
-            best = (n, name)
     rest = total - sum(counts)
     if rest < 0:
         return None
-    largest, who = best
-    if rest > largest:
-        largest, who = rest, REMAINDER
-    if 100 * largest > 33 * total:
+    if 100 * max(counts + [rest]) > 33 * total:
         return None
-    return {"cls": "SUPPORTS", "rule": "M2", "miner": who}
+    return {"cls": "SUPPORTS", "rule": "M2"}
 
 
 def _evidence(claim_type: str, ans: dict, lines: list) -> dict:
@@ -597,7 +616,7 @@ def _combine(a: dict, b: dict) -> dict:
     if "UNREADABLE" in (ca, cb):
         return {"verdict": "UNREADABLE", "rule": ""}
     if ca == cb and ca in PAGE_RULES and a["rule"] == b["rule"]:
-        same = a.get("height") == b.get("height") and a.get("amount") == b.get("amount")
+        same = a.get("height") == b.get("height") and a.get("amount") == b.get("amount") and a.get("miner") == b.get("miner")
         if same:
             return {"verdict": "CONTRADICTED" if ca == "CONTRADICTS" else "SUPPORTED", "rule": "BOTH:" + a["rule"]}
     if {ca, cb} == {"CONTRADICTS", "SUPPORTS"}:
@@ -635,26 +654,63 @@ def _check_page(p, claim_type: str) -> dict:
         if isinstance(h, bool) or h not in (0, 1):
             raise ValueError("bad height")
         return {"cls": cls, "rule": rule, "height": h}
+    if rule == "M2":
+        return {"cls": cls, "rule": rule}
     m = p.get("miner")
-    ok = _miner_name(m) if rule == "M1" else (m if m == REMAINDER else _row_name(m))
-    if ok is None or ok != m:
+    if _miner_name(m) is None or _miner_name(m) != m:
         raise ValueError("bad miner")
     return {"cls": cls, "rule": rule, "miner": m}
 
 
+def _check_class(p, claim_type: str) -> dict:
+    """One page of an UNDETERMINED result: only its class and rule are kept."""
+    if not isinstance(p, dict) or p.get("cls") not in CLASSES or p.get("cls") == "UNREADABLE":
+        raise ValueError("bad class")
+    cls = p["cls"]
+    if cls not in PAGE_RULES:
+        return {"cls": cls}
+    rule = p.get("rule")
+    allowed = {"DECENTRALIZED_MINING": ("M1", "M2"), "FAIR_LAUNCH": ("P1", "M1")}.get(claim_type, ("P1", "P2"))
+    if rule not in PAGE_RULES[cls] or rule not in allowed:
+        raise ValueError("bad rule")
+    return {"cls": cls, "rule": rule}
+
+
+def _reason(a: dict, b: dict) -> str:
+    """The reason an UNDETERMINED result gives, from the two pages' classes (as _combine orders them)."""
+    ca, cb = a["cls"], b["cls"]
+    if {ca, cb} == {"CONTRADICTS", "SUPPORTS"}:
+        return "D1_EXPLORERS_DISAGREE"
+    if "WRONG_PAGE" in (ca, cb):
+        return "W1_WRONG_PAGE"
+    if ca in PAGE_RULES or cb in PAGE_RULES:
+        return "D2_NOT_SHOWN_BY_BOTH"
+    return "U1_NOT_ENOUGH_EVIDENCE"
+
+
+def _short(r: dict) -> dict:
+    """What is passed on and stored: an UNDETERMINED result keeps only each page's class and rule, so no amount,
+    block, line or name is recorded that the validators did not all see."""
+    if r["verdict"] != "UNDETERMINED":
+        return r
+    keep = lambda p: {k: p[k] for k in ("cls", "rule") if k in p}  # noqa: E731
+    return {"verdict": r["verdict"], "rule": r["rule"], "a": keep(r["a"]), "b": keep(r["b"])}
+
+
 def _check_result(r, claim_type: str) -> dict:
+    """A result passed on by another node, re-validated. UNDETERMINED comes in short form (_short)."""
     if not isinstance(r, dict):
         raise ValueError("not an object")
+    if r.get("verdict") == "UNDETERMINED":
+        a, b = _check_class(r.get("a"), claim_type), _check_class(r.get("b"), claim_type)
+        if r.get("rule") != _reason(a, b):
+            raise ValueError("reason does not follow from the pages")
+        return {"verdict": "UNDETERMINED", "rule": r["rule"], "a": a, "b": b}
     a, b = _check_page(r.get("a"), claim_type), _check_page(r.get("b"), claim_type)
     c = _combine(a, b)
-    if r.get("verdict") != c["verdict"]:
+    if r.get("verdict") != c["verdict"] or r.get("rule") != c["rule"]:
         raise ValueError("verdict does not follow from the pages")
-    if c["verdict"] in ("CONTRADICTED", "SUPPORTED", "UNREADABLE") or c["rule"] == "D1_EXPLORERS_DISAGREE":
-        if r.get("rule") != c["rule"]:
-            raise ValueError("rule does not follow from the pages")
-    elif r.get("rule") not in REASONS:
-        raise ValueError("bad reason")
-    return {"verdict": c["verdict"], "rule": r["rule"], "a": a, "b": b}
+    return {"verdict": c["verdict"], "rule": c["rule"], "a": a, "b": b}
 
 
 def _same_page(lp: dict, mp: dict, lines: list) -> bool:
@@ -664,7 +720,7 @@ def _same_page(lp: dict, mp: dict, lines: list) -> bool:
         return lp["height"] == mp["height"] and lp["amount"] == mp["amount"] and _quote_ok(lp["quote"], lp["amount_text"], lines)
     if lp.get("rule") == "P2":
         return lp["height"] == mp["height"]
-    if lp.get("rule") in ("M1", "M2"):
+    if lp.get("rule") == "M1":
         return lp["miner"] == mp["miner"]
     return True
 
@@ -676,11 +732,9 @@ def _same_result(leader: dict, mine: dict, la: list, lb: list) -> bool:
         return False
     if v == "UNREADABLE":
         return True
-    if v == "UNDETERMINED":
-        d1 = leader["rule"] == "D1_EXPLORERS_DISAGREE"
-        if d1 != (mine["rule"] == "D1_EXPLORERS_DISAGREE"):
-            return False
-        return not d1 or (leader["a"]["cls"] == mine["a"]["cls"] and leader["b"]["cls"] == mine["b"]["cls"])
+    if v == "UNDETERMINED":  # everything stored: the reason and each page's class and rule
+        return leader["rule"] == mine["rule"] and all(
+            leader[p]["cls"] == mine[p]["cls"] and leader[p].get("rule") == mine[p].get("rule") for p in ("a", "b"))
     return leader["rule"] == mine["rule"] and _same_page(leader["a"], mine["a"], la) and _same_page(leader["b"], mine["b"], lb)
 
 
@@ -732,6 +786,31 @@ Fill in:
 Respond with JSON only, with exactly these keys: {{{shape}}}"""
 
 
+def _keys(claim_type: str) -> list:
+    keys = []
+    if claim_type != "DECENTRALIZED_MINING":
+        keys += ["block_number", "extra_allocation", "allocation_amount", "evidence_line"]
+        if claim_type != "FAIR_LAUNCH":
+            keys += ["reward_amount", "reward_line"]
+    if claim_type in ("DECENTRALIZED_MINING", "FAIR_LAUNCH"):
+        keys += ["top_miner_name", "top_miner_blocks", "blocks_inspected"]
+        if claim_type == "DECENTRALIZED_MINING":
+            keys.append("rows")
+    return keys
+
+
+def _in_form(ans: dict, claim_type: str) -> bool:
+    """Every key of the form is there, each a string (or a whole number), rows a list."""
+    for k in _keys(claim_type):
+        v = ans.get(k)
+        if k == "rows":
+            if not isinstance(v, list):
+                return False
+        elif isinstance(v, bool) or not isinstance(v, (str, int)):
+            return False
+    return True
+
+
 def _fetch(url: str) -> str:
     try:
         return _clean_page(gl.nondet.web.render(url, mode="text", wait_after_loaded=RENDER_WAIT))
@@ -751,6 +830,8 @@ def _read_page(url: str, coin: str, claim_type: str) -> tuple:
         ans = _parse_llm_json(gl.nondet.exec_prompt(_prompt(claim_type, coin, page)))
     except Exception:
         return {"cls": "UNREADABLE"}, lines
+    if not _in_form(ans, claim_type):
+        return {"cls": "UNREADABLE"}, lines  # a model answer out of form says nothing about the page
     return _evidence(claim_type, ans, lines), lines
 
 
@@ -762,7 +843,7 @@ def _read_both(a_url: str, b_url: str, coin: str, claim_type: str) -> tuple:
 
 def _consensus(a_url: str, b_url: str, coin: str, claim_type: str) -> dict:
     def leader_fn() -> dict:
-        return _read_both(a_url, b_url, coin, claim_type)[0]
+        return _short(_read_both(a_url, b_url, coin, claim_type)[0])
 
     def validator_fn(leader_result) -> bool:
         if not isinstance(leader_result, gl.vm.Return):
@@ -775,6 +856,16 @@ def _consensus(a_url: str, b_url: str, coin: str, claim_type: str) -> dict:
         return _same_result(leader, mine, la, lb)
 
     return _check_result(gl.vm.run_nondet_unsafe(leader_fn, validator_fn), claim_type)
+
+
+def _outcome(old: dict, new: dict) -> str:
+    """UPHELD: the same fact again (same rule; for P1 the same block and amount, for P2 the same block).
+    OVERTURNED: the opposite definite verdict on a block-1 bond (BOTH:P1 <-> BOTH:P2). Anything else: NOT_CONFIRMED."""
+    if new["rule"] == old["rule"] and all(new[p].get(k) == old[p].get(k) for p in ("a", "b") for k in ("height", "amount")):
+        return "UPHELD"
+    if new["rule"] == OPPOSITE.get(old["rule"]):
+        return "OVERTURNED"
+    return "NOT_CONFIRMED"
 
 
 # ------------------------------------------------- storage
@@ -817,6 +908,7 @@ class LaunchClaimCheckerV2(gl.Contract):
     count: u256
     locked: u256
     claims_total: u256
+    burned: u256
     windows_json: str
 
     def __init__(self, bond_win: int = 3600, ch_win: int = 86400, grace: int = 3600, rc_win: int = 3600):
@@ -828,6 +920,7 @@ class LaunchClaimCheckerV2(gl.Contract):
         self.count = u256(0)
         self.locked = u256(0)
         self.claims_total = u256(0)
+        self.burned = u256(0)
 
     # ---- plumbing
 
@@ -899,7 +992,7 @@ class LaunchClaimCheckerV2(gl.Contract):
             "domains": [_domain(_host_of(explorer_a_url)), _domain(_host_of(explorer_b_url))],
             "coin_name": coin_name, "claim_type": claim_type, "claim_text": claim_text, "result": r,
         }
-        bd = {"state": "NONE", "amount": 0, "tb": 0, "n": 0, "clock": now, "recheck": None, "req_collected": False, "held": 0}
+        bd = {"state": "NONE", "amount": 0, "tb": 0, "n": 0, "clock": now, "recheck": None, "req_collected": False, "held": 0, "burned": 0}
         self.checks[new_id] = Check(id=new_id, requester=me, record_json=json.dumps(record, sort_keys=True), bond_json=json.dumps(bd, sort_keys=True))
         self.count = u256(int(self.count) + 1)
         self._index(me, new_id)
@@ -922,13 +1015,13 @@ class LaunchClaimCheckerV2(gl.Contract):
         problem = ""
         if gl.message.sender_address.as_hex.lower() != c.requester.lower():
             problem = "only the requester can bond its check"
-        elif rec["result"]["rule"] not in ("BOTH:P1", "BOTH:P2"):
-            problem = "only a BOTH:P1 or BOTH:P2 verdict can be bonded"
+        elif rec["claim_type"] not in BONDABLE_CLAIMS or rec["result"]["rule"] not in OPPOSITE:
+            problem = "only a BOTH:P1 or BOTH:P2 verdict on NO_PREMINE or NO_FOUNDER_REWARD can be bonded"
         elif bd["state"] != "NONE":
             problem = "this check is already bonded"
         elif value < MIN_BOND:
             problem = f"the bond must be at least {MIN_BOND} wei"
-        elif now > rec["t0"] + w["bond_win"] or bd["clock"] >= rec["t0"] + w["bond_win"] + w["grace"]:
+        elif now > rec["t0"] + w["bond_win"]:
             problem = "the time to bond this check has passed"
         if problem:
             return self._refuse(problem)
@@ -949,7 +1042,7 @@ class LaunchClaimCheckerV2(gl.Contract):
         c, rec, bd = loaded
         me = gl.message.sender_address.as_hex.lower()
         problem = ""
-        if bd["state"] != "BONDED" or bd["recheck"] is not None:
+        if bd["state"] != "BONDED":
             problem = "this check has no open bond"
         elif me == c.requester.lower():
             problem = "the requester cannot challenge its own bond"
@@ -986,16 +1079,23 @@ class LaunchClaimCheckerV2(gl.Contract):
         if bd["state"] != "BONDED" or bd["n"] == 0:
             raise gl.vm.UserError("nothing to re-check: the check is " + ("unchallenged" if bd["state"] == "BONDED" else bd["state"]))
         t = self._times(bd)
-        if not t["rc_open"] <= now <= t["rc_end"] or bd["clock"] >= t["nc_from"]:
+        if not t["rc_open"] <= now <= t["rc_end"]:
             raise gl.vm.UserError(f"a re-check must be sent from unix time {t['rc_open']} to {t['rc_end']}")
         bd["clock"] = max(bd["clock"], now)
         r = _consensus(rec["explorer_a_url"], rec["explorer_b_url"], rec["coin_name"], rec["claim_type"])
-        if r["verdict"] == "UNREADABLE":
+        if r["verdict"] == "UNREADABLE" or "WRONG_PAGE" in (r["a"]["cls"], r["b"]["cls"]):
+            # a page that could not be read, or that did not show this coin (an error page, a page moved), decides
+            # nothing: the window stays open, and with no decided re-check the bond ends NOT_CONFIRMED.
             self._save(c, bd)
-            return {"ok": True, "decided": False, "why": "an explorer page could not be read; the re-check window stays open"}
-        old = rec["result"]["verdict"]
-        state = "UPHELD" if r["verdict"] == old else ("OVERTURNED" if r["verdict"] in ("SUPPORTED", "CONTRADICTED") else "NOT_CONFIRMED")
+            return {"ok": True, "decided": False, "why": "an explorer page could not be read or did not show this coin; the re-check window stays open"}
+        state = _outcome(rec["result"], r)
         bd.update(state=state, recheck=dict(r, at=now))
+        if state == "OVERTURNED":
+            burn = bd["amount"] // 2
+            bd["held"] -= burn
+            bd["burned"] = burn
+            self.locked = u256(int(self.locked) - burn)
+            self.burned = u256(int(self.burned) + burn)
         self._save(c, bd)
         return {"ok": True, "decided": True, "state": state, "verdict": r["verdict"], "rule": r["rule"]}
 
@@ -1046,7 +1146,8 @@ class LaunchClaimCheckerV2(gl.Contract):
                 raise gl.vm.UserError("already collected")
             i = int(mark)
             if st == "OVERTURNED":
-                due = B + B // n + (1 if i < B % n else 0)
+                pool = B - B // 2  # half the bond (rounded down) was burned at the re-check
+                due = B + pool // n + (1 if i < pool % n else 0)
             elif st == "NOT_CONFIRMED":
                 due = B
             self.challenger_of[key] = mark + ":collected"
@@ -1084,7 +1185,7 @@ class LaunchClaimCheckerV2(gl.Contract):
         out = {"id": c.id, "requester": c.requester, **rec, "bond": dict(bd), "as_of": at}
         if bd["state"] != "NONE":
             out["times"] = self._times(bd)
-        out["agreed"] = "the verdict and rule; per page the class and rule; P1 block and amount; P2 block; M miner name" if rec["result"]["verdict"] != "UNDETERMINED" else "the verdict, and whether the explorers disagree (D1); any other reason is the leader's reading"
+        out["agreed"] = "the verdict and rule; per page the class and rule; P1 block and amount; P2 block; M1 miner name" if rec["result"]["verdict"] != "UNDETERMINED" else "the verdict, the reason and each page's class and rule (nothing else is stored)"
         out["meaning"] = "what the two pages showed, not a finding about the coin"
         return out
 
@@ -1133,16 +1234,19 @@ class LaunchClaimCheckerV2(gl.Contract):
 
     @gl.public.view
     def totals(self) -> dict:
-        """locked (bonds and deposits not yet collected) + credited (not yet withdrawn)."""
-        locked, credited = int(self.locked), int(self.claims_total)
-        return {"locked": _s(locked), "credited": _s(credited), "accounted_for": _s(locked + credited), "checks": int(self.count)}
+        """locked (bonds and deposits not yet collected) + credited (not yet withdrawn) + burned (half of each overturned
+        bond, out of everyone's reach) = every wei paid in through bond and challenge and not withdrawn."""
+        locked, credited, burned = int(self.locked), int(self.claims_total), int(self.burned)
+        return {"locked": _s(locked), "credited": _s(credited), "burned": _s(burned), "accounted_for": _s(locked + credited + burned), "checks": int(self.count)}
 
     @gl.public.view
     def get_rules(self) -> dict:
         return {
             "claim_types": list(CLAIM_TYPES), "windows_seconds": self._w(), "window_floor_seconds": WIN_FLOOR,
-            "min_bond_wei": _s(MIN_BOND), "bondable": ["BOTH:P1", "BOTH:P2"], "max_height": MAX_HEIGHT,
+            "min_bond_wei": _s(MIN_BOND), "bondable": ["BOTH:P1", "BOTH:P2"], "bondable_claims": list(BONDABLE_CLAIMS),
+            "overturned": "half the bond (rounded down) is burned; each challenger collects its deposit and an equal share of the rest",
+            "upheld": "the same rule again; for P1 the same block and amount, for P2 the same block", "max_height": MAX_HEIGHT,
             "min_blocks": MIN_BLOCKS, "m1": "2 x top > total", "m2": "100 x largest <= 33 x total", "max_rows": MAX_ROWS,
-            "anchor_lines": ANCHOR_LINES, "page_chars": PAGE_CHARS, "stop_words": list(STOP_WORDS), "second_level": list(SECOND_LEVEL),
+            "anchor_lines": ANCHOR_LINES, "page_chars": PAGE_CHARS, "stop_words": list(STOP_WORDS), "generic_words": list(GENERIC_WORDS), "second_level": list(SECOND_LEVEL),
             "catch_all_words": list(AGGREGATE_WORDS), "fair_launch": "contradicted by P1 or M1; never supported",
         }
