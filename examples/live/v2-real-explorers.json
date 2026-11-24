@@ -1,0 +1,50 @@
+{
+ "what": "Checks of real coins on two real block explorers, sent to the page's Studio contract. Each is the only send of its kind; neither was read by the validators, so nothing was recorded.",
+ "note": "r1 was sent to the first build's page contract, r2 to the fixed build's. 'an explorer page could not be read' means a validator's rendered text of a page was empty, or its model's answer was not in the fixed form; the transaction does not say which page.",
+ "checks": [
+  {
+   "args": [
+    "https://blockchair.com/litecoin/block/1",
+    "https://live.blockcypher.com/ltc/block/1/",
+    "Litecoin",
+    "NO_PREMINE",
+    ""
+   ],
+   "tx": "0xebd3402c2eb12a4d3101615baa431b0f7be7bf09e87ff4cf089753ff11d81b3a",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "ERROR",
+   "returned": "an explorer page could not be read; nothing was recorded",
+   "created_at": "2026-11-24T12:17:51.708823+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "contract": "0x0239d9Dcf10F3D868F00d37b2363794c0715A866"
+  },
+  {
+   "network": "genlayer-studio",
+   "contract": "0xE9f2cA19bf87110fc188030264beb1c0c0C9Dd57",
+   "sender": "0x26F1344611281B471dE0C08aD2D736DF5BB656Da",
+   "args": [
+    "https://blockstream.info/block-height/1",
+    "https://www.blockchain.com/explorer/blocks/btc/1",
+    "Bitcoin",
+    "NO_PREMINE",
+    ""
+   ],
+   "tx": "0x2c0ed4a6b3b5ddc70b36fcd40c8c8bb614c85ed8c5a0383b38b9fd38d7959c74",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "ERROR",
+   "returned": "an explorer page could not be read; nothing was recorded",
+   "created_at": "2026-11-24T16:29:32.938821+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   }
+  }
+ ]
+}

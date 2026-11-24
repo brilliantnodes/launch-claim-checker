@@ -1,0 +1,1121 @@
+{
+ "network": "testnet-bradbury-phase-2",
+ "chain_id": 4221,
+ "build": "bradbury/build/launch_claim_checker_v2.py (GenVM v0.6)",
+ "build_sha256": "aa32cf2fdb7ce225acdcddd43368cae8b14ff4feb57b45f4258584f8b2c03a46",
+ "address": "0x106980F7bA1C2101488b99f13df51b07C0DAAc16",
+ "deploy_tx": "0x0cb38f6ec9f127292493ed40da22a3b8496d42121baf6c5ca40deda692a6eea0",
+ "windows_seconds": [
+  600,
+  600,
+  600,
+  600
+ ],
+ "bond_wei": "100000000000000000",
+ "accounts": {
+  "requester": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+  "challenger1": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+  "challenger2": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23"
+ },
+ "steps": [
+  {
+   "n": 1,
+   "label": "case A check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/block-1.html",
+    "Examplecoin",
+    "NO_FOUNDER_REWARD",
+    "No founder reward"
+   ],
+   "value": "0",
+   "tx": "0x7bee0993af05d936f3166f15fdcf97415194a2d898d30e179b720afd7ae2dda0",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 3,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795535894",
+   "seconds": 82,
+   "as_expected": true
+  },
+  {
+   "n": 2,
+   "label": "bond case A",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xb20bbd1b9387a40ab14a8438929744797184826cafbdea70d9ffe3d2144cd3a0",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795535987",
+   "seconds": 41,
+   "as_expected": true
+  },
+  {
+   "n": 3,
+   "label": "challenge A by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x6a44e27b5dc7158721b90713a22ffb005acb17f98c547fdbb6dabf9a8512f1ad",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795536041",
+   "seconds": 49,
+   "as_expected": true
+  },
+  {
+   "n": 4,
+   "label": "challenge A by challenger2",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x086bfa33197aff3a16198d81afcb09a087d747028756fa6a67af283ab37123e1",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795536091",
+   "seconds": 80,
+   "as_expected": true
+  },
+  {
+   "n": 5,
+   "label": "challenge A by the requester",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xd31bdebc4b84e760bd407ac77af93801bc03e54d9b96ed623866ac0d4450d003",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT"
+    ]
+   },
+   "created": "1795536178",
+   "seconds": 39,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 6,
+   "label": "challenge A again by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xe0734b2b52996ea3f6efb5926c55e8b7ede8dcff872ce047da53b60303d91dd1",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795536229",
+   "seconds": 48,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 7,
+   "label": "case B check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/controlcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/controlcoin/block-1.html",
+    "Controlcoin",
+    "NO_PREMINE",
+    "No premine"
+   ],
+   "value": "0",
+   "tx": "0xb844c46ecac8b12243e5287e46a6007e68567db68525c0848c2890209f9b92a0",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 3,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795536295",
+   "seconds": 123,
+   "as_expected": true
+  },
+  {
+   "n": 8,
+   "label": "bond case B",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "2"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x07633e6670bdc67d1925463416b64f9a772b3bd7544e2c5744e8759ece8fbb05",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 4,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795536431",
+   "seconds": 134,
+   "as_expected": true
+  },
+  {
+   "n": 9,
+   "label": "challenge B with the wrong amount",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "2"
+   ],
+   "value": "99999999999999999",
+   "tx": "0x6d5e6200654f3da4d9a183d749d0476caf5623d5716e974d51988728015b8ea6",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 4,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795536582",
+   "seconds": 121,
+   "as_expected": true,
+   "credited_back": "99999999999999999"
+  },
+  {
+   "n": 10,
+   "label": "settle B too early",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "settle",
+   "args": [
+    "2"
+   ],
+   "value": "0",
+   "tx": "0x04971450ec9227b098466cbd30709fe099cf8eecc7e3fb73bb1556c7db623624",
+   "expected": "refused with an error",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_ERROR",
+   "validators": {
+    "of": 4,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR"
+    ]
+   },
+   "created": "1795536713",
+   "seconds": 60,
+   "as_expected": true
+  },
+  {
+   "n": 11,
+   "label": "case C check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/turncoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/turncoin/block-1.html",
+    "Turncoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0xa2add8c2da5405bef5c0055fc0968b6d833fe01b1e3e8bd222040ed7942d8bbc",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 4,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795536780",
+   "seconds": 146,
+   "as_expected": true
+  },
+  {
+   "n": 12,
+   "label": "bond case C",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "3"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x1b634af905a80064cda08defcd00c2542316ff43fe27adf99225ce7aa0b37ada",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795536940",
+   "seconds": 34,
+   "as_expected": true
+  },
+  {
+   "n": 13,
+   "label": "challenge C by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "3"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xbecb10bb2bf3570a92355e45349f35624d1d34b513b169353bb19a1ac6b98dec",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795536986",
+   "seconds": 34,
+   "as_expected": true
+  },
+  {
+   "n": 14,
+   "label": "challenge B after the window",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "challenge",
+   "args": [
+    "2"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xe1e87f74ecd6eca895e26ae896ec5665a8d19768b76e4187aa00637bb464a828",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795537047",
+   "seconds": 32,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 15,
+   "label": "case D check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/veercoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/veercoin/block-1.html",
+    "Veercoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0x451abf3cbfe3e444504522a1fcf82ccec3f3a0b662fe1f530430803e3b149680",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "NONDET_DISAGREE",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795537108",
+   "seconds": 97,
+   "as_expected": true
+  },
+  {
+   "n": 16,
+   "label": "recheck A",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "recheck",
+   "args": [
+    "1"
+   ],
+   "value": "0",
+   "tx": "0xfe214410809da9294c2daec558d32485773a2b6dff73fb3c0336e4926d5a8b2d",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 4,
+    "same_as_the_result": 3,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "NONDET_DISAGREE",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795537218",
+   "seconds": 96,
+   "as_expected": true
+  },
+  {
+   "n": 17,
+   "label": "bond case D",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "4"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x95b5ec78b2b4c8e51cd5afbfae1b918c6e96a09e00868c6494c9d61cc90786d3",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795537315",
+   "seconds": 32,
+   "as_expected": true
+  },
+  {
+   "n": 18,
+   "label": "challenge D by challenger2",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "challenge",
+   "args": [
+    "4"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x81534ff608c2f3f480f181e8f3293d5f52db001112c64542a3ab20d01d3bb296",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795537359",
+   "seconds": 34,
+   "as_expected": true
+  },
+  {
+   "n": 19,
+   "label": "case E check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/block-1.html",
+    "Examplecoin",
+    "NO_PREMINE",
+    ""
+   ],
+   "value": "0",
+   "tx": "0xdf2cec66b1c578b0d657f432e8d604766408eb1f8acdeb949cc7285659915031",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 4,
+    "same_as_the_result": 3,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT"
+    ]
+   },
+   "created": "1795537433",
+   "seconds": 236,
+   "as_expected": true
+  },
+  {
+   "n": 20,
+   "label": "settle B (no challenger)",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "settle",
+   "args": [
+    "2"
+   ],
+   "value": "0",
+   "tx": "0x99df168a69959d7027fc27fba7441917c3e4bf5268a9f235b38fdfe258faf6b1",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795537682",
+   "seconds": 25,
+   "as_expected": true
+  },
+  {
+   "n": 21,
+   "label": "bond case E",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "5"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xa54111419487366c5959a684ed224fac26a0c398500cf7a5850e75386ddaab89",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795537707",
+   "seconds": 32,
+   "as_expected": true
+  },
+  {
+   "n": 22,
+   "label": "challenge E by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "5"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x1bf603e78e6816e37d237cda54289fb5b474e7d3a0838048b29ecafe4ce8a0ef",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795537751",
+   "seconds": 32,
+   "as_expected": true
+  },
+  {
+   "n": 23,
+   "label": "recheck E too early",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "recheck",
+   "args": [
+    "5"
+   ],
+   "value": "0",
+   "tx": "0x89abe572cf52b0596957aa599dd0c1fc1caf487736a1af6eb5949159c6cd781d",
+   "expected": "refused with an error",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_ERROR",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 4,
+    "votes": [
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "TIMEOUT"
+    ]
+   },
+   "created": "1795537784",
+   "seconds": 31,
+   "as_expected": true
+  },
+  {
+   "n": 24,
+   "label": "case F-mining check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-mining.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/pools.html",
+    "Examplecoin",
+    "DECENTRALIZED_MINING",
+    ""
+   ],
+   "value": "0",
+   "tx": "0xe9a0978651fe477b473ba74a86abd766c6be0235b1814955782ff4e8afe2735c",
+   "expected": "accepted",
+   "result": "UNDETERMINED",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 2,
+    "votes": [
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN",
+     "TIMEOUT",
+     "FINISHED_WITH_RETURN",
+     "NONDET_DISAGREE"
+    ]
+   },
+   "created": "1795537823",
+   "seconds": 144,
+   "as_expected": false
+  },
+  {
+   "n": 25,
+   "label": "case F-mining check (retry)",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-mining.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/pools.html",
+    "Examplecoin",
+    "DECENTRALIZED_MINING",
+    ""
+   ],
+   "value": "0",
+   "tx": "0x73e2f89e5a7ea8561aaac1071c883ccd3718d54d997a297b90ff60ea0acd0c01",
+   "expected": "accepted",
+   "result": "UNDETERMINED",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 4,
+    "same_as_the_result": 2,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "NONDET_DISAGREE",
+     "NONDET_DISAGREE"
+    ]
+   },
+   "created": "1795537976",
+   "seconds": 163,
+   "as_expected": false
+  },
+  {
+   "n": 26,
+   "label": "recheck C (both explorers corrected block 1)",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "recheck",
+   "args": [
+    "3"
+   ],
+   "value": "0",
+   "tx": "0xa4e274848cc5dd8d17b45404695c04f0b02e75dbb2d1f26a3f35d2e7e93e3863",
+   "expected": "accepted",
+   "result": "UNDETERMINED",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 0,
+    "votes": [
+     "NONDET_DISAGREE",
+     "TIMEOUT",
+     "TIMEOUT",
+     "NONDET_DISAGREE",
+     "NONDET_DISAGREE"
+    ]
+   },
+   "created": "1795538687",
+   "seconds": 363,
+   "as_expected": false
+  }
+ ],
+ "checks": [
+  {
+   "label": "contract rules: four windows of 600 s",
+   "value": {
+    "bond_win": 600,
+    "ch_win": 600,
+    "grace": 600,
+    "rc_win": 600
+   },
+   "want": {
+    "bond_win": 600,
+    "ch_win": 600,
+    "grace": 600,
+    "rc_win": 600
+   },
+   "ok": true,
+   "reads": 1,
+   "at": 1795535884
+  },
+  {
+   "label": "case A: check 1 is CONTRADICTED BOTH:P1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795535983
+  },
+  {
+   "label": "case A: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795536031
+  },
+  {
+   "label": "case A: two challengers, in order",
+   "value": [
+    "0xa8f3b6dc1b472e09bcc5002a61a4fb6660212590",
+    "0x9ad52f4bf93a0d3bd1979c543ea7b97619085a23"
+   ],
+   "want": [
+    "0xa8f3b6dc1b472e09bcc5002a61a4fb6660212590",
+    "0x9ad52f4bf93a0d3bd1979c543ea7b97619085a23"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795536285
+  },
+  {
+   "label": "case B: check 2 is SUPPORTED BOTH:P2",
+   "value": [
+    "SUPPORTED",
+    "BOTH:P2",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Controlcoin"
+   ],
+   "want": [
+    "SUPPORTED",
+    "BOTH:P2",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Controlcoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795536426
+  },
+  {
+   "label": "case B: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795536568
+  },
+  {
+   "label": "case C: check 3 is CONTRADICTED BOTH:P1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Turncoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Turncoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795536936
+  },
+  {
+   "label": "case C: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795536977
+  },
+  {
+   "label": "case D: check 4 is CONTRADICTED BOTH:P1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Veercoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Veercoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795537213
+  },
+  {
+   "label": "case D: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795537349
+  },
+  {
+   "label": "case E: check 5 is CONTRADICTED BOTH:P1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795537677
+  },
+  {
+   "label": "case E: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795537742
+  },
+  {
+   "label": "contract rules: four windows of 600 s",
+   "value": {
+    "bond_win": 600,
+    "ch_win": 600,
+    "grace": 600,
+    "rc_win": 600
+   },
+   "want": {
+    "bond_win": 600,
+    "ch_win": 600,
+    "grace": 600,
+    "rc_win": 600
+   },
+   "ok": true,
+   "reads": 1,
+   "at": 1795538403
+  },
+  {
+   "label": "case A: bonded",
+   "value": "UPHELD",
+   "want": "BONDED",
+   "ok": false,
+   "reads": 7,
+   "at": 1795538509
+  },
+  {
+   "label": "case A: two challengers, in order",
+   "value": [
+    "0xa8f3b6dc1b472e09bcc5002a61a4fb6660212590",
+    "0x9ad52f4bf93a0d3bd1979c543ea7b97619085a23"
+   ],
+   "want": [
+    "0xa8f3b6dc1b472e09bcc5002a61a4fb6660212590",
+    "0x9ad52f4bf93a0d3bd1979c543ea7b97619085a23"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795538521
+  },
+  {
+   "label": "case B: bonded",
+   "value": "RELEASED",
+   "want": "BONDED",
+   "ok": false,
+   "reads": 7,
+   "at": 1795538622
+  },
+  {
+   "label": "case C: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795538633
+  },
+  {
+   "label": "case D: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795538644
+  },
+  {
+   "label": "case E: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795538655
+  }
+ ],
+ "page_changes": [
+  {
+   "coin": "turncoin",
+   "commits": {
+    "launch-claim-checker": "db1f86c",
+    "demo-explorer": "a7a9ef4"
+   },
+   "live": {
+    "a": true,
+    "b": true
+   },
+   "at": 1795537098
+  },
+  {
+   "coin": "veercoin",
+   "commits": {
+    "launch-claim-checker": null,
+    "demo-explorer": "48b5073"
+   },
+   "live": {
+    "a": null,
+    "b": true
+   },
+   "at": 1795537423
+  }
+ ],
+ "cases": {
+  "A": {
+   "id": "1",
+   "check_tx": "0x7bee0993af05d936f3166f15fdcf97415194a2d898d30e179b720afd7ae2dda0",
+   "times": {
+    "close": 1795536587,
+    "nc_from": 1795538387,
+    "rc_end": 1795537787,
+    "rc_open": 1795537187
+   }
+  },
+  "B": {
+   "id": "2",
+   "check_tx": "0xb844c46ecac8b12243e5287e46a6007e68567db68525c0848c2890209f9b92a0",
+   "times": {
+    "close": 1795537031,
+    "nc_from": 1795538831,
+    "rc_end": 1795538231,
+    "rc_open": 1795537631
+   }
+  },
+  "C": {
+   "id": "3",
+   "check_tx": "0xa2add8c2da5405bef5c0055fc0968b6d833fe01b1e3e8bd222040ed7942d8bbc",
+   "times": {
+    "close": 1795537540,
+    "nc_from": 1795539340,
+    "rc_end": 1795538740,
+    "rc_open": 1795538140
+   }
+  },
+  "D": {
+   "id": "4",
+   "check_tx": "0x451abf3cbfe3e444504522a1fcf82ccec3f3a0b662fe1f530430803e3b149680",
+   "times": {
+    "close": 1795537915,
+    "nc_from": 1795539715,
+    "rc_end": 1795539115,
+    "rc_open": 1795538515
+   }
+  },
+  "E": {
+   "id": "5",
+   "check_tx": "0xdf2cec66b1c578b0d657f432e8d604766408eb1f8acdeb949cc7285659915031",
+   "times": {
+    "close": 1795538307,
+    "nc_from": 1795540107,
+    "rc_end": 1795539507,
+    "rc_open": 1795538907
+   }
+  }
+ },
+ "stopped": {
+  "at_utc": "2026-11-24T16:52Z",
+  "why": "Stopped by Brilliant Nodes after step 26. The Examplecoin mining check had no majority on two attempts (two validators timed out on the first; on the second the leader's model read explorer B's pool table as showing nothing, and two validators disagreed); the run stopped there and was resumed about six minutes later. Steps run on resume re-read the views of cases A and B after their bonds had already been decided, so those two reads show UPHELD and RELEASED where BONDED was expected. The re-check of case C (Turncoin) then had no majority (0 of 5 matching the leader, 363 s), and its 600-second re-check window, and case D's, closed before either could be sent again. Cases C and D therefore could not show the overturn and the disagreement on this deployment.",
+  "what_was_done": "A new deployment (0x2cc43Dab1D122258bAc2653877C6c100e8816bFa) with a 1,200-second re-check window, two new fictional coins (Swaycoin, Tiltcoin) and a run that sends an undecided re-check once more while its window leaves time: examples/live/v2-bradbury.json.",
+  "left_on_this_deployment": "Cases A and B were decided (upheld, released). Cases C, D and E were bonded and challenged and not collected; their test GEN stays locked in the contract until someone settles them."
+ }
+}
