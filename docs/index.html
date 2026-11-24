@@ -6,13 +6,13 @@
     <title>Launch Claim Checker</title>
     <meta name="description" content="Check a crypto launch claim against the announcement and a block explorer page. Verdicts are agreed by GenLayer validators and stored on chain." />
     <link rel="icon" href="./logo.svg" type="image/svg+xml" />
-    <script type="module" crossorigin src="./assets/main-BQbtQBHn.js"></script>
+    <script type="module" crossorigin src="./assets/main-D4ILWNIo.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/defineChain-D1SuaLFt.js">
     <link rel="modulepreload" crossorigin href="./assets/utils-p0bEcrd5.js">
     <link rel="modulepreload" crossorigin href="./assets/withTimeout-B-Ytf9Fu.js">
     <link rel="modulepreload" crossorigin href="./assets/secp256k1-BM-95uel.js">
     <link rel="modulepreload" crossorigin href="./assets/privateKeyToAccount-CJa2Deep.js">
-    <link rel="modulepreload" crossorigin href="./assets/config-DHQr3ELy.js">
+    <link rel="modulepreload" crossorigin href="./assets/config-7CUAGnQy.js">
     <link rel="stylesheet" crossorigin href="./assets/config-CISUaMU9.css">
   </head>
   <body>
@@ -41,8 +41,16 @@
         <p class="small">Runs on GenLayer Studio and on <a href="?net=bradbury">Testnet Bradbury Phase 2</a>; switch at the top of the page.</p>
       </section>
 
+      <section class="card" aria-labelledby="v2-h">
+        <h2 id="v2-h">New: two explorers, a bond and a challenge</h2>
+        <p>
+          Version 2 reads a launch claim on two block explorers on different domains and keeps a verdict only when both show the same thing.
+          A verdict can be bonded, challenged by anyone and re-checked by the validators. <a href="./two-explorers.html" id="to-v2">Open the v2 page</a>.
+        </p>
+      </section>
+
       <section class="card" aria-labelledby="bounty-h">
-        <h2 id="bounty-h">New: claim bounties</h2>
+        <h2 id="bounty-h">Claim bounties</h2>
         <p>
           Put test GEN behind a launch claim. A bounty pays the first person who shows, on the explorer pages the poster pinned,
           that the claim is false. <a href="./bounties.html" id="to-bounties">Open the bounties page</a>.

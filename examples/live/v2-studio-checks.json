@@ -1,0 +1,393 @@
+{
+ "network": "genlayer-studio",
+ "chain_id": 61999,
+ "contract_source": "contracts/launch_claim_checker_v2.py",
+ "contract_sha256": "01ed46a3b26b86ee817b1508c1527c78103845430d172f25bf1700cae4a46422",
+ "windows_seconds": [
+  600,
+  600,
+  600,
+  600
+ ],
+ "accounts": {
+  "requester": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+  "challenger1": "0x2dE9cF445E20DeEb411C21b04dc833500eAb8AD6",
+  "challenger2": "0x3E1f7Ecc1f8Ec8a301F5bc73D58F017224BF10C9"
+ },
+ "steps": [
+  {
+   "label": "check 1 Examplecoin NO_FOUNDER_REWARD",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/block-1.html",
+    "Examplecoin",
+    "NO_FOUNDER_REWARD",
+    "No founder reward"
+   ],
+   "value": "0",
+   "tx": "0x7bf338d12bd583cfefa282c173a53852ca12f807c2ff97000f8b2e4b8ee86965",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "1",
+    "ok": true,
+    "rule": "BOTH:P1",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-24T09:06:57.428811+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "CONTRADICTED",
+    "rule": "BOTH:P1"
+   },
+   "as_expected": true,
+   "ok": true
+  },
+  {
+   "label": "check 2 Controlcoin NO_PREMINE",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/controlcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/controlcoin/block-1.html",
+    "Controlcoin",
+    "NO_PREMINE",
+    "No premine"
+   ],
+   "value": "0",
+   "tx": "0xaee4e0a8fd8939defcad9070b96f2c6bd07743959b8776f3cf493c93e1445fdf",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "2",
+    "ok": true,
+    "rule": "BOTH:P2",
+    "verdict": "SUPPORTED"
+   },
+   "created_at": "2026-11-24T09:07:49.648811+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "SUPPORTED",
+    "rule": "BOTH:P2"
+   },
+   "as_expected": true,
+   "ok": true
+  },
+  {
+   "label": "check 3 Examplecoin DECENTRALIZED_MINING",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-mining.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/pools.html",
+    "Examplecoin",
+    "DECENTRALIZED_MINING",
+    "Decentralised mining"
+   ],
+   "value": "0",
+   "tx": "0x883de0dab31d3adfc48c6928d60491aba31306f68bb16984bbf6311289393031",
+   "status": "FINALIZED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "3",
+    "ok": true,
+    "rule": "BOTH:M1",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-24T09:08:32.298798+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "CONTRADICTED",
+    "rule": "BOTH:M1"
+   },
+   "as_expected": true,
+   "ok": true
+  },
+  {
+   "label": "check 4 Splitcoin NO_FOUNDER_REWARD (explorers disagree)",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/splitcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/splitcoin/block-1.html",
+    "Splitcoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0x5f3fb1febf4e9bfa1d67c466bd7ec6a67bc16cc9f8e6d3eb9a7216e550252dab",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "4",
+    "ok": true,
+    "rule": "D1_EXPLORERS_DISAGREE",
+    "verdict": "UNDETERMINED"
+   },
+   "created_at": "2026-11-24T09:58:46.458812+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "UNDETERMINED",
+    "rule": "D1_EXPLORERS_DISAGREE"
+   },
+   "as_expected": true,
+   "ok": true
+  },
+  {
+   "label": "check 5 Examplecoin, explorer B shows another coin",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/controlcoin/block-1.html",
+    "Examplecoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0x5bbbc09383df3387bd8e90897a970e3ca325af2c12ee9974031c8beb367799c2",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "5",
+    "ok": true,
+    "rule": "W1_WRONG_PAGE",
+    "verdict": "UNDETERMINED"
+   },
+   "created_at": "2026-11-24T09:59:35.860512+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "UNDETERMINED",
+    "rule": "W1_WRONG_PAGE"
+   },
+   "as_expected": true,
+   "ok": true
+  },
+  {
+   "label": "check 6 Examplecoin mining, planted instruction on B",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-mining.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/pools-annotated.html",
+    "Examplecoin",
+    "DECENTRALIZED_MINING",
+    ""
+   ],
+   "value": "0",
+   "tx": "0x5dc5401be5c3ed9714799c7a95dd090fb15dbb4aa919024d9990f3ac1a9daa6e",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "6",
+    "ok": true,
+    "rule": "BOTH:M1",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-24T10:00:40.095127+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "CONTRADICTED",
+    "rule": "BOTH:M1"
+   },
+   "as_expected": true,
+   "ok": true
+  },
+  {
+   "label": "check 7 Flipcoin NO_FOUNDER_REWARD",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/flipcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/flipcoin/block-1.html",
+    "Flipcoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0xf506860f2f64958d7cd0fd2f43b5b02e30dbf674ec9773eb21b8d4925ad8deb2",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "7",
+    "ok": true,
+    "rule": "BOTH:P1",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-24T10:01:40.218931+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "CONTRADICTED",
+    "rule": "BOTH:P1"
+   },
+   "as_expected": true,
+   "ok": true
+  },
+  {
+   "label": "check 8 Driftcoin NO_FOUNDER_REWARD",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/driftcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/driftcoin/block-1.html",
+    "Driftcoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0x38ce897a4c28ebb928ef6736045dd02bab4ced8c45b5ab634d8342b40bea9c0e",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "8",
+    "ok": true,
+    "rule": "BOTH:P1",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-24T10:02:28.036086+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "CONTRADICTED",
+    "rule": "BOTH:P1"
+   },
+   "as_expected": true,
+   "ok": true
+  },
+  {
+   "label": "check 9 Examplecoin NO_PREMINE",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/block-1.html",
+    "Examplecoin",
+    "NO_PREMINE",
+    ""
+   ],
+   "value": "0",
+   "tx": "0x7b70d571c5cdbbfcdb310cee55e8b579bcdc6a6b6ecf3f515b32a46919756711",
+   "status": "FINALIZED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "9",
+    "ok": true,
+    "rule": "BOTH:P1",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-24T10:03:13.210827+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "CONTRADICTED",
+    "rule": "BOTH:P1"
+   },
+   "as_expected": true,
+   "ok": false,
+   "seen_by_the_run": {
+    "result": "NO_MAJORITY",
+    "note": "Studio was down while the run waited (503/502 errors); the run stopped waiting and recorded no majority."
+   },
+   "explained": "Sent at 10:03 UTC, during Studio's outage; the network processed it at about 10:33 UTC and the validators agreed (3 of 5). The run had stopped waiting and first recorded it as no majority; corrected here from the chain."
+  },
+  {
+   "label": "bond check 1, sent after its bond window (the run was resumed after the outage)",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "bond",
+   "args": [
+    "1"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0xd796b19668e3275de9733988ba371cd228b372e2a437f40c5deaca6e734220ec",
+   "status": "FINALIZED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "error": "the time to bond this check has passed",
+    "ok": false,
+    "refunded": "1000000000000000000"
+   },
+   "created_at": "2026-11-24T10:18:35.488799+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": "refused:the time to bond this check has passed",
+   "as_expected": true,
+   "explained": "Refused and credited back, as the contract should. The 1 GEN stays credited to the requester on this contract."
+  }
+ ],
+ "checks": [],
+ "page_changes": [],
+ "deploy": {
+  "tx": "0x73b1a824e885ca3b59eaa0f7552974560db867cdd8016ca8d1c2e407f67213ba",
+  "address": "0x775B1f1E20c23C3A5b59135b1a70f2c0C29294c5",
+  "status": "ACCEPTED",
+  "result": "MAJORITY_AGREE",
+  "execution": "SUCCESS",
+  "created_at": "2026-11-24T09:06:41.425035+00:00",
+  "rotations": 0,
+  "votes": {
+   "agree": 4,
+   "of": 5
+  }
+ },
+ "address": "0x775B1f1E20c23C3A5b59135b1a70f2c0C29294c5",
+ "note": "The free checks: nine checks, all agreed (check 9 was processed late, after Studio's outage). This deployment was meant to carry the bonds as well, but the outage held the run up until the 600-second bond windows of these checks had passed; the one bond sent then was refused and credited back (last step). The bond and challenge cases were run on a fresh deployment: v2-studio-money.json."
+}

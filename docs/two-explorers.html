@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Two explorers, a bond and a challenge · Launch Claim Checker</title>
+    <meta name="description" content="Launch Claim Checker v2: two explorers on different domains must agree on a launch claim. A verdict can be bonded, challenged and re-checked; GenLayer validators decide where the money goes." />
+    <link rel="icon" href="./logo.svg" type="image/svg+xml" />
+    <script type="module" crossorigin src="./assets/twoExplorers-DsarPrRP.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/defineChain-D1SuaLFt.js">
+    <link rel="modulepreload" crossorigin href="./assets/utils-p0bEcrd5.js">
+    <link rel="modulepreload" crossorigin href="./assets/withTimeout-B-Ytf9Fu.js">
+    <link rel="modulepreload" crossorigin href="./assets/secp256k1-BM-95uel.js">
+    <link rel="modulepreload" crossorigin href="./assets/privateKeyToAccount-CJa2Deep.js">
+    <link rel="modulepreload" crossorigin href="./assets/config-7CUAGnQy.js">
+    <link rel="stylesheet" crossorigin href="./assets/config-CISUaMU9.css">
+    <link rel="stylesheet" crossorigin href="./assets/bounties-BY75j-AD.css">
+  </head>
+  <body>
+    <header class="top">
+      <div class="brand">
+        <img src="./logo.svg" alt="" width="40" height="40" />
+        <div>
+          <h1>Two explorers, a bond and a challenge</h1>
+          <p class="sub">Launch Claim Checker v2</p>
+        </div>
+      </div>
+      <div class="net" id="net"></div>
+    </header>
+
+    <main>
+      <p class="small"><a href="./">← The free checker</a> · <a href="./bounties.html">Claim bounties</a></p>
+      <p class="banner" id="net-banner" role="note" hidden></p>
+
+      <section class="card intro">
+        <p>
+          A launch claim such as "no founder reward" is checked on <strong>two block explorers on different domains</strong>. Each GenLayer validator reads
+          both pages itself. A verdict stands only when both pages show the same thing; when they disagree, the answer is "the explorers disagree".
+        </p>
+        <ol class="how">
+          <li><strong>Check.</strong> Anyone names the coin, the claim and two block-1 pages (or two mining pages). Free, apart from the network fee.</li>
+          <li><strong>Bond.</strong> Within the bond window the requester can put test GEN behind a verdict that both explorers agree on about block 1 (rules BOTH:P1 or BOTH:P2).</li>
+          <li><strong>Challenge.</strong> While the challenge window is open, anyone else can deposit the same amount to say the verdict is wrong.</li>
+          <li><strong>Re-check.</strong> After a short grace period anyone can have the validators read both pages again. Same verdict: <em>upheld</em>, the requester takes the challengers' deposits. The opposite verdict: <em>overturned</em>, the challengers share the bond. Anything else, or no re-check in time: <em>not confirmed</em>, everyone gets their own money back. A bond nobody challenges is released.</li>
+        </ol>
+        <p class="small">
+          <strong>Read this first.</strong> A check trusts the two pages: whoever runs both explorers can decide what they show. Two domains make that harder, not impossible.
+          A verdict says what the pages showed when they were read; it is not a finding about the coin. Test GEN only.
+        </p>
+        <p class="small" id="windows-line"></p>
+      </section>
+
+      <section class="card" id="accounts-card" aria-labelledby="acct-h">
+        <h2 id="acct-h">Accounts</h2>
+        <p class="small" id="acct-help">Temporary accounts live in this browser only and hold test GEN from Studio's faucet. One requests and bonds; the others challenge.</p>
+        <div class="acct" data-role="requester">
+          <strong>Requester</strong> <span class="addr" id="requester-addr">No account</span>
+          <span class="acct-actions"><button type="button" class="secondary" data-temp="requester">Use a temporary account</button> <button type="button" class="secondary" data-fund="requester">Get test GEN</button></span>
+          <p class="small" id="requester-bal"></p>
+        </div>
+        <div class="acct" data-role="challenger1">
+          <strong>Challenger</strong> <span class="addr" id="challenger1-addr">No account</span>
+          <span class="acct-actions"><button type="button" class="secondary" data-temp="challenger1">Use a temporary account</button> <button type="button" class="secondary" data-fund="challenger1">Get test GEN</button></span>
+          <p class="small" id="challenger1-bal"></p>
+        </div>
+        <div class="acct" data-role="challenger2">
+          <strong>Second challenger</strong> <span class="addr" id="challenger2-addr">No account</span>
+          <span class="acct-actions"><button type="button" class="secondary" data-temp="challenger2">Use a temporary account</button> <button type="button" class="secondary" data-fund="challenger2">Get test GEN</button></span>
+          <p class="small" id="challenger2-bal"></p>
+        </div>
+        <p class="error" id="acct-error" role="alert" hidden></p>
+      </section>
+
+      <section class="card" id="check-card" aria-labelledby="check-h">
+        <h2 id="check-h">Check a claim on two explorers</h2>
+        <form id="check-form" novalidate>
+          <label for="ctype">Claim</label>
+          <select id="ctype">
+            <option value="NO_FOUNDER_REWARD">No founder reward</option>
+            <option value="NO_PREMINE">No premine</option>
+            <option value="FAIR_LAUNCH">Fair launch</option>
+            <option value="DECENTRALIZED_MINING">Decentralized mining</option>
+          </select>
+          <label for="coin">Coin name <span class="opt">(must be on both pages)</span></label>
+          <input id="coin" type="text" maxlength="40" placeholder="Examplecoin" />
+          <label for="url-a">Explorer A: block 1 page, or a mining page for "decentralized mining"</label>
+          <input id="url-a" type="url" inputmode="url" maxlength="200" placeholder="https://explorer-one.example/block/1" />
+          <label for="url-b">Explorer B, on a different domain</label>
+          <input id="url-b" type="url" inputmode="url" maxlength="200" placeholder="https://explorer-two.example/block/1" />
+          <label for="ctext">The claim as the project words it <span class="opt">(optional)</span></label>
+          <input id="ctext" type="text" maxlength="200" placeholder="No founder reward" />
+          <div class="examples">
+            <span class="small">Try an example:</span>
+            <button type="button" class="link" data-example="exm">Examplecoin, no founder reward</button>
+            <button type="button" class="link" data-example="ctl">Controlcoin, no premine</button>
+            <button type="button" class="link" data-example="spl">Splitcoin: the explorers disagree</button>
+            <button type="button" class="link" data-example="mine">Examplecoin, decentralized mining</button>
+          </div>
+          <p class="small">Every coin here is fictional. Explorer A is a test page on checker.brilliantnodes.com; explorer B is a second test explorer on brilliantnodes.github.io, with a different layout. Both are run by Brilliant Nodes for these tests.</p>
+          <p class="error" id="check-error" role="alert" hidden></p>
+          <button type="submit" id="btn-check">Check as Requester</button>
+        </form>
+      </section>
+
+      <section class="card" id="life" aria-labelledby="life-h" hidden>
+        <h2 id="life-h">Transaction progress</h2>
+        <p id="life-what"></p>
+        <ol class="steps" id="steps"></ol>
+        <p id="life-note" class="small" aria-live="polite"></p>
+        <p class="small" id="life-hash"></p>
+      </section>
+
+      <section class="card" aria-labelledby="list-h">
+        <div class="row">
+          <h2 id="list-h">Latest checks</h2>
+          <button type="button" id="refresh" class="secondary">Refresh</button>
+        </div>
+        <p class="small" id="list-state" aria-live="polite">Loading…</p>
+        <div id="list"></div>
+      </section>
+
+      <section class="card" aria-labelledby="rules-h">
+        <h2 id="rules-h">The rules, read from the contract</h2>
+        <table class="rules" id="rules"></table>
+        <p class="small" id="totals"></p>
+        <h3>Limits</h3>
+        <ul class="how">
+          <li>Two pages run by the same party are not two witnesses. The contract only requires two different domains; it cannot tell who runs them.</li>
+          <li>Rules P1 and M1 are a model's reading with code checks, not a proof: code checks that every amount, block number and miner name the model gives is printed on that validator's own copy of the page.</li>
+          <li>Only block-1 verdicts that both explorers agree on can be bonded. A mining verdict changes from block to block, so it cannot be bonded.</li>
+          <li>A re-check reads the pages as they are then. A page that changed, or an explorer that is down, decides the outcome; that is the point of a re-check, and also its limit.</li>
+          <li>Refused bonds and challenges are credited straight back; withdraw them any time. Withdrawals reach the wallet when the transaction is finalized.</li>
+          <li>The network follows redirects without saying so. Use pages that do not redirect.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <span id="foot-contract"></span>
+      <span><a id="foot-repo" href="#">Source code</a></span>
+    </footer>
+
+  </body>
+</html>

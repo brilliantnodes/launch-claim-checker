@@ -7,7 +7,7 @@ export default defineConfig({
     outDir: "../docs",
     emptyOutDir: true,
     target: "es2022",
-    // Two pages: the free checker and the bounties.
-    rollupOptions: { input: { main: "index.html", bounties: "bounties.html" } },
+    // Three pages: the free checker, the bounties, and v2 (two explorers, a bond and a challenge).
+    rollupOptions: { input: { main: "index.html", bounties: "bounties.html", twoExplorers: "two-explorers.html" } },
   },
 });
