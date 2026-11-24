@@ -17,7 +17,7 @@ a refused one finishes normally and credits the GEN back, so a refusal is
 shown by the caller's credit rising by exactly the amount sent. recheck(),
 settle() and collect() raise when refused.
 
-The same stories as tools/live_v2_money.py on Studio. Turncoin and Veercoin
+The same stories as tools/live_v2_money.py on Studio (an overturned bond burns half). Turncoin and Veercoin
 stand in for Flipcoin and Driftcoin, so that the Studio run's corrected pages
 stay as they were. All coins and both explorers are fictional.
 """
@@ -25,14 +25,15 @@ import hashlib
 import json
 import os
 import secrets
-import shutil
 import subprocess
 import sys
 import time
-import urllib.request
 from pathlib import Path
 
 from genlayer_py import create_account
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import v2_pages  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 JS = ROOT / "tools" / "bradbury"
@@ -42,8 +43,8 @@ RESUME = "--resume" in sys.argv
 _args = [a for a in sys.argv[1:] if not a.startswith("--")]
 OUT = Path(_args[0]) if _args else ROOT / "examples" / "live" / "v2-bradbury.json"
 BUILD = ROOT / "bradbury" / "build" / "launch_claim_checker_v2.py"
-ADDRESS = os.environ.get("LCC2_BRADBURY", "0xC1b4AD9cd4D1609461B6eabbBb78a0B1F4FC8E22")
-DEPLOY_TX = "0xbddd1d3a9f7ebeb7abab9173c8346f64a22700cba511d7f13e3ffe94c80dd96f"
+ADDRESS = os.environ.get("LCC2_BRADBURY", "0x106980F7bA1C2101488b99f13df51b07C0DAAc16")
+DEPLOY_TX = os.environ.get("LCC2_BRADBURY_DEPLOY", "0x0cb38f6ec9f127292493ed40da22a3b8496d42121baf6c5ca40deda692a6eea0")
 G = 10**18
 BOND = G // 10
 A_URL = "https://checker.brilliantnodes.com/v2/{c}-block-1.html"
@@ -226,41 +227,14 @@ def new_check(case, args, verdict, rule):
     raise SystemExit(f"case {case}: no agreed check after two attempts")
 
 
-def page_has(url, text, tries=40):
-    for _ in range(tries):
-        try:
-            req = urllib.request.Request(url + f"?nocache={int(time.time())}", headers={"User-Agent": "lcc2-live"})
-            if text in urllib.request.urlopen(req, timeout=20).read().decode():
-                return True
-        except Exception:
-            pass
-        due()
-        time.sleep(15)
-    return False
-
-
 def correct_pages(coin):
-    """Write and push the corrected pages for one coin (tools/make_v2_pages.py --corrected), keeping the Studio run's corrections."""
+    """Correct one coin's fictional pages (tools/v2_pages.py), sending due outcome steps while the pages go live."""
     if any(p["coin"] == coin for p in rec["page_changes"]):
         return
-    done = ["flipcoin", "driftcoin"] + [p["coin"] for p in rec["page_changes"]] + [coin]
-    subprocess.run([sys.executable, str(ROOT / "tools" / "make_v2_pages.py"), str(ROOT / "web" / "public"), str(DEMO_REPO), "--corrected", ",".join(done)], check=True, capture_output=True)
-    shutil.copytree(ROOT / "web" / "public" / "v2", ROOT / "docs" / "v2", dirs_exist_ok=True)
-    msg = (f"Fictional explorer data correction for {coin} (Bradbury live run of Launch Claim Checker v2)\n\n"
-           "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01PmboiXeSxAX9LMvc5cn1bn\n")
-    commits = {}
-    for repo, paths, branches in ((ROOT, ["web/public/v2", "docs/v2"], ["main", "milestone-two-explorers"]), (DEMO_REPO, ["."], ["main"])):
-        subprocess.run(["git", "-C", str(repo), "add", *paths], check=True)
-        r = subprocess.run(["git", "-C", str(repo), "-c", "user.name=Brilliant Nodes", "-c", "user.email=noreply@brilliantnodes.com", "commit", "-q", "-m", msg], capture_output=True, text=True)
-        if r.returncode == 0:
-            for b in branches:
-                subprocess.run(["git", "-C", str(repo), "-c", "push.negotiate=true", "push", "-q", "origin", f"HEAD:{b}"], check=True, capture_output=True)
-        commits[repo.name] = subprocess.run(["git", "-C", str(repo), "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
-    live = {"a": page_has(A_URL.format(c=coin), "Correction (fictional)") if coin == "turncoin" else None,
-            "b": page_has(B_URL.format(c=coin), "Data correction (fictional)")}
-    rec["page_changes"].append({"coin": coin, "commits": commits, "live": live, "at": int(time.time())})
+    ch = v2_pages.correct(coin, "Bradbury live run", DEMO_REPO, ROOT, wait=due)
+    rec["page_changes"].append(ch)
     save()
-    print(f"pages corrected for {coin}: {commits} live={live}", flush=True)
+    print(f"pages corrected for {coin}: {ch}", flush=True)
 
 
 def times(case):
@@ -356,6 +330,8 @@ new_check("F-mining", [A_MINE, B_MINE, "Examplecoin", "DECENTRALIZED_MINING", ""
 step("bond on a mining verdict", "requester", "bond", [rec["cases"]["F-mining"]["id"]], BOND, credited_back=True)
 new_check("F-disagree", [A_URL.format(c="splitcoin"), B_URL.format(c="splitcoin"), "Splitcoin", "NO_FOUNDER_REWARD", ""], "UNDETERMINED", "D1_EXPLORERS_DISAGREE")
 step("bond on explorers that disagree", "requester", "bond", [rec["cases"]["F-disagree"]["id"]], BOND, credited_back=True)
+new_check("F-fair", [A_URL.format(c="examplecoin"), B_URL.format(c="examplecoin"), "Examplecoin", "FAIR_LAUNCH", "Fair launch"], *P1)
+step("bond on a FAIR_LAUNCH verdict", "requester", "bond", [rec["cases"]["F-fair"]["id"]], BOND, credited_back=True)
 
 # ------------------------------------------------------------------ outcomes, each as soon as it is due
 
@@ -373,7 +349,7 @@ check("case D: the re-check found the explorers disagree", lambda: (read("get_ch
 
 # ------------------------------------------------------------------ collect and withdraw
 
-owed = [("A", "requester", 3 * BOND), ("A", "challenger1", 0), ("B", "requester", BOND), ("C", "challenger1", 2 * BOND), ("D", "requester", BOND),
+owed = [("A", "requester", 3 * BOND), ("A", "challenger1", 0), ("B", "requester", BOND), ("C", "challenger1", BOND + (BOND - BOND // 2)), ("D", "requester", BOND),
         ("D", "challenger2", BOND), ("E", "requester", BOND), ("E", "challenger1", BOND)]
 for case, role, amount in owed:
     before = claimable(role)
@@ -388,8 +364,9 @@ for role in ROLES:
         check(f"withdraw {role}: one transfer of {have} to itself", msgs, [{"to": ADDR[role].lower(), "wei": str(have)}])
         check(f"withdraw {role}: nothing left credited", lambda role=role: claimable(role), 0)
 t = read("totals")
-check("totals: nothing locked or credited at the end", [t["locked"], t["credited"]], ["0", "0"])
-check("contract balance is zero", lambda: balance(ADDRESS), 0)
+check("totals: nothing locked or credited; half of case C's bond burned", [t["locked"], t["credited"], t["burned"]], ["0", "0", str(BOND // 2)])
+check("contract balance equals the burned GEN", lambda: balance(ADDRESS), BOND // 2)
+check("case C: half the bond burned", lambda: read("get_check", [rec["cases"]["C"]["id"]])["bond"].get("burned"), BOND // 2)
 rec["summary"] = {"steps": len(rec["steps"]), "steps_as_expected": sum(1 for s in rec["steps"] if s["as_expected"]),
                   "checks": len(rec["checks"]), "checks_ok": sum(1 for c in rec["checks"] if c["ok"])}
 save()

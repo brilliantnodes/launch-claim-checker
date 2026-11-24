@@ -15,23 +15,24 @@ Cases (all coins and both explorers fictional, both run by Brilliant Nodes):
   C  Flipcoin NO_FOUNDER_REWARD     bonded, challenged; both explorers then correct block 1 -> OVERTURNED
   D  Driftcoin NO_FOUNDER_REWARD    bonded, challenged; only Blockfield corrects block 1    -> NOT_CONFIRMED
   E  Examplecoin NO_PREMINE         bonded, challenged, nobody re-checks                    -> NOT_CONFIRMED
-  F  bonds refused on a mining verdict and on "explorers disagree"; challenges refused
-     (wrong amount, the requester, a second time, after the window); collect; withdraw.
+  F  free checks: explorer B shows another coin (W1); an instruction planted on B (verdict
+     unchanged); bonds refused on a mining verdict, on "explorers disagree" and on FAIR_LAUNCH;
+     challenges refused (wrong amount, the requester, a second time, after the window);
+     collect; withdraw. An overturned bond burns half: at the end the contract holds exactly
+     the burned GEN, and nothing is locked or credited.
 """
 import hashlib
 import json
 import os
-import shutil
-import subprocess
 import sys
 import time
-import urllib.request
 from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bounty import G, balance, client, fund, read  # noqa: E402
 from studio_fees import deploy, send  # noqa: E402
+import v2_pages  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 KEYS = Path(os.environ.get("LCC2_KEYS", str(Path.home() / ".lcc2-keys")))
@@ -46,6 +47,7 @@ A = "https://checker.brilliantnodes.com/v2/{c}-block-1.html"
 B = "https://brilliantnodes.github.io/demo-explorer/{c}/block-1.html"
 A_MINE = "https://checker.brilliantnodes.com/v2/examplecoin-mining.html"
 B_MINE = "https://brilliantnodes.github.io/demo-explorer/examplecoin/pools.html"
+B_PLANTED = "https://brilliantnodes.github.io/demo-explorer/examplecoin/pools-annotated.html"
 BOND = G
 
 roles = {r: client(KEYS / f"lcc2_studio_{r}.key") for r in ("requester", "challenger1", "challenger2")}
@@ -117,43 +119,14 @@ def check_view(label, cond, detail):
     print(("ok   " if cond else "FAIL ") + label, flush=True)
 
 
-def page_has(url, text, tries=40):
-    for _ in range(tries):
-        try:
-            req = urllib.request.Request(url + f"?nocache={int(time.time())}", headers={"User-Agent": "lcc2-live"})
-            if text in urllib.request.urlopen(req, timeout=20).read().decode():
-                return True
-        except Exception:
-            pass
-        due()
-        time.sleep(15)
-    return False
-
-
 def correct_pages(coin):
-    """Make and push the corrected pages for one coin (tools/make_v2_pages.py --corrected)."""
+    """Correct one coin's fictional pages (tools/v2_pages.py), sending due outcome steps while the pages go live."""
     if any(p["coin"] == coin for p in rec["page_changes"]):
         return
-    done = [p["coin"] for p in rec["page_changes"]] + [coin]
-    gen = [sys.executable, str(ROOT / "tools" / "make_v2_pages.py"), str(CHECKER_REPO / "web" / "public"), str(DEMO_REPO), "--corrected", ",".join(done)]
-    subprocess.run(gen, check=True, capture_output=True)
-    commits = {}
-    msg = f"Fictional explorer data correction for {coin} (live run of Launch Claim Checker v2)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01PmboiXeSxAX9LMvc5cn1bn\n"
-    for repo, paths, is_checker in ((CHECKER_REPO, ["web/public/v2", "docs/v2"], True), (DEMO_REPO, ["."], False)):
-        if is_checker:
-            shutil.copytree(repo / "web" / "public" / "v2", repo / "docs" / "v2", dirs_exist_ok=True)
-        subprocess.run(["git", "-C", str(repo), "add", *paths], check=True)
-        r = subprocess.run(["git", "-C", str(repo), "-c", "user.name=Brilliant Nodes", "-c", "user.email=noreply@brilliantnodes.com", "commit", "-q", "-m", msg], capture_output=True, text=True)
-        if r.returncode == 0:
-            subprocess.run(["git", "-C", str(repo), "-c", "push.negotiate=true", "push", "-q", "origin", "HEAD:main"], check=True, capture_output=True)
-            if is_checker:
-                subprocess.run(["git", "-C", str(repo), "-c", "push.negotiate=true", "push", "-q", "origin", "HEAD:milestone-two-explorers"], capture_output=True)
-        commits[repo.name] = subprocess.run(["git", "-C", str(repo), "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
-    live = {"a": page_has(A.format(c=coin), "Correction (fictional)") if coin == "flipcoin" else None,
-            "b": page_has(B.format(c=coin), "Data correction (fictional)")}
-    rec["page_changes"].append({"coin": coin, "commits": commits, "live": live, "at": int(time.time())})
+    ch = v2_pages.correct(coin, "Studio live run", DEMO_REPO, CHECKER_REPO, wait=due)
+    rec["page_changes"].append(ch)
     save()
-    print(f"pages corrected for {coin}: {commits} live={live}", flush=True)
+    print(f"pages corrected for {coin}: {ch}", flush=True)
 
 
 def times(case):
@@ -232,6 +205,10 @@ mine = check_with_retry("F-mining", [A_MINE, B_MINE, "Examplecoin", "DECENTRALIZ
 step("bond on a mining verdict", "requester", "bond", [mine], BOND, "refused:BOTH:P1 or BOTH:P2")
 split = check_with_retry("F-disagree", [A.format(c="splitcoin"), B.format(c="splitcoin"), "Splitcoin", "NO_FOUNDER_REWARD", ""], {"verdict": "UNDETERMINED", "rule": "D1_EXPLORERS_DISAGREE"})
 step("bond on explorers that disagree", "requester", "bond", [split], BOND, "refused:BOTH:P1 or BOTH:P2")
+fair = check_with_retry("F-fair", [A.format(c="examplecoin"), B.format(c="examplecoin"), "Examplecoin", "FAIR_LAUNCH", "Fair launch"], P1)
+step("bond on a FAIR_LAUNCH verdict", "requester", "bond", [fair], BOND, "refused:NO_PREMINE or NO_FOUNDER_REWARD")
+check_with_retry("F-wrong-page", [A.format(c="examplecoin"), B.format(c="controlcoin"), "Examplecoin", "NO_FOUNDER_REWARD", ""], {"verdict": "UNDETERMINED", "rule": "W1_WRONG_PAGE"})
+check_with_retry("F-planted", [A_MINE, B_PLANTED, "Examplecoin", "DECENTRALIZED_MINING", ""], {"verdict": "CONTRADICTED", "rule": "BOTH:M1"})
 
 # ------------------------------------------------------------------ outcomes
 
@@ -245,7 +222,7 @@ while any(o[3] not in DONE for o in OUTCOMES):
 # ------------------------------------------------------------------ collect and withdraw
 
 owed = {("A", "requester"): 3 * BOND, ("A", "challenger1"): 0, ("A", "challenger2"): 0, ("B", "requester"): BOND,
-        ("C", "requester"): 0, ("C", "challenger1"): 2 * BOND, ("D", "requester"): BOND, ("D", "challenger2"): BOND,
+        ("C", "requester"): 0, ("C", "challenger1"): BOND + (BOND - BOND // 2), ("D", "requester"): BOND, ("D", "challenger2"): BOND,
         ("E", "requester"): BOND, ("E", "challenger1"): BOND}
 for (case, who), amount in owed.items():
     step(f"collect {case} by {who}", who, "collect", [ids[case]], 0, {"ok": True, "credited": str(amount)})
@@ -263,8 +240,10 @@ check_view("case C shows the overturning verdict SUPPORTED", (v["C"]["bond"].get
 check_view("case D re-check: the explorers disagree", (v["D"]["bond"].get("recheck") or {}).get("rule") == "D1_EXPLORERS_DISAGREE", v["D"]["bond"].get("recheck"))
 check_view("challengers of case A", [x.lower() for x in read(C["requester"], rec["address"], "get_challengers", [ids["A"]])] == [ADDR["challenger1"].lower(), ADDR["challenger2"].lower()], None)
 t = read(C["requester"], rec["address"], "totals", [])
-check_view("totals: nothing locked or credited at the end", t["locked"] == "0" and t["credited"] == "0", t)
-check_view("contract balance is zero", balance(C["requester"], rec["address"]) == 0, balance(C["requester"], rec["address"]))
+check_view("totals: nothing locked or credited; half of case C's bond burned", t["locked"] == "0" and t["credited"] == "0" and t["burned"] == str(BOND // 2), t)
+check_view("contract balance equals the burned GEN", balance(C["requester"], rec["address"]) == BOND // 2, balance(C["requester"], rec["address"]))
+check_view("case C: half the bond burned", v["C"]["bond"].get("burned") == BOND // 2, v["C"]["bond"].get("burned"))
+check_view("case F-wrong-page stored in short form", read(C["requester"], rec["address"], "get_check", [rec["cases"]["F-wrong-page"]["id"]])["result"]["a"].keys() <= {"cls", "rule"}, None)
 rec["summary"] = {"steps": len(rec["steps"]), "steps_as_expected": sum(1 for s in rec["steps"] if s["as_expected"]),
                   "checks": len(rec["checks"]), "checks_ok": sum(1 for c in rec["checks"] if c["ok"])}
 save()
