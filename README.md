@@ -45,12 +45,12 @@ The thresholds are returned by the `get_rules` view, so a verdict can be audited
 
 ## Version 2: two explorers, a bond and a challenge
 
-Version 2 of the checker, [`contracts/launch_claim_checker_v2.py`](contracts/launch_claim_checker_v2.py), reads a launch claim on **two block explorers on different domains** and records a definite verdict only when **both show the same fact by the same rule**. A requester can put a bond behind a verdict about a coin's earliest blocks; anyone can challenge it with the same amount; the validators then read both explorers again and the outcome decides where the money goes. The accepted checker and the bounties contract are unchanged.
+Version 2 of the checker, [`contracts/launch_claim_checker_v2.py`](contracts/launch_claim_checker_v2.py), reads a launch claim on **two block explorers on different domains** and records a definite verdict only when **both show the same fact by the same rule**. A requester can put a bond behind a verdict about a coin's earliest blocks; anyone can challenge it with the same amount; the validators then read both explorers again and the outcome decides where the money goes. If the verdict is overturned, half the bond is burned. The accepted checker and the bounties contract are unchanged.
 
 - **Try it:** https://checker.brilliantnodes.com/two-explorers.html (GenLayer Studio, free temporary accounts) · [Bradbury view](https://checker.brilliantnodes.com/two-explorers.html?net=bradbury) (read-only)
-- **Video (88 seconds, with voice-over):** https://checker.brilliantnodes.com/two-explorers-demo-v3.mp4 · **Article:** https://checker.brilliantnodes.com/article-two-explorers.html
-- **Contract on Studio** (used by the page): [`0x0239d9Dcf10F3D868F00d37b2363794c0715A866`](https://explorer-studio.genlayer.com/address/0x0239d9Dcf10F3D868F00d37b2363794c0715A866) · [open it in GenLayer Studio](https://studio.genlayer.com/?import-contract=0x0239d9Dcf10F3D868F00d37b2363794c0715A866)
-- **Contract on Testnet Bradbury Phase 2:** [`0xC1b4AD9cd4D1609461B6eabbBb78a0B1F4FC8E22`](https://scan.bradbury.genlayer.com/address/0xC1b4AD9cd4D1609461B6eabbBb78a0B1F4FC8E22)
+- **Video (90 seconds, with voice-over):** https://checker.brilliantnodes.com/two-explorers-demo-v4.mp4 · **Article:** https://checker.brilliantnodes.com/article-two-explorers.html
+- **Contract on Studio** (used by the page): [`0xE9f2cA19bf87110fc188030264beb1c0c0C9Dd57`](https://explorer-studio.genlayer.com/address/0xE9f2cA19bf87110fc188030264beb1c0c0C9Dd57) · [open it in GenLayer Studio](https://studio.genlayer.com/?import-contract=0xE9f2cA19bf87110fc188030264beb1c0c0C9Dd57)
+- **Contract on Testnet Bradbury Phase 2:** [`0x106980F7bA1C2101488b99f13df51b07C0DAAc16`](https://scan.bradbury.genlayer.com/address/0x106980F7bA1C2101488b99f13df51b07C0DAAc16)
 - **What changed since the claim-bounties milestone:** [`MILESTONE-2.md`](MILESTONE-2.md)
 
 Test GEN only. All coins and both explorers used here are fictional test pages run by Brilliant Nodes: explorer A on checker.brilliantnodes.com/v2/, explorer B ("Blockfield", a different layout) on [brilliantnodes.github.io/demo-explorer](https://brilliantnodes.github.io/demo-explorer/).
@@ -71,8 +71,8 @@ For each explorer on its own (one model call per page; the other page is never i
 2. Code checks that the coin's name stands as a whole word in the first 12 non-empty lines. If not, it is the wrong page and no model runs.
 3. The model fills a fixed form; an answer out of form makes the page unreadable.
 4. Code decides the page's evidence, every check on **this validator's own copy**:
-   - **P1** (contradicts `NO_PREMINE`, `NO_FOUNDER_REWARD`, `FAIR_LAUNCH`): the bounties' P1 rule. A block number from 0 to 100 printed on the page; an allocation beyond the block reward; the amount parsed exactly and standing on the copied line.
-   - **P2** (supports `NO_PREMINE`, `NO_FOUNDER_REWARD`): the earliest block shown is 0 or 1, printed; the model copies that block's reward line and code finds the line and its amount on the page; the model says nothing else is paid in that block.
+   - **P1** (contradicts `NO_PREMINE`, `NO_FOUNDER_REWARD`, `FAIR_LAUNCH`): the bounties' P1 rule. A block number from 0 to 100, printed on a line of the page that says "block" or "height"; an allocation beyond the block reward; the amount parsed exactly and standing on the copied line.
+   - **P2** (supports `NO_PREMINE`, `NO_FOUNDER_REWARD`): the block shown is 0 or 1, printed on a line that says "block" or "height"; the model copies that block's reward line and code finds the line and its amount on the page; the model says nothing else is paid in that block.
    - **M1** (contradicts `DECENTRALIZED_MINING`, `FAIR_LAUNCH`): the bounties' M1 rule. A named miner and its count on one line, the total printed, catch-all rows refused, at least 50 blocks, 2 × count > total.
    - **M2** (supports `DECENTRALIZED_MINING`): the model copies every row (at most 25); code checks each row and that the rows add up to no more than the total; each catch-all row and the unlisted remainder count as one miner. Supported only if 100 × largest ≤ 33 × total.
    - `FAIR_LAUNCH` is never supported.
@@ -81,19 +81,19 @@ For each explorer on its own (one model call per page; the other page is never i
 | Explorer A | Explorer B | Verdict | Rule |
 |---|---|---|---|
 | contradicts by P1 | contradicts by P1, same block and same amount | `CONTRADICTED` | `BOTH:P1` |
-| contradicts by M1 | contradicts by M1 | `CONTRADICTED` | `BOTH:M1` |
+| contradicts by M1 | contradicts by M1, same miner | `CONTRADICTED` | `BOTH:M1` |
 | supports by P2 | supports by P2, same block | `SUPPORTED` | `BOTH:P2` |
 | supports by M2 | supports by M2 | `SUPPORTED` | `BOTH:M2` |
 | contradicts | supports (or the other way round) | `UNDETERMINED` | `D1_EXPLORERS_DISAGREE` |
 | either page is the wrong page (and the other does not show the opposite) | | `UNDETERMINED` | `W1_WRONG_PAGE` |
 | anything else | | `UNDETERMINED` | `D2_NOT_SHOWN_BY_BOTH` or `U1_NOT_ENOUGH_EVIDENCE` |
 
-If either page is unreadable, a check records nothing and a re-check decides nothing.
+If either page is unreadable, a check records nothing. In a re-check, a page that cannot be read or does not show the coin (an error page, a page that moved) decides nothing either: the re-check window stays open. A coin name made only of generic words or numbers ("Block 1", "Coinbase") is refused, because it would stand near the top of almost any explorer page.
 
 ### What validators must agree on
 
-- A definite verdict: exactly the same verdict and rule; per page the same class and rule; for P1 the same block number and amount; for P2 the same block; for the M rules the same miner name, which must stand on this validator's own copy. Each validator's own block counts decide its own verdict; no count or share is passed on or stored.
-- `UNDETERMINED`: the class, and whether the explorers disagree (`D1`). The other reasons are the leader's reading and are labelled so.
+- A definite verdict: exactly the same verdict and rule; per page the same class and rule; for P1 the same block number and amount; for P2 the same block; for M1 the same miner name, which must stand on this validator's own copy. Each validator's own block counts decide its own verdict; no count, share or M2 miner is passed on or stored.
+- `UNDETERMINED`: the result is passed on and stored in short form, the reason and each page's class and rule, and every validator compares all of it. No amount, block, line or miner is stored for an undetermined check.
 - The leader's own form must reproduce the leader's result through the same code.
 - What GEN depends on is only the class (supported, contradicted, or not definite), agreed exactly.
 
@@ -101,7 +101,7 @@ If either page is unreadable, a check records nothing and a re-check decides not
 
 | Call | Takes GEN | Model | Who | Effect |
 |---|---|---|---|---|
-| `bond(check_id)` | the bond | no | the requester | Bonds a `BOTH:P1` or `BOTH:P2` verdict, once, at least 0.01 GEN |
+| `bond(check_id)` | the bond | no | the requester | Bonds a `BOTH:P1` or `BOTH:P2` verdict on `NO_PREMINE` or `NO_FOUNDER_REWARD`, once, at least 0.01 GEN |
 | `challenge(check_id)` | exactly the bond | no | anyone but the requester, once per address | Adds a challenger; no cap on their number |
 | `recheck(check_id)` | no | yes | anyone | Reads both pages again; decides the outcome |
 | `settle(check_id)` | no | no | anyone | Releases an unchallenged bond, or ends a challenged bond nobody re-checked as not confirmed |
@@ -110,14 +110,14 @@ If either page is unreadable, a check records nothing and a re-check decides not
 
 Outcomes, with n challengers and bond B:
 
-- **Upheld** (the re-check gives the same class): the requester collects B + n × B.
-- **Overturned** (the opposite definite class): each challenger collects B + B div n, and the first B mod n challengers in recorded order 1 wei more.
-- **Not confirmed** (the re-check is not definite, or nobody re-checks in time): everyone collects their own money.
+- **Upheld** (the re-check finds the same fact: the same rule, and on both explorers the same block and, for P1, the same amount): the requester collects B + n × B.
+- **Overturned** (the opposite rule: `BOTH:P1` becomes `BOTH:P2`, or the other way round): B div 2 is burned. Each challenger collects its deposit B plus a share of the rest, P = B − B div 2: P div n, and the first P mod n challengers in recorded order 1 wei more. The requester therefore loses at least half the bond however many challenger addresses it uses itself.
+- **Not confirmed** (anything else: an undetermined re-check, a definite one with another block or amount, or nobody re-checks in time): everyone collects their own money.
 - **Released** (no challenger): the requester collects B.
 
 Time is each transaction's own timestamp; a check's clock is the latest timestamp it has seen and never runs backwards. With t0 the check's time and tb the bond's: a bond is taken until t0 + bond window; challenges until close = tb + challenge window; a re-check from close + grace for the re-check window; a challenged bond with no decided re-check can be settled as not confirmed from the end of that window + grace; an unchallenged bond can be released from close + grace. The windows are constructor settings, at least 600 seconds each, with no owner and no setter (`get_rules` shows them). The defaults are 60 minutes, 24 hours, 60 minutes and 60 minutes; every deployment named here uses 600 seconds for all four, so a whole case runs in about 40 minutes.
 
-**Money.** Pull payments only. `bond` and `challenge` run no model and never raise: a refused payment (wrong amount, the requester challenging itself, a second challenge from one address, too late, a verdict that cannot be bonded) is credited straight back. `totals()` returns locked (bonds and deposits not yet collected) and credited (not yet withdrawn); their sum equalled the contract's balance at the end of every live run. As for the bounties, GEN sent with a call that takes none, or with a wrong number of arguments, stays outside that sum, and a withdrawal on Bradbury needs a fee allocation for its transfer.
+**Money.** Pull payments only. `bond` and `challenge` run no model and never raise: a refused payment (wrong amount, the requester challenging itself, a second challenge from one address, too late, a verdict that cannot be bonded) is credited straight back. `totals()` returns locked (bonds and deposits not yet collected), credited (not yet withdrawn) and burned (half of each overturned bond, held by the contract for good); after every step of the live runs locked + credited + burned equalled the contract's balance. As for the bounties, GEN sent with a call that takes none, or with a wrong number of arguments, stays outside that sum. On Bradbury a withdrawal needs a fee allocation for its transfer: one sent without it is processed, the credit is taken, and the transfer is not made, so the amount is lost.
 
 ### Version 2 contract interface
 
@@ -126,23 +126,25 @@ Time is each transaction's own timestamp; a check's clock is the latest timestam
 | `__init__(bond_win=3600, ch_win=86400, grace=3600, rc_win=3600)` | constructor | The four windows, in seconds, each at least 600 |
 | `check_claim(explorer_a_url, explorer_b_url, coin_name, claim_type, claim_text="")` | write | Check a claim on two explorers on different domains |
 | `bond`, `challenge`, `recheck`, `settle`, `collect`, `withdraw` | payable / write | As in the table above |
-| `get_check(check_id, at=0)` | view | One check with both pages' readings, the bond and its times; with `at` set to the current unix time, the times as a transaction sent now would find them |
+| `get_check(check_id, at=0)` | view | One check with both pages' readings, the bond and its times, and the phase each window is in at time `at` (a unix time; a time before the check's own clock counts as that clock) |
 | `get_latest(limit=10, at=0)` | view | The newest checks (at most 20) |
 | `get_challengers(check_id)`, `get_by_address(address)`, `get_claimable(address)`, `get_count()`, `totals()`, `get_rules()` | view | A bond's challengers in order, an address's checks (its latest 200), its credit, the number of checks, the money, the rules |
 
 ### Live runs of version 2
 
-The same stories ran on Studio and on Bradbury on 24 Nov 2026: upheld with two challengers, released, overturned after both explorers corrected block 1, not confirmed when only one did, not confirmed when nobody re-checked, and every refusal credited back. Studio 41 of 41 transactions as expected, plus 10 on a free-check deployment; Bradbury 42 of 42; the page, clicked through in a headless browser, 8 of 8. Each case with its transactions is in [`MILESTONE-2.md`](MILESTONE-2.md#how-it-was-checked); `python tools/verify_v2.py` and `python tools/verify_v2_bradbury.py` check the records against the chain.
+The same stories ran on the fixed build, on Studio and on Bradbury, on 24 Nov 2026: upheld with two challengers, released, overturned after both explorers corrected block 1 (half the bond burned), not confirmed when only one did, not confirmed when nobody re-checked, and every refusal credited back, including bonds on mining, disagreeing and `FAIR_LAUNCH` verdicts. Studio: 45 of 45 transactions as expected. Bradbury: 44 of 45, the forty-fifth a mining check with no majority that agreed when sent again; four further sends were refused by the node before reaching the chain and sent again. The page, clicked through in a headless browser: 8 of 8. Each run ends with nothing locked or credited and the burned half in the contract. Each case with its transactions, and everything that did not go to plan, is in [`MILESTONE-2.md`](MILESTONE-2.md#how-it-was-checked); `python tools/verify_v2.py` and `python tools/verify_v2_bradbury.py` check the records against the chain. The first build's runs are kept in [`examples/live/v2-first-build/`](examples/live/v2-first-build/).
 
 ### Limits of version 2
 
 - **Two pages run by one party are not two witnesses.** The contract requires two different domains; it cannot tell who runs them. The domain rule is a short table (the last two labels of a host, three for names such as `co.uk`), not the public suffix list; all of `*.github.io` counts as one domain. The network follows redirects without saying so, so explorer B can redirect to explorer A; the page shows both hosts.
 - **The rules are a model's reading with code checks, not a proof.** Code checks that every amount, block number and miner name the model gives is printed on that validator's own copy of the page. The P rules do not see allocations made in a chain's genesis state, nor blocks the page does not show.
 - **A re-check reads the pages as they are then.** A page that changed, or an explorer that is down, decides the outcome. That is the point of a re-check, and also its limit: whoever runs both explorers can change both.
-- **Mining verdicts cannot be bonded**, because a live page's counts change from block to block.
-- **Extra challenger addresses** held by one person shrink an honest challenger's share of an overturned bond, at the cost of locking more GEN. The requester can challenge from another address; it then shares in its own loss.
+- **Only verdicts about a coin's first blocks can be bonded.** Mining verdicts change from block to block, and a `FAIR_LAUNCH` verdict can only ever be contradicted, so neither can be bonded.
+- **Whoever controls one of the two explorers can keep a re-check from deciding**, by showing an error page or another coin; the bond then ends not confirmed and everyone gets their money back. Controlling one explorer cannot overturn a verdict: that needs both.
+- **Extra challenger addresses** held by one person shrink an honest challenger's share of an overturned bond, at the cost of locking more GEN. A requester challenging its own bond from other addresses still loses at least half the bond, which is burned.
+- **The windows of the live deployments are short.** A bond's challenge window runs from the time the bond was sent; the live deployments use 600 seconds for every window to run whole cases in about 40 minutes. The defaults are 60 minutes to bond and 24 hours to challenge.
 - **A challenge processed after a re-check or a settle** is refused and credited back, even if it was sent in time.
-- **The live runs read Brilliant Nodes' own test pages.** One check on two real explorers (Litecoin's block 1 on blockchair.com and live.blockcypher.com) could not be read by the validators, so nothing was recorded. No outside party has bonded or challenged a verdict yet.
+- **The live runs read Brilliant Nodes' own test pages.** Two checks on real explorers (Litecoin's block 1 on blockchair.com and live.blockcypher.com; Bitcoin's block 1 on blockstream.info and blockchain.com) could not be read by the validators, so nothing was recorded ([`examples/live/v2-real-explorers.json`](examples/live/v2-real-explorers.json)). No outside party has bonded or challenged a verdict yet.
 
 ## Claim bounties
 

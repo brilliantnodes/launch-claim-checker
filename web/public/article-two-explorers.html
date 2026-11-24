@@ -59,25 +59,25 @@
 <p>A verdict becomes more useful when someone stands behind it. The person who asked for the check can now <strong>bond</strong> it: lock an amount of tokens behind the verdict. For a fixed period, <strong>anyone else can challenge</strong> it by depositing the same amount. There is no limit on how many people can challenge.</p>
 <p>After the challenge period, the machines <strong>read both explorers again</strong>, under the same rules:</p>
 <ul>
-<li>Same verdict: the bond is <strong>upheld</strong>, and the person who bonded it takes the challengers' deposits.</li>
-<li>The opposite verdict: it is <strong>overturned</strong>, and the challengers share the bond.</li>
-<li>Anything else, for example the explorers now disagree: <strong>not confirmed</strong>, and everyone gets their own money back.</li>
+<li>The same facts again: the bond is <strong>upheld</strong>, and the person who bonded it takes the challengers' deposits.</li>
+<li>The opposite verdict: it is <strong>overturned</strong>. Half the bond is burned; the challengers get their deposits back and share the other half. Burning half means that someone who bonds a false verdict and then challenges it from other addresses of their own still loses at least half the bond.</li>
+<li>Anything else, for example the explorers now disagree, or one of them shows an error page: <strong>not confirmed</strong>, and everyone gets their own money back.</li>
 </ul>
-<p>Only verdicts about a coin's earliest blocks can be bonded, because those blocks never change. Mining shares move from block to block, so a verdict about them is recorded but cannot carry money.</p>
+<p>Only verdicts on "no premine" and "no founder reward" about a coin's earliest blocks can be bonded, because those blocks never change. Mining shares move from block to block, and a "fair launch" promise can be shown false but never shown true, so verdicts about them are recorded but cannot carry money.</p>
 
 <h2>What we tested</h2>
 <p>We built two fictional explorers with different layouts on two different domains, and ran the same stories on two GenLayer test networks:</p>
 <ul>
 <li>A false promise, bonded and challenged by two people: the second reading agreed, and the bond was upheld.</li>
 <li>A true promise nobody challenged: the bond was released.</li>
-<li>Both explorers "corrected" a coin's block 1 after the bond: the second reading reversed the verdict, and the challenger was paid.</li>
+<li>Both explorers "corrected" a coin's block 1 after the bond: the second reading reversed the verdict, half the bond was burned, and the challenger collected its deposit and the other half.</li>
 <li>Only one explorer corrected it: the explorers now disagreed, and everyone got their money back.</li>
-<li>Wrong amounts, late challenges and attempts to bond a mining verdict were all refused, and the money was returned.</li>
+<li>Wrong amounts, late challenges and attempts to bond a mining or a "fair launch" verdict were all refused, and the money was returned.</li>
 </ul>
-<p>All 41 transactions on the first network and 42 on the second came out as expected, and each run ended with every token accounted for. The contract passes 70 automated tests of its own, and 93 of 93 deliberate breaks of its code were caught.</p>
+<p>On the first network all 45 transactions came out as expected. On the second, 44 of 45 did; the other, a mining check, found no agreement among the machines and agreed when sent again. Each run ended with every token accounted for: nothing locked, nothing owed, and the burned half in the contract. The contract passes 131 automated tests of its own, 119 of 119 deliberate breaks of its code were caught, and two independent reviews found problems that were fixed before these runs.</p>
 
 <h2>Limitations</h2>
-<p>Two websites run by the same party are not two witnesses, and the contract cannot tell who runs a domain. The rules rely on a model's reading of each page, checked by code, which is not a mathematical proof. They do not see coins created in a chain's starting state rather than paid in a block. A second reading sees the pages as they are at that moment, so a page that has changed, or an explorer that is down, decides the outcome. Our tests used pages we wrote; one attempt on two real explorers could not be read by the validators.</p>
+<p>Two websites run by the same party are not two witnesses, and the contract cannot tell who runs a domain. The rules rely on a model's reading of each page, checked by code, which is not a mathematical proof. They do not see coins created in a chain's starting state rather than paid in a block. A second reading sees the pages as they are at that moment, so a page that has changed decides the outcome. An explorer that is down or shows an error decides nothing, so whoever controls one of the two explorers can keep a second reading from deciding; the bond then ends with everyone's money returned. Our tests used pages we wrote. Two attempts on real explorers, block 1 of Litecoin and of Bitcoin, each on two well-known explorers, could not be read by the validators, so nothing was recorded.</p>
 
 <h2>Questions for further research</h2>
 <ol>

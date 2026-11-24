@@ -17,7 +17,7 @@ export const NETWORKS = {
     name: "GenLayer Testnet Bradbury Phase 2",
     contract: "0x963920f38a46c0Dc9592889a4B783FFAaEc6dA9C",
     bounties: "0xc437e39BA9e51282a259c814e2d4d9CcEF6c257b",
-    checkerV2: "0x106980F7bA1C2101488b99f13df51b07C0DAAc16",
+    checkerV2: "0x2cc43Dab1D122258bAc2653877C6c100e8816bFa", // second Bradbury run of the fixed build (20-minute re-check window)
     explorer: "https://scan.bradbury.genlayer.com",
     rpc: "https://rpc-bradbury.genlayer.com",
     chainId: 4221,

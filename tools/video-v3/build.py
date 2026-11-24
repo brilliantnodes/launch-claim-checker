@@ -35,9 +35,9 @@ LINES = {
     "two": "Launch Claim Checker version two reads the claim on two explorers, on two different domains. Every Gen Layer validator opens both pages itself, and plain code checks every number its model copies.",
     "verdict": "Both show two million coins paid to the founders in block one: contradicted. If they show different things, the answer is honest: the explorers disagree.",
     "bond": "Now put money behind it. The requester bonds the verdict. Anyone who thinks it is wrong can challenge it, with the same amount.",
-    "outcomes": "Then the validators read both explorers again. Same verdict: upheld, and the requester takes the deposits. The opposite: overturned, and the challengers share the bond. Anything else: everyone gets their money back.",
+    "outcomes": "Then the validators read both explorers again. The same facts: upheld, and the requester takes the deposits. The opposite: overturned. Half the bond is burned, and the challengers share the rest. Anything else: everyone gets their money back.",
     "flip": "We tested it live. Both explorers corrected Flip coin's block one. The re-check reversed the verdict, and the challenger was paid.",
-    "proof": "Seventy tests. Ninety three deliberate breaks, every one caught. Live on Gen Layer Studio and the Bradbury test net, with every transaction as expected.",
+    "proof": "A hundred and thirty one tests. A hundred and nineteen deliberate breaks, every one caught. Two independent reviews. Then live on Gen Layer Studio and the Bradbury test net.",
     "end": "Try it free, at checker dot brilliant nodes dot com.",
 }
 ORDER = list(LINES)
@@ -269,7 +269,7 @@ def scenes():
 <div class="person in" style="left:1530px;top:600px;{d(3.6)}"><div class="hd"></div><div class="bd"></div>Challenger 2</div>
 <div class="vault in" style="left:{vx}px;top:{vy}px;{d(.6)}"><div class="vglow pulse" style="{d(2.2)}"></div><div class="vglow pulse" style="{d(4.1)}"></div><div class="vglow pulse" style="{d(5.1)}"></div>
   <svg width="220" height="220" style="position:absolute;left:-10px;top:-10px"><circle cx="110" cy="110" r="100" class="ringbg"/><circle cx="110" cy="110" r="100" class="ring" style="{d(2.4)}"/></svg>
-  <div style="font-size:24px;color:#93a3c4;font-weight:700;margin-top:52px">BONDED</div>
+  <div style="font-size:24px;color:#93a3c4;font-weight:700;margin-top:52px">HELD</div>
   <div class="big" id="held" style="font-size:58px;color:#ffbe4d">0 GEN</div>
 </div>
 <div class="in" style="position:absolute;left:{vx-60}px;top:{vy+250}px;width:320px;text-align:center;font-size:26px;color:#93a3c4;font-weight:600;{d(2.4)}">challenge window</div>
@@ -284,9 +284,9 @@ def scenes():
     dur = durs["outcomes"]
     cards, flows = "", ""
     xs = [130, 700, 1270]
-    spec = [("r", "same verdict", "Upheld", "The requester takes the deposits", 3.2),
-            ("g", "opposite verdict", "Overturned", "The challengers share the bond", 6.0),
-            ("a", "anything else", "Not confirmed", "Everyone gets their money back", 8.6)]
+    spec = [("r", "same facts", "Upheld", "The requester takes the deposits", 3.2),
+            ("g", "opposite verdict", "Overturned", "Half the bond burned, challengers share the rest", 7.0),
+            ("a", "anything else", "Not confirmed", "Everyone gets their money back", 12.0)]
     def av(x, y, label, color):
         return f'<div style="position:absolute;left:{x}px;top:{y}px;width:84px;text-align:center;font-size:20px;font-weight:700;color:#c9d5ee"><div style="width:58px;height:58px;border-radius:50%;margin:0 auto 4px;background:{color}"></div>{label}</div>'
     def cf(x0, y0, x1, y1, t):
@@ -294,7 +294,7 @@ def scenes():
     pot = (230, 290)
     flowsets = [
         av(40, 300, "Requester", "#ffb02e") + "".join(cf(pot[0], 160, 140 + k * 62, 302, k * .25) for k in range(3)),
-        av(40, 300, "Challenger", "#4fe0a6") + av(396, 300, "Challenger", "#4fe0a6") + cf(pot[0], 160, 128, 302, 0) + cf(pot[0], 160, 190, 302, .15) + cf(pot[0], 160, 330, 302, .3) + cf(pot[0], 160, 268, 302, .45),
+        av(40, 300, "Challenger", "#4fe0a6") + av(218, 300, "Burned", "#ff5d6c") + av(396, 300, "Challenger", "#4fe0a6") + cf(pot[0], 160, 53, 302, 0) + cf(pot[0], 160, 409, 302, .15) + cf(pot[0], 160, 231, 302, .35),
         av(40, 300, "Requester", "#ffb02e") + av(218, 300, "Challenger", "#4fe0a6") + av(396, 300, "Challenger", "#4fe0a6") + cf(230, 160, 53, 380, 0) + cf(230, 160, 231, 380, .15) + cf(230, 160, 409, 380, .3),
     ]
     for x, (c, tag, title, text, t), fl in zip(xs, spec, flowsets):
@@ -333,15 +333,15 @@ def scenes():
 </div>
 <div class="in" style="position:absolute;left:760px;top:540px;width:400px;text-align:center;font-size:26px;color:#93a3c4;font-weight:700;{d(5.0)}">re-check</div>
 <div class="stamp" style="position:absolute;left:770px;top:650px;{d(6.4)}"><span class="pill g" style="font-size:40px;padding:18px 34px">OVERTURNED</span></div>
-<div class="in" style="position:absolute;left:0;right:0;top:880px;text-align:center;font-size:40px;font-weight:800;{d(7.2)}">The challenger collects <span class="amber">2 GEN</span></div>
-<div class="coin fly" style="left:0;top:0;--x0:917px;--y0:660px;--x1:1360px;--y1:860px;{d(7.4)}">2 GEN</div>
+<div class="in" style="position:absolute;left:0;right:0;top:880px;text-align:center;font-size:40px;font-weight:800;{d(7.2)}">The challenger collects <span class="amber">1.5 GEN</span> · 0.5 GEN burned</div>
+<div class="coin fly" style="left:0;top:0;--x0:917px;--y0:660px;--x1:1640px;--y1:860px;{d(7.4)}">1.5</div>
 """, css=""".flipcard{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:flip .8s cubic-bezier(.4,0,.2,1) both}
 @keyframes flip{from{transform:rotateY(0)}to{transform:rotateY(180deg)}}
 .face{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;backface-visibility:hidden}.face.back{transform:rotateY(180deg)}""")
 
     # 8. proof: counters and case tiles
     dur = durs["proof"]
-    tiles = ["Upheld, two challengers", "Released", "Overturned", "Not confirmed: explorers disagree", "Not confirmed: no re-check", "Every refusal credited back", "Withdrawals", "Planted instruction ignored"]
+    tiles = ["Upheld, two challengers", "Released", "Overturned, half burned", "Not confirmed: explorers disagree", "Not confirmed: no re-check", "Every refusal credited back", "Withdrawals", "Planted instruction ignored"]
     tl = "".join(f'<div class="tile pop" style="{d(4.2+i*.18)}"><b>✓</b>{t}</div>' for i, t in enumerate(tiles))
     S["proof"] = page(dur, f"""
 <div class="h in" style="{d(.1)}">Built to be broken. <span class="green">Then run live.</span></div>
@@ -352,13 +352,13 @@ def scenes():
  <div class="in" style="{d(3.0)}"><div class="big n" id="c4">0</div><div class="lab">live transactions, Bradbury</div></div>
 </div>
 <div class="tiles">{tl}</div>
-<div class="in" style="position:absolute;left:0;right:0;top:960px;text-align:center;font-size:30px;color:#c9d5ee;font-weight:600;{d(6.4)}">Every transaction as expected · every record checked against the chain</div>
+<div class="in" style="position:absolute;left:0;right:0;top:960px;text-align:center;font-size:30px;color:#c9d5ee;font-weight:600;{d(6.4)}">Every record checked against the chain</div>
 """, css=""".stats{position:absolute;left:90px;right:90px;top:290px;display:grid;grid-template-columns:repeat(4,1fr);gap:30px;text-align:center}
 .n{white-space:nowrap;font-size:140px;color:#ffbe4d;text-shadow:0 0 50px #ffb02e55}.lab{font-size:28px;color:#c9d5ee;font-weight:600;margin-top:6px}
 .tiles{position:absolute;left:150px;right:150px;top:640px;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
 .tile{background:rgba(14,28,58,.8);border:2px solid rgba(79,224,166,.35);border-radius:18px;padding:20px 22px;font-size:25px;font-weight:700;display:flex;gap:14px;align-items:center}
 .tile b{color:#06301f;background:#4fe0a6;border-radius:50%;width:38px;height:38px;flex:none;display:flex;align-items:center;justify-content:center;font-size:22px}""",
-        js="""const C=[[1,.3,70],[2,1.0,93],[3,2.6,41],[4,3.0,42]];window.tick=t=>{for(const [i,s,v] of C){const p=Math.max(0,Math.min(1,(t-s-.2)/1.2));document.getElementById('c'+i).textContent=Math.round(v*(1-Math.pow(1-p,3)));}if(t>=2.4)document.getElementById('c2').textContent='93/93';};""")
+        js="""const C=[[1,.3,131],[2,1.0,119],[3,2.6,45],[4,3.0,45]];window.tick=t=>{for(const [i,s,v] of C){const p=Math.max(0,Math.min(1,(t-s-.2)/1.2));document.getElementById('c'+i).textContent=Math.round(v*(1-Math.pow(1-p,3)));}if(t>=2.4)document.getElementById('c2').textContent='119/119';};""")
 
     # 9. end
     dur = durs["end"]
@@ -420,7 +420,8 @@ def render(names=None):
             pg.close()
         b.close()
     (B / "list.txt").write_text("".join(f"file 'parts/{n}.mp4'\n" for n in ORDER))
-    out, tmp = B / "two-explorers-demo-v3.mp4", B / "two-explorers-demo-v3.part.mp4"
+    name = os.environ.get("VIDEO_NAME", "two-explorers-demo-v4")
+    out, tmp = B / f"{name}.mp4", B / f"{name}.part.mp4"
     subprocess.run(["ffmpeg", "-y", "-v", "error", "-f", "concat", "-safe", "0", "-i", str(B / "list.txt"), "-i", str(B / "narration.wav"),
                     "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", str(tmp)], check=True)
     os.replace(tmp, out)
