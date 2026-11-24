@@ -1,5 +1,11 @@
 import { createClient, createAccount, generatePrivateKey } from "genlayer-js";
 import { studionet } from "genlayer-js/chains";
+// Since late November 2026 GenLayer Studio refuses a transaction without a fee distribution.
+// Reads stay on genlayer-js 1; every write goes through genlayer-js 2 with a fee estimate
+// (about 0.1 test GEN deposited, the unused part refunded).
+import { createClient as createWriter, createAccount as createAccountW } from "genlayer-js-studio";
+import { studionet as studionetW } from "genlayer-js-studio/chains";
+const studioFees = async (w) => { const f = await w.estimateTransactionFees(); return { distribution: f.distribution, feeValue: f.feeValue }; };
 import { NET, NETWORKS, CONTRACT_ADDRESS, NETWORK_NAME, EXPLORER_BASE, REPO_URL } from "./config.js";
 
 const BRADBURY = NET.key === "bradbury";
@@ -9,7 +15,7 @@ const v2 = BRADBURY ? await import("genlayer-js-v2") : null;
 const v2chains = BRADBURY ? await import("genlayer-js-v2/chains") : null;
 const CHAIN = BRADBURY ? v2chains.testnetBradbury : studionet;
 const makeClient = (account) =>
-  BRADBURY ? v2.createClient({ chain: CHAIN, endpoint: NET.rpc, ...(account && { account }) }) : createClient({ chain: studionet, ...(account && { account }) });
+  BRADBURY ? v2.createClient({ chain: CHAIN, endpoint: NET.rpc, ...(account && { account }) }) : account ? createWriter({ chain: studionetW, account }) : createClient({ chain: studionet });
 
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => {
@@ -226,9 +232,8 @@ async function runCheck(args) {
     before = await read("get_count");
   } catch {}
 
-  // Bradbury Phase 2 takes a fee deposit with every transaction; the unused part is refunded.
+  // Bradbury Phase 2, and since late November 2026 Studio too, take a fee deposit with every transaction; the unused part is refunded.
   const fees = async () => {
-    if (!BRADBURY) return undefined;
     const e = await writer.client.estimateTransactionFees();
     return { distribution: e.distribution, feeValue: e.feeValue };
   };
@@ -238,7 +243,7 @@ async function runCheck(args) {
       functionName: "check_claim",
       args,
       value: 0n,
-      ...(BRADBURY && { fees: await fees() }),
+      fees: await fees(),
     });
 
   let hash;

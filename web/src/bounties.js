@@ -1,5 +1,11 @@
 import { createClient, createAccount, generatePrivateKey, abi } from "genlayer-js";
 import { studionet } from "genlayer-js/chains";
+// Since late November 2026 GenLayer Studio refuses a transaction without a fee distribution.
+// Reads stay on genlayer-js 1; every write goes through genlayer-js 2 with a fee estimate
+// (about 0.1 test GEN deposited, the unused part refunded).
+import { createClient as createWriter, createAccount as createAccountW } from "genlayer-js-studio";
+import { studionet as studionetW } from "genlayer-js-studio/chains";
+const studioFees = async (w) => { const f = await w.estimateTransactionFees(); return { distribution: f.distribution, feeValue: f.feeValue }; };
 import { NET, NETWORKS, EXPLORER_BASE, REPO_URL } from "./config.js";
 
 // Claim bounties (contracts/launch_claim_bounties.py). On Studio the page
@@ -96,7 +102,7 @@ function tempAccount(role) {
     store.set(`lcb.temp.${role}`, key);
   }
   const account = createAccount(key);
-  roles[role] = { client: createClient({ chain: studionet, account }), address: account.address, role };
+  roles[role] = { client: createWriter({ chain: studionetW, account: createAccountW(key) }), address: account.address, role };
   $(`${role}-addr`).textContent = `Temporary: ${account.address}`;
   refreshBalances();
   loadList();
@@ -203,7 +209,7 @@ async function send(who, functionName, args, value, what) {
   // Never resent automatically: if the first send reached the node, a second
   // one would be a second transaction (a second pot, a second fee).
   let hash, err;
-  try { hash = await who.client.writeContract({ address: ADDRESS, functionName, args, value: value || 0n }); } catch (e) { err = e; }
+  try { hash = await who.client.writeContract({ address: ADDRESS, functionName, args, value: value || 0n, fees: await studioFees(who.client) }); } catch (e) { err = e; }
   if (err) {
     drawSteps("SENT", true);
     $("life-note").textContent = `The network did not confirm the send (${short(err)}). It may or may not have gone out, so this page does not resend it: press Refresh in a minute and look before trying again.`;
