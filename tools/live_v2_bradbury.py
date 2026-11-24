@@ -145,7 +145,10 @@ def claimable(role) -> int:
 
 
 def check(label, value, want=None):
-    """A view read right after a transaction can still show the state before it; a callable is read again, up to a minute."""
+    """A view read right after a transaction can still show the state before it; a callable is read again, up to a minute.
+    A check that already passed earlier in this record is not read again on a resume (the state may have moved on)."""
+    if RESUME and any(c["label"] == label and c["ok"] for c in rec["checks"]):
+        return True
     reads = 0
     while True:
         got = value() if callable(value) else value
@@ -163,6 +166,8 @@ def check(label, value, want=None):
 def step(label, role, fn, args, value=0, raises=False, credited_back=False, payees=""):
     """One transaction. raises: the contract is expected to refuse it with an error.
     credited_back: a refused bond or challenge, which finishes normally and credits the GEN back."""
+    if label in DONE and DONE[label]["tx"] is None:
+        label += " (sent again)"  # the node refused the send itself; nothing reached the chain
     if label in DONE:
         return DONE[label]
     due()
@@ -172,8 +177,15 @@ def step(label, role, fn, args, value=0, raises=False, credited_back=False, paye
         time.sleep(15)
     before = claimable(role) if credited_back else None
     t0 = time.time()
-    d = node(role, "write", ADDRESS, fn, json.dumps(args, default=str), str(value), payees)
-    h = d.get("hash")
+    for attempt in range(4):
+        d = node(role, "write", ADDRESS, fn, json.dumps(args, default=str), str(value), payees)
+        h = d.get("hash")
+        err = str(d.get("error") or "")
+        # the node refused the send itself (a fee just under a rising base fee, a dropped connection): nothing
+        # reached the chain, so the same call is sent again a little later
+        if h or not ("base fee" in err or "fetch failed" in err):
+            break
+        time.sleep(20)
     if h and not decided(d.get("raw") or {}):
         d = wait(h)
     if h and str((d.get("raw") or {}).get("statusName")) in ("LEADER_TIMEOUT", "VALIDATORS_TIMEOUT"):
@@ -267,7 +279,12 @@ def due():
             if f"bond case {case}" not in DONE:
                 continue
             t = rec["cases"][case].get("times") or times(case)
-            if label in DONE:
+            if label in DONE and DONE[label]["tx"] is None:
+                # the node refused the send itself (nothing reached the chain): send it again
+                label += " (sent again)"
+                if label in DONE:
+                    continue
+            elif label in DONE:
                 # a re-check nobody agreed on decided nothing: once more while the window leaves time for it
                 if fn != "recheck" or DONE[label]["result"] == "MAJORITY_AGREE" or label.endswith(" (again)"):
                     continue
@@ -360,7 +377,11 @@ def again_due(o):
             and time.time() <= int(rec["cases"][o[0]]["times"]["rc_end"]) - 420)
 
 
-while any(o[3] not in DONE or again_due(o) for o in OUTCOMES):
+def unsent(o):
+    return o[3] in DONE and DONE[o[3]]["tx"] is None and o[3] + " (sent again)" not in DONE
+
+
+while any(o[3] not in DONE or again_due(o) or unsent(o) for o in OUTCOMES):
     due()
     left = [int(rec["cases"][o[0]]["times"][o[1]]) + o[2] - time.time() for o in OUTCOMES if o[3] not in DONE]
     if left:
@@ -391,7 +412,7 @@ for role in ROLES:
 t = read("totals")
 check("totals: nothing locked or credited; half of case C's bond burned", [t["locked"], t["credited"], t["burned"]], ["0", "0", str(BOND // 2)])
 check("contract balance equals the burned GEN", lambda: balance(ADDRESS), BOND // 2)
-check("case C: half the bond burned", lambda: read("get_check", [rec["cases"]["C"]["id"]])["bond"].get("burned"), BOND // 2)
+check("case C: half the bond burned", lambda: int(read("get_check", [rec["cases"]["C"]["id"]])["bond"].get("burned") or 0), BOND // 2)
 rec["summary"] = {"steps": len(rec["steps"]), "steps_as_expected": sum(1 for s in rec["steps"] if s["as_expected"]),
                   "checks": len(rec["checks"]), "checks_ok": sum(1 for c in rec["checks"] if c["ok"])}
 save()

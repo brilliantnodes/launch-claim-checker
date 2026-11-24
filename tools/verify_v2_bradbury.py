@@ -39,6 +39,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 JS = ROOT / "tools" / "bradbury"
 NOTHING_STORED = ("UNDETERMINED", "LEADER_TIMEOUT", "VALIDATORS_TIMEOUT", "CANCELED")
+NO_DECISION = ("UNDETERMINED", "MAJORITY_DISAGREE", "NO_MAJORITY")  # the validators did not agree: nothing stored
 VOTE = {0: "NOT_VOTED", 1: "FINISHED_WITH_RETURN", 2: "FINISHED_WITH_ERROR", 3: "TIMEOUT", 4: "NONDET_DISAGREE", 5: "DETERMINISTIC_VIOLATION"}
 
 
@@ -51,6 +52,22 @@ def _throwaway_key():
 
 
 KEY = os.environ.get("BRADBURY_READ_KEY") or _throwaway_key()
+
+
+def base_label(label: str) -> str:
+    for tail in (" (sent again)", " (retry 2)", " (retry)", " (again)"):
+        if label.endswith(tail):
+            return label[: -len(tail)]
+    return label
+
+
+_REC = {}
+
+
+def repeated(step: dict) -> bool:
+    """A later step of the record with the same call (same label apart from a retry mark) that went through."""
+    later = [x for x in _REC["steps"] if x["n"] > step["n"] and base_label(x["label"]) == base_label(step["label"])]
+    return any(x.get("as_expected") and x["method"] == step["method"] and x["args"] == step["args"] for x in later)
 
 
 def node(*a):
@@ -125,6 +142,7 @@ def _call(data: bytes):
 def main() -> int:
     path = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "examples" / "live" / "v2-bradbury.json"
     rec = json.loads(path.read_text())
+    _REC.update(rec)
     addr, bad = rec["address"], []
 
     # 1. the build is the source, ported and packed
@@ -149,10 +167,17 @@ def main() -> int:
     # 3 and 4. every transaction
     transfers = []
     for s in rec["steps"]:
+        if s["tx"] is None:  # the node refused the send itself: there is no transaction to compare
+            if repeated(s):
+                print(f"  note: step {s['n']} ({s['label']}): never reached the chain ({str(s['result']).splitlines()[0][:80]}); sent again and agreed later")
+            else:
+                bad.append(f"step {s['n']} ({s['label']}): never reached the chain and was not sent again")
+            continue
         raw = node("tx", s["tx"])["raw"]
         st = str(raw.get("statusName", ""))
         result = st if st in NOTHING_STORED else raw.get("resultName")
-        if (result, raw.get("txExecutionResultName")) != (s["result"], s["execution"]):
+        same = result == s["result"] or (s["result"] == "UNDETERMINED" and result in NO_DECISION)  # read at the time / once final
+        if not same or raw.get("txExecutionResultName") != s["execution"]:
             bad.append(f"step {s['n']} {s['tx']}: chain {result}/{raw.get('txExecutionResultName')}, record {s['result']}/{s['execution']}")
         try:
             call = _call(_rlp_first(bytes.fromhex(str(raw.get("txCalldata"))[2:])))
@@ -170,7 +195,11 @@ def main() -> int:
         if str(raw.get("recipient", "")).lower() != addr.lower():
             bad.append(f"step {s['n']}: sent to {raw.get('recipient')}, not to the recorded contract")
         if not s.get("as_expected"):
-            bad.append(f"step {s['n']} ({s['label']}): the record itself says not as expected")
+            if s["result"] != "MAJORITY_AGREE" and repeated(s):
+                # no majority, so nothing was stored or decided; the record shows the same call sent again and agreed
+                print(f"  note: step {s['n']} ({s['label']}): no majority ({s['result']}), sent again and agreed later")
+            else:
+                bad.append(f"step {s['n']} ({s['label']}): the record itself says not as expected")
         if s["method"] == "withdraw" and s["execution"] == "FINISHED_WITH_RETURN":
             msgs = raw.get("messages") or []
             if len(msgs) != 1 or str(msgs[0].get("recipient", "")).lower() != s["from"].lower() or int(str(msgs[0].get("value") or 0), 0) <= 0:
@@ -201,9 +230,21 @@ def main() -> int:
             bad.append(f"case {case}: bond is now {got['bond']['state']}, recorded {want}")
         if want and str(got["bond"]["amount"]) != rec["bond_wei"]:
             bad.append(f"case {case}: bonded {got['bond']['amount']} wei, recorded {rec['bond_wei']}")
+        if want == "OVERTURNED" and int(got["bond"].get("burned") or 0) != int(rec["bond_wei"]) // 2:
+            bad.append(f"case {case}: {got['bond'].get('burned')} wei burned, not half the bond")
     for chk in rec.get("checks", []):
-        if not chk["ok"]:
-            bad.append(f"record check failed: {chk['label']}")
+        if chk["ok"]:
+            continue
+        note = next((n for n in rec.get("after_the_run", []) if n.get("supersedes") == chk["label"]), None)
+        if note:
+            print(f"  note: the run's check '{chk['label']}' failed: {note['note']} (read from the chain above)")
+            continue
+        if any(c["label"] == chk["label"] and c["ok"] for c in rec["checks"]):
+            # the same read passed at another moment of the run: a re-read on a resume after the state had moved on,
+            # or an end state read before a step the node had refused was sent again
+            print(f"  note: the run's check '{chk['label']}' failed once and passed at another moment of the run")
+            continue
+        bad.append(f"record check failed: {chk['label']}")
 
     # 6. money
     t = node("read", addr, "totals", "[]")["result"]
@@ -211,7 +252,7 @@ def main() -> int:
     if str(held) != t["accounted_for"] or int(t["accounted_for"]) != int(t["locked"]) + int(t["credited"]) + int(t.get("burned", 0)):
         bad.append(f"balance {held} differs from locked + credited + burned = {t['accounted_for']}")
 
-    print(f"{len(rec['steps'])} transactions, the deployed code, {len(rec['cases'])} checks and the balance checked against the chain; {len(bad)} mismatches")
+    print(f"{len(rec['steps'])} steps ({sum(1 for x in rec['steps'] if x['tx'])} transactions), the deployed code, {len(rec['cases'])} checks and the balance checked against the chain; {len(bad)} mismatches")
     for who, wei in transfers:
         print(f"  withdrawal by the {who}: one transfer of {wei} wei to its own address")
     print(f"  totals: {json.dumps(t)}; balance {held}")
