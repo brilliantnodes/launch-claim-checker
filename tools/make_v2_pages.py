@@ -11,7 +11,8 @@ Two made-up explorers with different layouts, on two different domains:
 --corrected writes the later versions of the named coins' pages: Flipcoin's two
 explorers both correct block 1 (no extra allocation after all), and Driftcoin's
 Blockfield page alone does. They are used to show an overturned challenge and a
-challenge that is not confirmed. Every coin, address, pool and figure is invented.
+challenge that is not confirmed. Turncoin and Veercoin repeat those two stories
+for the Bradbury run. Every coin, address, pool and figure is invented.
 """
 import sys
 from pathlib import Path
@@ -26,8 +27,11 @@ COINS = {
     "Splitcoin": ("SPL", "spl1q", "1,500,000.00000000", None),
     "Flipcoin": ("FLP", "flp1q", "750,000.00000000", "750,000"),
     "Driftcoin": ("DRF", "drf1q", "3,250,000.00000000", "3,250,000"),
+    # the same two stories again, for the Bradbury run (the Studio run's corrected pages stay as they were)
+    "Turncoin": ("TRN", "trn1q", "1,200,000.00000000", "1,200,000"),
+    "Veercoin": ("VER", "ver1q", "4,100,000.00000000", "4,100,000"),
 }
-CORRECTABLE = {"flipcoin": ("a", "b"), "driftcoin": ("b",)}
+CORRECTABLE = {"flipcoin": ("a", "b"), "driftcoin": ("b",), "turncoin": ("a", "b"), "veercoin": ("b",)}
 
 
 def page_a(coin, ticker, pre, alloc, corrected=False):
