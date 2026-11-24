@@ -5,7 +5,7 @@ Launch Claim Checker was accepted as a Project in its first version: a contract 
 - **Previous milestone:** branch [`milestone-claim-bounties`](https://github.com/brilliantnodes/launch-claim-checker/tree/milestone-claim-bounties) (commit `8b6ab43`)
 - **This milestone:** branch [`milestone-two-explorers`](https://github.com/brilliantnodes/launch-claim-checker/tree/milestone-two-explorers), a snapshot of `main` as submitted
 - **Everything that changed:** [compare `milestone-claim-bounties...milestone-two-explorers`](https://github.com/brilliantnodes/launch-claim-checker/compare/milestone-claim-bounties...milestone-two-explorers)
-- **Video (95 seconds, with voice-over):** https://checker.brilliantnodes.com/two-explorers-demo.mp4
+- **Video (88 seconds, with voice-over):** https://checker.brilliantnodes.com/two-explorers-demo-v3.mp4
 - **Article:** https://checker.brilliantnodes.com/article-two-explorers.html
 - **Try it:** https://checker.brilliantnodes.com/two-explorers.html (free temporary accounts on GenLayer Studio) · [Bradbury view](https://checker.brilliantnodes.com/two-explorers.html?net=bradbury) (read-only)
 - **Contract on Studio:** the page uses [`0x0239…A866`](https://explorer-studio.genlayer.com/address/0x0239d9Dcf10F3D868F00d37b2363794c0715A866); the live run on record used [`0x9aA4…436F`](https://explorer-studio.genlayer.com/address/0x9aA412AdaB30Fe4A4f90D9C84421AB0C7a14436F) and [`0x775B…94c5`](https://explorer-studio.genlayer.com/address/0x775B1f1E20c23C3A5b59135b1a70f2c0C29294c5)
@@ -81,7 +81,7 @@ Studio (bond 1 GEN) and Bradbury (bond 0.1 GEN) ran the same stories. On Bradbur
 - `tools/make_v2_pages.py`, `web/public/v2/`: the fictional explorer A pages (explorer B is in the demo-explorer repository).
 - `tools/live_v2.py`, `tools/live_v2_money.py`, `tools/live_v2_bradbury.py`: the live runs. `tools/verify_v2.py`, `tools/verify_v2_bradbury.py`: check the records against the chain. `tools/site_flow_v2.py`: the page in a headless browser. `tools/studio_fees.py`: Studio writes with a fee estimate.
 - `examples/live/v2-studio-checks.json`, `v2-studio-money.json`, `v2-bradbury.json`, `v2-site-studio.json`: the records.
-- `web/two-explorers.html`, `web/src/two-explorers.js`: the page. `web/public/article-two-explorers.html`: the article. `tools/video-v2/`: how the video was made.
+- `web/two-explorers.html`, `web/src/two-explorers.js`: the page. `web/public/article-two-explorers.html`: the article. `tools/video-v3/`: how the video was made.
 - `reviews/v2/`: the record of the reviews.
 
 ## Limits

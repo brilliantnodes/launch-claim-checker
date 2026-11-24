@@ -17,7 +17,7 @@
 2. Import the Studio contract: [`0x0239…A866`](https://studio.genlayer.com/?import-contract=0x0239d9Dcf10F3D868F00d37b2363794c0715A866).
 3. Read the live cases in [`MILESTONE-2.md`](MILESTONE-2.md#how-it-was-checked): upheld with two challengers, released, overturned after both explorers corrected block 1, not confirmed when only one did, not confirmed with no re-check, and the refusals; each links its transactions.
 4. Records: Studio [`examples/live/v2-studio-money.json`](examples/live/v2-studio-money.json) (`python tools/verify_v2.py` checks it against the chain); Bradbury [`0xC1b4…8E22`](https://scan.bradbury.genlayer.com/address/0xC1b4AD9cd4D1609461B6eabbBb78a0B1F4FC8E22), [`examples/live/v2-bradbury.json`](examples/live/v2-bradbury.json).
-5. Video (95 s): https://checker.brilliantnodes.com/two-explorers-demo.mp4. Tests: 70 for version 2 on GenVM v0.2 and v0.6, 93 of 93 deliberate breaks caught; limits in the README ([Limits of version 2](README.md#limits-of-version-2)).
+5. Video (88 s): https://checker.brilliantnodes.com/two-explorers-demo-v3.mp4. Tests: 70 for version 2 on GenVM v0.2 and v0.6, 93 of 93 deliberate breaks caught; limits in the README ([Limits of version 2](README.md#limits-of-version-2)).
 
 *All coins and both explorers in the examples are fictional test pages run by Brilliant Nodes. Test GEN only.*
 
