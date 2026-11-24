@@ -44,7 +44,9 @@ def run_check(address, announcement_url, explorer_url, claim_type, claim_text=""
     while time.time() - started < timeout:
         time.sleep(5)
         try:
-            status = client.get_transaction(transaction_hash=tx).get("status_name") or status
+            # genlayer-py 0.19 dropped status_name from get_transaction; the raw RPC still carries the status
+            raw = client.provider.make_request(method="eth_getTransactionByHash", params=[tx]).get("result") or {}
+            status = raw.get("status") or status
         except Exception:
             continue
         if status in SETTLED or status in FAILED:
