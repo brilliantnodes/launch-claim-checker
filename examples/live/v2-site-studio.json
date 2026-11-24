@@ -1,0 +1,279 @@
+{
+ "page": "https://checker.brilliantnodes.com/two-explorers.html",
+ "network": "GenLayer Studio (studionet)",
+ "started_utc": "2026-11-24T12:00:08Z",
+ "steps": [
+  {
+   "n": 1,
+   "click": "Example 'Examplecoin, no founder reward', then 'Check as Requester'",
+   "page_says": "Accepted. Check 2: CONTRADICTED (BOTH:P1).",
+   "tx": "0x8a2295ee1eaf5fe0e4a0a9e854a8dd5a9332e46b0ee900046a665d05880e3fc7",
+   "on_chain": {
+    "from": "0x97E59dA139438772909bD492FacD9F29b91e2762",
+    "to": "0x0239d9Dcf10F3D868F00d37b2363794c0715A866",
+    "value": "0",
+    "method": "check_claim",
+    "args": [
+     "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+     "https://brilliantnodes.github.io/demo-explorer/examplecoin/block-1.html",
+     "Examplecoin",
+     "NO_FOUNDER_REWARD",
+     "No founder reward"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "id": "2",
+     "ok": true,
+     "rule": "BOTH:P1",
+     "verdict": "CONTRADICTED"
+    },
+    "created_at": "2026-11-24T12:00:34.056437+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 2,
+   "click": "'Bond as Requester' with the default 1 test GEN",
+   "page_says": "Accepted. 1 GEN bonded. Challenges are taken until 12:11 UTC.",
+   "tx": "0x6e0daff68ec03768d53fa56fd211d5cfc0f85e77cd1fd27b234532a1ee6c3d05",
+   "on_chain": {
+    "from": "0x97E59dA139438772909bD492FacD9F29b91e2762",
+    "to": "0x0239d9Dcf10F3D868F00d37b2363794c0715A866",
+    "value": "1000000000000000000",
+    "method": "bond",
+    "args": [
+     "2"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "bonded": "1000000000000000000",
+     "close": 1795522282,
+     "nc_from": 1795524082,
+     "ok": true,
+     "rc_end": 1795523482,
+     "rc_open": 1795522882
+    },
+    "created_at": "2026-11-24T12:01:22.332459+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 3,
+   "click": "'Challenge as Challenger'",
+   "page_says": "Accepted. Challenger 1. A re-check can be sent from 12:21 UTC.",
+   "tx": "0x8a656a39dd46e13e6ec75019700412b7e5d76c62439f63c0b4c93146567074ef",
+   "on_chain": {
+    "from": "0xF5d7a61cDF5109E1fe89d3cc61c1fab2c0EbbEdA",
+    "to": "0x0239d9Dcf10F3D868F00d37b2363794c0715A866",
+    "value": "1000000000000000000",
+    "method": "challenge",
+    "args": [
+     "2"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "challenger": 1,
+     "ok": true,
+     "recheck_from": 1795522882
+    },
+    "created_at": "2026-11-24T12:01:34.318819+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 4,
+   "click": "'Challenge as Second challenger'",
+   "page_says": "Accepted. Challenger 2. A re-check can be sent from 12:21 UTC.",
+   "tx": "0x4b0c0ee68763019181d05ec51d55db86c0df082cb826b07e942855d21d64b60a",
+   "on_chain": {
+    "from": "0x3a2355Bd198708dFB86933AB4abe1C6FabDCef5d",
+    "to": "0x0239d9Dcf10F3D868F00d37b2363794c0715A866",
+    "value": "1000000000000000000",
+    "method": "challenge",
+    "args": [
+     "2"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "challenger": 2,
+     "ok": true,
+     "recheck_from": 1795522882
+    },
+    "created_at": "2026-11-24T12:02:01.441131+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 4,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 5,
+   "click": "'Re-check now', once the page shows it",
+   "page_says": "Accepted. The re-check found CONTRADICTED (BOTH:P1): the bond is upheld.",
+   "tx": "0xd03f8b4ea5ab60cd06bf4305965cbb9c58cc30e1a05348c0036053bd6e30432a",
+   "on_chain": {
+    "from": "0xF5d7a61cDF5109E1fe89d3cc61c1fab2c0EbbEdA",
+    "to": "0x0239d9Dcf10F3D868F00d37b2363794c0715A866",
+    "value": "0",
+    "method": "recheck",
+    "args": [
+     "2"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "decided": true,
+     "ok": true,
+     "rule": "BOTH:P1",
+     "state": "UPHELD",
+     "verdict": "CONTRADICTED"
+    },
+    "created_at": "2026-11-24T12:21:48.038800+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 6,
+   "click": "'Collect as Requester'",
+   "page_says": "Accepted. 3 GEN credited; withdraw it under Accounts.",
+   "tx": "0xb429f2e3c5553ca352971c0e2e88752e0235902ed84344b8f5fb12cf6cd71e4b",
+   "on_chain": {
+    "from": "0x97E59dA139438772909bD492FacD9F29b91e2762",
+    "to": "0x0239d9Dcf10F3D868F00d37b2363794c0715A866",
+    "value": "0",
+    "method": "collect",
+    "args": [
+     "2"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "credited": "3000000000000000000",
+     "ok": true,
+     "state": "UPHELD"
+    },
+    "created_at": "2026-11-24T12:23:03.238798+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 3,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 7,
+   "click": "'Collect as Challenger' (an upheld check gives a challenger nothing)",
+   "page_says": "Accepted. This outcome gives this account nothing (an upheld check keeps the challengers' deposits).",
+   "tx": "0xd912b4f977fbb5221f755448088c9778f369cf385d47c05d275f60e0a1dc277a",
+   "on_chain": {
+    "from": "0xF5d7a61cDF5109E1fe89d3cc61c1fab2c0EbbEdA",
+    "to": "0x0239d9Dcf10F3D868F00d37b2363794c0715A866",
+    "value": "0",
+    "method": "collect",
+    "args": [
+     "2"
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "credited": "0",
+     "ok": true,
+     "state": "UPHELD"
+    },
+    "created_at": "2026-11-24T12:23:33.365232+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 4,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  },
+  {
+   "n": 8,
+   "click": "'Withdraw' next to the Requester's balance",
+   "page_says": "Accepted: 3 GEN is on its way. It reaches the wallet when the transaction is finalized.",
+   "tx": "0x89bffa679d445c6e190ff33e320d8ddb2f081b637f6eb5382c16f33ffe41667d",
+   "on_chain": {
+    "from": "0x97E59dA139438772909bD492FacD9F29b91e2762",
+    "to": "0x0239d9Dcf10F3D868F00d37b2363794c0715A866",
+    "value": "0",
+    "method": "withdraw",
+    "args": [
+     0
+    ],
+    "status": "FINALIZED",
+    "result": "MAJORITY_AGREE",
+    "execution": "SUCCESS",
+    "returned": {
+     "amount": "3000000000000000000",
+     "left": "0",
+     "ok": true
+    },
+    "created_at": "2026-11-24T12:23:54.438816+00:00",
+    "rotations": 0,
+    "votes": {
+     "agree": 4,
+     "of": 5
+    }
+   },
+   "as_expected": true
+  }
+ ],
+ "page_errors": [],
+ "contract": "0x0239d9Dcf10F3D868F00d37b2363794c0715A866",
+ "windows_line": "On this contract: 10 min to bond after a check, 10 min to challenge, then 10 min of grace, 10 min to re-check and 10 min more before a challenged bond can be settled as not confirmed. Minimum bond 0.01 GEN.",
+ "accounts": {
+  "requester": "0x97E59dA139438772909bD492FacD9F29b91e2762",
+  "challenger1": "0xF5d7a61cDF5109E1fe89d3cc61c1fab2c0EbbEdA",
+  "challenger2": "0x3a2355Bd198708dFB86933AB4abe1C6FabDCef5d"
+ },
+ "check_as_the_page_shows_it": "CONTRADICTED\nNo founder reward: Examplecoin\n#2 \u00b7 BOTH:P1\n\nboth explorers show an extra allocation in block 1. This is what the two pages showed, not a finding about the coin.\n\nExplorer A: checker.brilliantnodes.com \u00b7 contradicts the claim (P1) \u00b7 block 1: 2,000,000.00000000\n1 2,000,000.00000000 EXM Founders allocation to exm1qfounders0000000000000000000001\nExplorer B: brilliantnodes.github.io \u00b7 contradicts the claim (P1) \u00b7 block 1: 2,000,000\nexm1qfounders0000000000000000000001 receives 2,000,000 EXM (founders allocation)\nRequested by\n0x97E59dA139438772909bD492FacD9F29b91e2762\nChecked at\n12:00 UTC\ntest GEN\nBond as Requester\nuntil 12:10 UTC",
+ "bond_as_the_page_shows_it": "CONTRADICTED\nNo founder reward: Examplecoin\n#2 \u00b7 BOTH:P1 \u00b7 bond bonded\n\nboth explorers show an extra allocation in block 1. This is what the two pages showed, not a finding about the coin.\n\nExplorer A: checker.brilliantnodes.com \u00b7 contradicts the claim (P1) \u00b7 block 1: 2,000,000.00000000\n1 2,000,000.00000000 EXM Founders allocation to exm1qfounders0000000000000000000001\nExplorer B: brilliantnodes.github.io \u00b7 contradicts the claim (P1) \u00b7 block 1: 2,000,000\nexm1qfounders0000000000000000000001 receives 2,000,000 EXM (founders allocation)\nRequested by\n0x97E59dA139438772909bD492FacD9F29b91e2762\nChecked at\n12:00 UTC\nBond\n1 GEN \u00b7 held now 3 GEN\nChallengers\n0xf5d7\u2026beda, 0x3a23\u2026ef5d\nChallenges until\n12:11 UTC (in 9 min)\nRe-check window\n12:21 UTC to 12:31 UTC\nChallenge as Challenger\nChallenge as Second challenger",
+ "outcome_as_the_page_shows_it": "CONTRADICTED\nNo founder reward: Examplecoin\n#2 \u00b7 BOTH:P1 \u00b7 bond upheld\n\nboth explorers show an extra allocation in block 1. This is what the two pages showed, not a finding about the coin.\n\nExplorer A: checker.brilliantnodes.com \u00b7 contradicts the claim (P1) \u00b7 block 1: 2,000,000.00000000\n1 2,000,000.00000000 EXM Founders allocation to exm1qfounders0000000000000000000001\nExplorer B: brilliantnodes.github.io \u00b7 contradicts the claim (P1) \u00b7 block 1: 2,000,000\nexm1qfounders0000000000000000000001 receives 2,000,000 EXM (founders allocation)\nRequested by\n0x97E59dA139438772909bD492FacD9F29b91e2762\nChecked at\n12:00 UTC\nBond\n1 GEN \u00b7 held now 3 GEN\nChallengers\n0xf5d7\u2026beda, 0x3a23\u2026ef5d\nChallenges until\n12:11 UTC (now)\nRe-check window\n12:21 UTC to 12:31 UTC\nRe-check found\nCONTRADICTED (BOTH:P1) at 12:21 UTC\nRe-check, explorer A: checker.brilliantnodes.com \u00b7 contradicts the claim (P1) \u00b7 block 1: 2,000,000.00000000\n1 2,000,000.00000000 EXM Founders allocation to exm1qfounders0000000000000000000001\nRe-check, explorer B: brilliantnodes.github.io \u00b7 contradicts the claim (P1) \u00b7 block 1: 2,000,000\nexm1qfounders0000000000000000000001 receives 2,000,000 EXM (founders allocation)\nCollect as Requester\nCollect as Challenger\nCollect as Second challenger",
+ "totals_after": {
+  "accounted_for": "0",
+  "checks": 2,
+  "credited": "0",
+  "locked": "0"
+ },
+ "summary": {
+  "clicks_that_sent_a_transaction": 8,
+  "as_expected": 8,
+  "page_errors": 0
+ }
+}
