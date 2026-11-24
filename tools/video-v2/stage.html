@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Launch Claim Checker v2 video stage</title>
+<style>
+:root { --bg: #0f1524; --bg2: #162040; --card: #182036; --ink: #eceef4; --muted: #a3acc0; --line: #2c3654; --accent: #fca311; --good: #7fd6a4; --good-bg: #173527; --bad: #ff9c92; --bad-bg: #44201c; --paper: #f6f4ef; --navy: #14213d; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); }
+#s { position: relative; width: 1920px; height: 1080px; overflow: hidden; color: var(--ink); font-family: Inter, "DejaVu Sans", sans-serif;
+  background: radial-gradient(ellipse at 85% 12%, rgba(252,163,17,.16), transparent 52%), radial-gradient(ellipse at 6% 96%, rgba(127,214,164,.12), transparent 48%), linear-gradient(155deg, var(--bg), var(--bg2)); }
+section { position: absolute; inset: 0; display: none; padding: 150px 130px 110px; }
+section.on { display: block; }
+.bar { position: absolute; left: 130px; right: 130px; top: 56px; display: flex; justify-content: space-between; align-items: baseline; font-size: 26px; color: var(--muted); }
+.bar b { color: var(--ink); font-family: "Bitstream Charter", "DejaVu Serif", serif; font-size: 32px; font-weight: 700; }
+.bar i { font-style: normal; color: var(--accent); font-weight: 600; }
+.foot { position: absolute; left: 130px; right: 130px; bottom: 44px; font-size: 22px; color: var(--muted); display: flex; justify-content: space-between; }
+h1 { font-family: "Bitstream Charter", "DejaVu Serif", serif; font-weight: 700; font-size: 150px; line-height: 1.02; margin: 0; letter-spacing: -.01em; }
+h2 { font-family: "Bitstream Charter", "DejaVu Serif", serif; font-weight: 700; font-size: 66px; line-height: 1.08; margin: 0 0 40px; white-space: nowrap; letter-spacing: -.005em; }
+.lede { font-size: 40px; line-height: 1.35; color: var(--muted); max-width: 1500px; }
+.lede b, .amber { color: var(--accent); }
+.kicker { font-size: 30px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 26px; }
+.row { display: flex; gap: 56px; align-items: stretch; }
+.card { background: var(--card); border: 2px solid var(--line); border-radius: 22px; padding: 40px 44px; box-shadow: 0 30px 70px rgba(0,0,0,.35); }
+.paper { background: var(--paper); color: var(--navy); border-radius: 22px; padding: 44px 50px; box-shadow: 0 30px 70px rgba(0,0,0,.45); }
+.quote { font-family: "Bitstream Charter", "DejaVu Serif", serif; font-size: 66px; line-height: 1.15; font-weight: 700; }
+.small { font-size: 28px; color: var(--muted); line-height: 1.4; }
+.paper .small { color: #5b6477; }
+.mono { font-family: "DejaVu Sans Mono", monospace; }
+.pill { display: inline-block; font-weight: 700; font-size: 30px; padding: 10px 26px; border-radius: 40px; }
+.pill.good { background: var(--good-bg); color: var(--good); } .pill.bad { background: var(--bad-bg); color: var(--bad); } .pill.amberp { background: rgba(252,163,17,.16); color: var(--accent); }
+.big { font-family: "Bitstream Charter", "DejaVu Serif", serif; font-weight: 700; font-size: 110px; line-height: 1; font-variant-numeric: tabular-nums lining-nums; }
+.kv { display: grid; grid-template-columns: auto 1fr; gap: 16px 34px; font-size: 34px; align-items: baseline; }
+.kv dt { color: var(--muted); } .kv dd { margin: 0; font-weight: 600; }
+.paper .kv dt { color: #5b6477; }
+ul.checks { list-style: none; margin: 0; padding: 0; font-size: 34px; line-height: 1.3; }
+ul.checks li { padding: 14px 0 14px 62px; position: relative; border-bottom: 2px solid var(--line); }
+ul.checks li:last-child { border-bottom: 0; }
+ul.checks li::before { content: "✓"; position: absolute; left: 6px; top: 10px; color: var(--good); font-weight: 700; font-size: 40px; }
+.dots { display: flex; gap: 22px; margin: 6px 0 26px; }
+.dots span { width: 74px; height: 74px; border-radius: 50%; background: var(--good-bg); border: 4px solid var(--good); display: flex; align-items: center; justify-content: center; color: var(--good); font-weight: 700; font-size: 34px; }
+.browser { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 40px 90px rgba(0,0,0,.55), 0 0 0 2px rgba(255,255,255,.14); }
+.browser .bb { background: #e8ebf3; height: 54px; display: flex; align-items: center; gap: 11px; padding: 0 20px; color: #46506b; font-size: 22px; }
+.browser .bb u { width: 16px; height: 16px; border-radius: 50%; background: #e5484d; display: inline-block; }
+.browser .bb u:nth-child(2) { background: #f5b301; } .browser .bb u:nth-child(3) { background: #2fb36b; }
+.browser .bb span { flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-right: 70px; }
+.browser .shot { overflow: hidden; background: #f6f4ef; }
+.browser img { display: block; width: 100%; }
+.tl { position: relative; margin-top: 30px; height: 330px; }
+.tl .axis { position: absolute; left: 0; right: 0; top: 118px; height: 6px; background: var(--line); border-radius: 3px; }
+.tl .ev { position: absolute; top: 0; width: 400px; text-align: center; font-size: 30px; line-height: 1.3; }
+.tl .ev .tick { width: 30px; height: 30px; border-radius: 50%; margin: 104px auto 16px; background: var(--accent); }
+.tl .ev.b .tick { background: var(--muted); }
+.tl .ev b { display: block; font-size: 34px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px; margin-top: 16px; }
+.grid4 .card { padding: 34px 34px 38px; }
+.grid4 .big { font-size: 104px; color: var(--accent); }
+.grid4 .small { margin-top: 14px; font-size: 29px; }
+.center { text-align: center; }
+.hi { background: rgba(252,163,17,.3); border-radius: 6px; padding: 0 6px; }
+
+
+.tbl { width: 100%; border-collapse: collapse; font-size: 40px; color: var(--ink); }
+.tbl td { padding: 22px 18px; border-bottom: 2px solid var(--line); vertical-align: middle; line-height: 1.3; }
+.tbl tr:last-child td { border-bottom: 0; }
+.out3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
+.out3 .card { padding: 36px 36px 40px; }
+.out3 h3 { margin: 22px 0 14px; font-size: 40px; font-family: "Bitstream Charter", "DejaVu Serif", serif; }
+.who { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; margin-top: 10px; }
+.arrow { font-size: 70px; color: var(--accent); align-self: center; }
+</style>
+</head>
+<body>
+<div id="s">
+  <div class="bar"><b>Launch Claim Checker</b><span>Version 2 · <i>test GEN only, fictional coins</i></span></div>
+
+  <section id="title" style="padding-top:250px">
+    <div class="kicker">New in Launch Claim Checker</div>
+    <h1>Two explorers,<br>a bond and a challenge</h1>
+    <p class="lede" style="margin-top:40px">An intelligent contract on GenLayer, by Brilliant Nodes.</p>
+  </section>
+
+  <section id="problem" style="padding-top:215px">
+    <h2>One explorer is one website</h2>
+    <div class="row" style="margin-top:20px">
+      <div class="paper" style="flex:1">
+        <div class="small" style="margin-bottom:22px">A new coin (fictional) announces:</div>
+        <div class="quote">“No founder reward.”</div>
+      </div>
+      <div class="card" style="flex:1">
+        <div class="small" style="font-size:36px;color:var(--ink);line-height:1.45">A block explorer shows whether block 1 paid the founders. But one site can be <b class="amber">wrong</b>, out of date, or run by the people who made the claim.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="two">
+    <h2>Every validator reads two explorers</h2>
+    <div class="row">
+      <div class="browser" style="flex:1">
+        <div class="bb"><u></u><u></u><u></u><span>checker.brilliantnodes.com/v2/…</span></div>
+        <div class="shot" style="height:560px"><img src="build/shot_a.jpg" alt=""></div>
+      </div>
+      <div class="browser" style="flex:1">
+        <div class="bb"><u></u><u></u><u></u><span>brilliantnodes.github.io/demo-explorer/…</span></div>
+        <div class="shot" style="height:560px"><img src="build/shot_b.jpg" alt=""></div>
+      </div>
+    </div>
+    <p class="small" style="margin-top:26px">Two fictional explorers, two layouts, two domains. Each validator renders both pages itself; plain code checks every value its model copies against its own copy.</p>
+  </section>
+
+  <section id="combine" style="padding-top:240px">
+    <h2>A verdict needs both explorers</h2>
+    <table class="tbl">
+      <tr><td>Both show block 1 paying 2,000,000 EXM to the founders, the same amount</td><td style="width:430px"><span class="pill bad">CONTRADICTED</span></td></tr>
+      <tr><td>Both show block 1 with only the miner reward</td><td><span class="pill good">SUPPORTED</span></td></tr>
+      <tr><td>One shows an allocation, the other does not</td><td><span class="pill amberp">EXPLORERS DISAGREE</span></td></tr>
+    </table>
+  </section>
+
+  <section id="bond" style="padding-top:215px">
+    <h2>Money behind the verdict</h2>
+    <div class="who">
+      <div class="card"><div class="small">The requester bonds it</div><div class="big" style="margin-top:18px;color:var(--accent)">1 GEN</div></div>
+      <div class="card"><div class="small">Anyone can challenge</div><div class="big" style="margin-top:18px">1 GEN</div></div>
+      <div class="card"><div class="small">and anyone else</div><div class="big" style="margin-top:18px">1 GEN</div></div>
+    </div>
+    <p class="lede" style="margin-top:44px;font-size:36px">Only verdicts about a coin's earliest blocks can be bonded: those blocks never change.</p>
+  </section>
+
+  <section id="recheck" style="padding-top:280px">
+    <h2>Then the validators read both again</h2>
+    <div class="out3">
+      <div class="card"><span class="pill bad">same verdict</span><h3>Upheld</h3><div class="small">The requester takes the challengers' deposits.</div></div>
+      <div class="card"><span class="pill good">opposite verdict</span><h3>Overturned</h3><div class="small">The challengers share the bond.</div></div>
+      <div class="card"><span class="pill amberp">anything else</span><h3>Not confirmed</h3><div class="small">Everyone gets their own money back.</div></div>
+    </div>
+  </section>
+
+  <section id="flip" style="padding-top:270px">
+    <h2>Tested: the explorers change their minds</h2>
+    <div class="row">
+      <div class="card" style="flex:1"><div class="small">Flipcoin, at the bond</div><div style="margin:26px 0"><span class="pill bad">CONTRADICTED · BOTH:P1</span></div><div class="small">Both explorers then correct block 1.</div></div>
+      <div class="arrow">→</div>
+      <div class="card" style="flex:1;border-color:var(--good)"><div class="small">At the re-check</div><div style="margin:26px 0"><span class="pill good">SUPPORTED · BOTH:P2</span></div><div class="small" style="color:var(--ink)">Overturned: the challenger collects 2 GEN.</div></div>
+    </div>
+    <p class="small" style="margin-top:30px">When only one explorer corrected it (Driftcoin), the re-check found the explorers disagree: not confirmed, everyone was paid back.</p>
+  </section>
+
+  <section id="page">
+    <h2>On the page: check, bond, challenge, re-check</h2>
+    <div class="row">
+      <div class="browser" style="flex:1.3">
+        <div class="bb"><u></u><u></u><u></u><span>checker.brilliantnodes.com/two-explorers.html</span></div>
+        <div class="shot" style="height:600px"><img src="build/shot_page.jpg" alt=""></div>
+      </div>
+      <div class="card" style="flex:.7">
+        <span class="pill bad">Upheld</span>
+        <div class="small" style="margin-top:30px;font-size:33px;color:var(--ink)">Two challengers, then the re-check found the same verdict. The requester collected</div>
+        <div class="big" style="margin-top:16px;color:var(--accent)">3 GEN</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proof" style="padding-top:215px">
+    <h2>Built to be broken, then run live</h2>
+    <div class="grid4">
+      <div class="card"><div class="big" data-k="tests"></div><div class="small">tests, passing on both GenVM versions</div></div>
+      <div class="card"><div class="big" data-k="mutants"></div><div class="small">deliberate breaks of the contract, every one caught</div></div>
+      <div class="card"><div class="big" data-k="studio_tx"></div><div class="small">live transactions on GenLayer Studio, all as expected</div></div>
+      <div class="card"><div class="big" data-k="bradbury_tx"></div><div class="small">live transactions on Testnet Bradbury, the same stories</div></div>
+    </div>
+    <p class="lede" style="margin-top:44px;font-size:34px">Every record checked against the chain. Pull payments only. Limits stated in the README.</p>
+  </section>
+
+  <section id="end" class="center" style="padding-top:300px">
+    <div class="kicker">Try it free, with test GEN</div>
+    <h1 style="font-size:112px">checker.brilliantnodes.com</h1>
+    <p class="lede" style="margin:46px auto 0;font-size:44px;color:var(--ink)">Two explorers, a bond and a challenge</p>
+    <p class="lede" style="margin:18px auto 0">Built on GenLayer by Brilliant Nodes</p>
+  </section>
+
+  <div class="foot"><span>All coins and both explorers are fictional test pages.</span><span>github.com/brilliantnodes/launch-claim-checker</span></div>
+</div>
+<script>
+function setup(d) { document.querySelectorAll("[data-k]").forEach((n) => { if (d[n.dataset.k] !== undefined) n.textContent = d[n.dataset.k]; }); }
+function show(id) { document.querySelectorAll("section").forEach((n) => n.classList.toggle("on", n.id === id)); }
+</script>
+</body>
+</html>

@@ -8,3 +8,5 @@ tools/video/build/
 tools/video/*.mp4
 *.claims.json
 *.key
+tools/video-v2/build/
+tools/video-v2/*.mp4
