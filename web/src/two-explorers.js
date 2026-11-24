@@ -48,7 +48,7 @@ const shortAddr = (a) => (a ? `${a.slice(0, 6)}…${a.slice(-4)}` : "");
 const same = (a, b) => !!a && !!b && String(a).toLowerCase() === String(b).toLowerCase();
 const nowS = () => Math.floor(Date.now() / 1000);
 const when = (s) => (s ? new Date(s * 1000).toISOString().replace("T", " ").slice(11, 16) + " UTC" : "");
-const inMin = (s) => { const d = s - nowS(); return d <= 0 ? "now" : d < 90 ? `in ${d} s` : `in ${Math.round(d / 60)} min`; };
+const inMin = (s) => { const d = s - nowS(); return d <= 0 ? "passed" : d < 90 ? `in ${d} s` : `in ${Math.round(d / 60)} min`; };
 function toWei(text) {
   const s = String(text).trim();
   if (!/^\d+(\.\d{1,18})?$/.test(s)) return null;
