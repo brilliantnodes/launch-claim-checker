@@ -78,8 +78,17 @@ def verify(path: Path, c) -> list:
             bad.append(f"step {n}: sent to {t.get('to_address')}, not to the recorded contract")
         if int(t.get("value") or 0) != int(s["value"]):
             bad.append(f"step {n}: value on chain {t.get('value')}, recorded {s['value']}")
-        if s.get("as_expected") is not True:
-            bad.append(f"step {n} ({s['label']}): the record itself says not as expected ({s.get('as_expected')!r})")
+        agreed = got.get("result") == "MAJORITY_AGREE"
+        refused_no_check = "no such check" in str((s.get("returned") or {}).get("error", ""))
+        if not agreed or refused_no_check or s.get("as_expected") is not True:
+            # Two cases are reported as notes, both followed in the record by the same call that went through:
+            # a check the validators did not agree on in time (nothing stored; a leader's return value is not a
+            # stored check), and a payment refused only because that check had not been stored.
+            if (not agreed or refused_no_check) and repeated(rec, n - 1):
+                why = f"not agreed ({got.get('result')}), nothing stored" if not agreed else "refused: its check had not been stored"
+                print(f"  note: step {n} ({s['label']}): {why}; sent again and agreed later")
+            else:
+                bad.append(f"step {n} ({s['label']}): not as expected (chain {got.get('result')}, record {s.get('as_expected')!r})")
 
     for s in rec["steps"]:
         r = s.get("returned")
@@ -113,6 +122,20 @@ def verify(path: Path, c) -> list:
     print(f"{path.name}: contract {addr}, {len(rec['steps'])} transactions, balance {held} wei = locked + credited + burned"
           f" ({t.get('burned', 0)} burned): {'OK' if not bad else 'MISMATCH'}")
     return bad
+
+
+def base_label(label: str) -> str:
+    for tail in (" (check stored)", " (retry 2)", " (retry)"):
+        if label.endswith(tail):
+            return label[: -len(tail)]
+    return label
+
+
+def repeated(rec: dict, i: int) -> bool:
+    """A later step with the same label (apart from a retry mark) and the same method that went through."""
+    s = rec["steps"][i]
+    return any(base_label(x["label"]) == base_label(s["label"]) and x["fn"] == s["fn"] and x.get("as_expected") is True
+               and x.get("result") == "MAJORITY_AGREE" for x in rec["steps"][i + 1:])
 
 
 def verify_site(path: Path, c) -> list:
