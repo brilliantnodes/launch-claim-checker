@@ -8,7 +8,7 @@ export const NETWORKS = {
     name: "GenLayer Studio (studionet)",
     contract: "0x81351f3e6e7c9CFC41573Ca9962b17f70C9AFFB8",
     bounties: "0x583995CE8814C987e888070352A3F1d3AF9BBDca", // LaunchClaimBounties; set after each deployment
-    checkerV2: "0xE9f2cA19bf87110fc188030264beb1c0c0C9Dd57", // LaunchClaimCheckerV2 for the page (600-second windows); set after each deployment
+    checkerV2: "0x624c4Af62668A6ac6C82040F61d9d0dDaCEa49F9", // LaunchClaimCheckerV2 for the page (600-second windows), the build after review 3
     explorer: "https://explorer-studio.genlayer.com",
   },
   bradbury: {
