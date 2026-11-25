@@ -38,10 +38,12 @@ COINS = {
     "Shiftcoin": ("SHF", "shf1q", "3,300,000.00000000", "3,300,000"),
     "Swervecoin": ("SWV", "swv1q", "700,000.00000000", "700,000"),
     "Skewcoin": ("SKW", "skw1q", "2,900,000.00000000", "2,900,000"),
+    # the second Bradbury Phase 3 run's overturn (the first run's correction was published late; see MILESTONE-2)
+    "Lurchcoin": ("LRC", "lrc1q", "1,100,000.00000000", "1,100,000"),
 }
 CORRECTABLE = {"flipcoin": ("a", "b"), "driftcoin": ("b",), "turncoin": ("a", "b"), "veercoin": ("b",),
                "swaycoin": ("a", "b"), "tiltcoin": ("b",), "pivotcoin": ("a", "b"), "shiftcoin": ("b",),
-               "swervecoin": ("a", "b"), "skewcoin": ("b",)}
+               "swervecoin": ("a", "b"), "skewcoin": ("b",), "lurchcoin": ("a", "b")}
 
 
 def page_a(coin, ticker, pre, alloc, corrected=False):

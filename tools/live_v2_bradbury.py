@@ -280,6 +280,10 @@ def due():
         for case, key, off, label, role, fn, kw in OUTCOMES:
             if f"bond case {case}" not in DONE:
                 continue
+            coin = {"C": COIN_C, "D": COIN_D}.get(case)
+            if fn == "recheck" and coin and not any(p["coin"] == coin and all(v in (True, None) for v in p["live"].values())
+                                                    for p in rec["page_changes"]):
+                continue  # never re-check C or D before their corrected pages are live on both explorers
             t = rec["cases"][case].get("times") or times(case)
             if label in DONE and DONE[label]["tx"] is None:
                 # the node refused the send itself (nothing reached the chain): send it again

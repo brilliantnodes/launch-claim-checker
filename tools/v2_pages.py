@@ -64,11 +64,19 @@ def correct(coin: str, run: str, demo: Path, checker: Path = ROOT, wait=None) ->
                                 "commit", "-q", "-m", msg], capture_output=True, text=True)
             if r.returncode == 0:
                 for b in branches:
-                    for _ in range(3):
+                    pushed = False
+                    for attempt in range(3):
                         if subprocess.run(["git", "-C", str(repo), "-c", "push.negotiate=true", "push", "-q", "origin", f"HEAD:{b}"],
                                           capture_output=True).returncode == 0:
+                            pushed = True
                             break
+                        if b == "main":
+                            # someone else pushed to main meanwhile (it happened on 25 Nov): put this commit on top and retry
+                            subprocess.run(["git", "-C", str(repo), "pull", "-q", "--rebase", "--autostash", "origin", "main"], capture_output=True)
                         time.sleep(5)
+                    if not pushed and b == "main":
+                        # a correction that is not published must stop the run: a re-check would read the old page
+                        raise RuntimeError(f"{repo.name}: the correction for {coin} could not be pushed to main")
             commits[repo.name] = subprocess.run(["git", "-C", str(repo), "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
     state = {}
     for side, url, mark in (("a", A_URL, MARK_A), ("b", B_URL, MARK_B)):
