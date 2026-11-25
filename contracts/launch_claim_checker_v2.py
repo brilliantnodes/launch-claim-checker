@@ -37,11 +37,14 @@ different domains, with a bonded challenge.
      bond (rounded down) is burned, and each challenger collects its deposit
      and an equal share of the other half (where it does not divide evenly,
      the first challengers one wei more), so a requester who challenges itself from other addresses
-     still loses at least half. Anything else: NOT CONFIRMED, everyone
-     collects their own. A reading where a page is unreadable or does not show
-     the coin (an error page, a page moved) decides nothing. No decided
-     re-check by RC_WIN + GRACE: settle makes it NOT CONFIRMED. No
-     challenger: settle RELEASES the bond from GRACE after the window closes.
+     still loses at least half. The explorers now showing opposite facts
+     (D1): NOT CONFIRMED, everyone collects their own. Any other reading
+     (a page unreadable, not showing the coin, or showing nothing that
+     decides, as an error page with the explorer's own header does) decides
+     nothing: the window stays open. No decided re-check by RC_WIN + GRACE:
+     settle makes it NOT CONFIRMED. No challenger: settle RELEASES the bond
+     from GRACE after the window closes. Only a verdict on block 0 or 1 can be
+     bonded, because only there can the opposite reading (P2) exist.
 
 What validators agree on: the verdict and rule exactly; per page the class
 and rule; for P1 the block and amount exactly, the leader's line standing on
@@ -103,6 +106,8 @@ GENERIC_WORDS = STOP_WORDS + (
     "input", "inputs", "reward", "rewards", "genesis", "address", "addresses", "wallet", "scan", "scanner", "info", "stats", "home",
     "search", "the", "of", "explorers", "blockchain", "crypto", "ledger", "mining", "pow", "pos", "latest", "new", "number", "no",
     "total", "confirmations", "fee", "fees", "size", "time", "date", "status",
+    "difficulty", "nonce", "version", "merkle", "root", "previous", "prev", "next", "timestamp", "weight", "bits", "height",
+    "hashes", "details", "overview", "summary", "page", "view", "data", "value", "amount", "type", "id",
 )
 BONDABLE_CLAIMS = ("NO_PREMINE", "NO_FOUNDER_REWARD")  # FAIR_LAUNCH is never SUPPORTED, so a bond on it could never be overturned
 OPPOSITE = {"BOTH:P1": "BOTH:P2", "BOTH:P2": "BOTH:P1"}
@@ -760,12 +765,12 @@ def _prompt(claim_type: str, coin: str, page: str) -> str:
     if claim_type in ("DECENTRALIZED_MINING", "FAIR_LAUNCH"):
         fields += [
             '- "top_miner_name": the name or address of the single miner or pool with the most blocks in the page\'s table of blocks per miner, exactly as printed; "" if there is no such table.',
-            '- "top_miner_blocks": that miner\'s number of blocks exactly as printed, as a string; "". Never compute it from a percentage.',
-            '- "blocks_inspected": the total number of blocks the table covers, exactly as printed, as a string; "" if not printed. Never add up rows yourself.',
+            '- "top_miner_blocks": that miner\'s number of blocks as printed, digits only, as a string; "" if there is no such table. Never compute it from a percentage.',
+            '- "blocks_inspected": the total number of blocks the table covers as printed, digits only, as a string; "" if not printed. Never add up rows yourself.',
         ]
         keys += ["top_miner_name", "top_miner_blocks", "blocks_inspected"]
         if claim_type == "DECENTRALIZED_MINING":
-            fields.append('- "rows": every row of that table in order, at most 25, as [{"name": "...", "blocks": "..."}], each exactly as printed; [] if there is no such table.')
+            fields.append('- "rows": every row of that table in order, at most 25, as [{"name": "...", "blocks": "..."}], each name exactly as printed and each number of blocks as printed, digits only; [] if there is no such table.')
             keys.append("rows")
     shape = ", ".join(f'"{k}": ...' for k in keys)
     return f"""You copy facts from one block explorer page into a fixed form for a public record. You do not judge the project and you do not decide any outcome.
@@ -860,10 +865,11 @@ def _consensus(a_url: str, b_url: str, coin: str, claim_type: str) -> dict:
 
 def _outcome(old: dict, new: dict) -> str:
     """UPHELD: the same fact again (same rule; for P1 the same block and amount, for P2 the same block).
-    OVERTURNED: the opposite definite verdict on a block-1 bond (BOTH:P1 <-> BOTH:P2). Anything else: NOT_CONFIRMED."""
+    OVERTURNED: the opposite definite verdict about the same block on both pages (BOTH:P1 <-> BOTH:P2).
+    Anything else: NOT_CONFIRMED."""
     if new["rule"] == old["rule"] and all(new[p].get(k) == old[p].get(k) for p in ("a", "b") for k in ("height", "amount")):
         return "UPHELD"
-    if new["rule"] == OPPOSITE.get(old["rule"]):
+    if new["rule"] == OPPOSITE.get(old["rule"]) and all(new[p].get("height") == old[p].get("height") for p in ("a", "b")):
         return "OVERTURNED"
     return "NOT_CONFIRMED"
 
@@ -1015,8 +1021,10 @@ class LaunchClaimCheckerV2(gl.Contract):
         problem = ""
         if gl.message.sender_address.as_hex.lower() != c.requester.lower():
             problem = "only the requester can bond its check"
-        elif rec["claim_type"] not in BONDABLE_CLAIMS or rec["result"]["rule"] not in OPPOSITE:
-            problem = "only a BOTH:P1 or BOTH:P2 verdict on NO_PREMINE or NO_FOUNDER_REWARD can be bonded"
+        elif (rec["claim_type"] not in BONDABLE_CLAIMS or rec["result"]["rule"] not in OPPOSITE
+              or any(int(rec["result"][p].get("height", 2)) > 1 for p in ("a", "b"))):
+            # P2, the opposite reading, exists only for block 0 or 1: a verdict on a later block could never be overturned
+            problem = "only a BOTH:P1 or BOTH:P2 verdict on block 0 or 1, on NO_PREMINE or NO_FOUNDER_REWARD, can be bonded"
         elif bd["state"] != "NONE":
             problem = "this check is already bonded"
         elif value < MIN_BOND:
@@ -1083,11 +1091,12 @@ class LaunchClaimCheckerV2(gl.Contract):
             raise gl.vm.UserError(f"a re-check must be sent from unix time {t['rc_open']} to {t['rc_end']}")
         bd["clock"] = max(bd["clock"], now)
         r = _consensus(rec["explorer_a_url"], rec["explorer_b_url"], rec["coin_name"], rec["claim_type"])
-        if r["verdict"] == "UNREADABLE" or "WRONG_PAGE" in (r["a"]["cls"], r["b"]["cls"]):
-            # a page that could not be read, or that did not show this coin (an error page, a page moved), decides
-            # nothing: the window stays open, and with no decided re-check the bond ends NOT_CONFIRMED.
+        if not (r["rule"].startswith("BOTH:") or r["rule"] == "D1_EXPLORERS_DISAGREE"):
+            # only both explorers showing a definite fact, or showing opposite facts, decides. A page that could not
+            # be read, did not show this coin, or showed nothing that decides (an error page that keeps the explorer's
+            # own header) decides nothing: the window stays open, and with no decided re-check the bond ends NOT_CONFIRMED.
             self._save(c, bd)
-            return {"ok": True, "decided": False, "why": "an explorer page could not be read or did not show this coin; the re-check window stays open"}
+            return {"ok": True, "decided": False, "why": "the explorers did not both show a definite fact (" + r["rule"] + "); the re-check window stays open"}
         state = _outcome(rec["result"], r)
         bd.update(state=state, recheck=dict(r, at=now))
         if state == "OVERTURNED":

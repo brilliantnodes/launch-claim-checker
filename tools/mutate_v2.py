@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Mutation check for LaunchClaimCheckerV2: break the contract on purpose, one
-change at a time, and confirm that the v2 tests (tests/direct/test_checker_v2.py and
-tests/direct/test_checker_v2_review.py) catch every break.
+change at a time, and confirm that the v2 tests (tests/direct/test_checker_v2.py,
+tests/direct/test_checker_v2_review.py and tests/direct/test_checker_v2_review3.py) catch every break.
 
     PYTHONPATH=. python tools/mutate_v2.py            # all mutants
     PYTHONPATH=. python tools/mutate_v2.py 12 40      # only mutants 12 and 40
@@ -13,9 +13,10 @@ _places, _quote_ok, _catch_all, _miner_name, ...) are covered by
 tools/mutate_bounties.py; the mutants here target the code new in v2.
 
 Left out on purpose (changes that make no difference to what the contract does):
-- the order of M1 and M2 for DECENTRALIZED_MINING, and of P1 and P2 for the
-  premine claims: the two rules exclude each other on one page (more than half
-  versus at most a third of the same printed total; "yes" versus "no");
+- the order of P1 and P2 for the premine claims: the two rules exclude each
+  other on one answer ("yes" versus "no" in extra_allocation). (The order of M1
+  and M2 is not left out: M1 reads the top-miner fields and M2 the rows, so one
+  answer can meet both; review 3 found this, and it is a mutant below.)
 - the rule comparison in _combine: two pages of the same class with the same
   block and amount always carry the same rule (a P page has a block, an M page
   has none);
@@ -29,13 +30,18 @@ Left out on purpose (changes that make no difference to what the contract does):
 - _short in the leader: _check_result cuts an UNDETERMINED result to the short
   form anyway, before it is compared or stored (_short only keeps the data
   passed between nodes small);
-- the reason comparison for UNDETERMINED in _same_result, and the class
-  comparison next to it: the reason is a function of the two pages' classes, and
-  classes that differ while reasons and rules agree cannot occur;
+- the reason comparison for UNDETERMINED in _same_result: the reason follows
+  from the two pages' classes and rules, which are compared next to it. (The
+  class comparison is not left out: NOTHING and WRONG_PAGE both carry no rule,
+  so A NOTHING / B WRONG_PAGE and the swap give the same reason and rules;
+  review 3 found this, and it is a mutant below.)
 - the bond's rule test on the result (BOTH:P1/BOTH:P2) next to its claim-type
   test: a NO_PREMINE or NO_FOUNDER_REWARD check is definite only as BOTH:P1 or
   BOTH:P2; for the same reason the re-check outcome's rule test is the same as a
   verdict test for these claims;
+- the bond's block test on one page instead of both: a BOTH:P1 or BOTH:P2
+  verdict needs the same block on both pages (_combine), so one page's block is
+  the other's;
 - a challenge on a decided bond: a decision comes after the challenge window,
   which refuses it first;
 - booleans as windows: True and False are below the 600-second floor.
@@ -132,7 +138,7 @@ MUTANTS = [
     ("check records unreadable", 'if r["verdict"] == "UNREADABLE":\n            raise gl.vm.UserError("an explorer page could not be read; nothing was recorded")', 'if False:\n            raise gl.vm.UserError("")'),
     # bond
     ("bond: anyone", 'if gl.message.sender_address.as_hex.lower() != c.requester.lower():\n            problem = "only the requester', 'if False:\n            problem = "only the requester'),
-    ("bond: fair launch", 'elif rec["claim_type"] not in BONDABLE_CLAIMS or rec["result"]["rule"] not in OPPOSITE:', 'elif rec["result"]["rule"] not in OPPOSITE:'),
+    ("bond: fair launch", 'elif (rec["claim_type"] not in BONDABLE_CLAIMS or rec["result"]["rule"] not in OPPOSITE', 'elif (rec["result"]["rule"] not in OPPOSITE'),
     ("bond: twice", 'elif bd["state"] != "NONE":\n            problem = "this check is already bonded"', 'elif False:\n            problem = ""'),
     ("bond: no minimum", 'elif value < MIN_BOND:', 'elif value < 1:'),
     ("bond: late by tx time", 'elif now > rec["t0"] + w["bond_win"]:', 'elif now > rec["t0"] + w["bond_win"] + 1:'),
@@ -149,11 +155,11 @@ MUTANTS = [
     ("recheck: unchallenged", 'if bd["state"] != "BONDED" or bd["n"] == 0:', 'if bd["state"] != "BONDED":'),
     ("recheck: early", 'if not t["rc_open"] <= now <= t["rc_end"]:', 'if not t["close"] <= now <= t["rc_end"]:'),
     ("recheck: late", 'if not t["rc_open"] <= now <= t["rc_end"]:', 'if not t["rc_open"] <= now <= t["rc_end"] + 1:'),
-    ("recheck: unreadable decides", 'if r["verdict"] == "UNREADABLE" or "WRONG_PAGE" in (r["a"]["cls"], r["b"]["cls"]):', 'if "WRONG_PAGE" in (r["a"].get("cls"), r["b"].get("cls")):'),
-    ("recheck: wrong page decides", 'if r["verdict"] == "UNREADABLE" or "WRONG_PAGE" in (r["a"]["cls"], r["b"]["cls"]):', 'if r["verdict"] == "UNREADABLE":'),
+    ("recheck: unreadable decides", 'if not (r["rule"].startswith("BOTH:") or r["rule"] == "D1_EXPLORERS_DISAGREE"):', 'if not (r["rule"].startswith("BOTH:") or r["rule"] in ("D1_EXPLORERS_DISAGREE", "")):'),
+    ("recheck: wrong page decides", 'if not (r["rule"].startswith("BOTH:") or r["rule"] == "D1_EXPLORERS_DISAGREE"):', 'if not (r["rule"].startswith("BOTH:") or r["rule"] in ("D1_EXPLORERS_DISAGREE", "W1_WRONG_PAGE")):'),
     ("outcome: another amount upholds", 'for p in ("a", "b") for k in ("height", "amount")):', 'for p in ("a", "b") for k in ("height",)):'),
     ("outcome: another block upholds", 'for p in ("a", "b") for k in ("height", "amount")):', 'for p in ("a", "b") for k in ("amount",)):'),
-    ("outcome: undetermined overturns", 'if new["rule"] == OPPOSITE.get(old["rule"]):', 'if new["rule"] != old["rule"]:'),
+    ("outcome: undetermined overturns", 'if new["rule"] == OPPOSITE.get(old["rule"]) and all(new[p].get("height") == old[p].get("height") for p in ("a", "b")):', 'if new["rule"] != old["rule"]:'),
     ("outcome: same is not upheld", '        return "UPHELD"\n', '        return "NOT_CONFIRMED"\n'),
     ("overturn: nothing burned", 'burn = bd["amount"] // 2', 'burn = 0'),
     ("overturn: burn not counted", 'self.burned = u256(int(self.burned) + burn)', 'pass'),
@@ -184,12 +190,23 @@ MUTANTS = [
     ("port above 65535", 'and port[1] != "0" and int(port[1:]) <= 65535', 'and port[1] != "0"'),
     ("anchor 13 lines", 'ANCHOR_LINES = 12', 'ANCHOR_LINES = 13'),
     ("page 7000 chars", 'PAGE_CHARS = 6000', 'PAGE_CHARS = 7000'),
+    # from review 3
+    ("UNDETERMINED: page classes not compared", 'leader[p]["cls"] == mine[p]["cls"] and leader[p].get("rule") == mine[p].get("rule") for p in ("a", "b"))', 'leader[p].get("rule") == mine[p].get("rule") for p in ("a", "b"))'),
+    ("M2 tried before M1", 'found = _m1(ans, lines) or _m2(ans, lines)', 'found = _m2(ans, lines) or _m1(ans, lines)'),
+    ("bond: P1 on any block", '\n              or any(int(rec["result"][p].get("height", 2)) > 1 for p in ("a", "b"))):', '):'),
+    ("overturn: any block", 'if new["rule"] == OPPOSITE.get(old["rule"]) and all(new[p].get("height") == old[p].get("height") for p in ("a", "b")):', 'if new["rule"] == OPPOSITE.get(old["rule"]):'),
+    ("overturn: page A's block only", 'all(new[p].get("height") == old[p].get("height") for p in ("a", "b")):\n        return "OVERTURNED"', 'all(new[p].get("height") == old[p].get("height") for p in ("a",)):\n        return "OVERTURNED"'),
+    ("recheck: nothing found decides", 'if not (r["rule"].startswith("BOTH:") or r["rule"] == "D1_EXPLORERS_DISAGREE"):', 'if r["verdict"] == "UNREADABLE" or "WRONG_PAGE" in (r["a"]["cls"], r["b"]["cls"]):'),
+    ("recheck: disagreeing explorers decide nothing", 'if not (r["rule"].startswith("BOTH:") or r["rule"] == "D1_EXPLORERS_DISAGREE"):', 'if not r["rule"].startswith("BOTH:"):'),
+    ("field names allowed as coin names", '"difficulty", "nonce", "version", "merkle", "root", "previous", "prev", "next", "timestamp", "weight", "bits", "height",', ''),
+    ("mining counts not digits only", "that miner\\'s number of blocks as printed, digits only", "that miner\\'s number of blocks exactly as printed"),
 ]
 
 
 def run_one(job) -> tuple:
     i, name, path, env = job
-    r = subprocess.run([sys.executable, "-m", "pytest", "tests/direct/test_checker_v2.py", "tests/direct/test_checker_v2_review.py", "-q", "-x", "-p", "no:cacheprovider"],
+    r = subprocess.run([sys.executable, "-m", "pytest", "tests/direct/test_checker_v2.py", "tests/direct/test_checker_v2_review.py",
+                        "tests/direct/test_checker_v2_review3.py", "-q", "-x", "-p", "no:cacheprovider"],
                        cwd=ROOT, env={**env, "LCC2_CONTRACT": str(path)}, capture_output=True, text=True)
     return i, name, r.returncode != 0
 

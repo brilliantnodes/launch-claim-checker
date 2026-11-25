@@ -15,4 +15,4 @@ trap 'rm -rf "$TMP"' EXIT
 cp "$TMP/tests/conftest_v6.py" "$TMP/tests/direct/conftest.py"
 cd "$TMP"
 GENVM_VERSION="${GENVM_VERSION:-v0.6.0-rc10}" LCC2_CONTRACT=bradbury/build/launch_claim_checker_v2.py PYTHONPATH=. \
-  "$VENV/bin/python" -m pytest tests/direct/test_checker_v2.py tests/direct/test_checker_v2_review.py -q -p no:cacheprovider
+  "$VENV/bin/python" -m pytest tests/direct/test_checker_v2.py tests/direct/test_checker_v2_review.py tests/direct/test_checker_v2_review3.py -q -p no:cacheprovider
