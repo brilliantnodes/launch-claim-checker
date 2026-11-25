@@ -75,6 +75,8 @@ def unix(iso):
 
 
 def step(label, who, fn, args, value=0, expect=None):
+    if label in DONE and "no such check" in str((DONE[label].get("returned") or {}).get("error", "")):
+        label += " (check stored)"  # refused only because the check had not been stored; sent again once it is
     if label in DONE:
         return DONE[label]
     due()
@@ -85,6 +87,8 @@ def step(label, who, fn, args, value=0, expect=None):
         as_expected = isinstance(ret, dict) and ret.get("ok") is False and expect[8:] in str(ret.get("error", ""))
     elif isinstance(expect, dict):
         as_expected = isinstance(ret, dict) and all(ret.get(k) == v for k, v in expect.items())
+    if as_expected and s.get("result") != "MAJORITY_AGREE":
+        as_expected = False  # a leader's return value is not an agreed transaction
     entry = {"label": label, "who": who, "from": ADDR[who], "fn": fn, "args": args, "value": str(value), "tx": h,
              **s, "expected": expect, "as_expected": as_expected}
     rec["steps"].append(entry)
@@ -96,15 +100,16 @@ def step(label, who, fn, args, value=0, expect=None):
 
 
 def check_with_retry(case, args, expect):
-    """A check; if the validators did not agree (nothing recorded), once more."""
-    for attempt in ("", " (retry)"):
+    """A check; if the validators did not agree or did not finish in time (nothing recorded), up to twice more.
+    A leader's return value alone is not a stored check: only an agreed transaction is."""
+    for attempt in ("", " (retry)", " (retry 2)"):
         e = step(f"case {case} check{attempt}", "requester", "check_claim", args, 0, expect)
         ret = e.get("returned")
-        if isinstance(ret, dict) and ret.get("id"):
+        if isinstance(ret, dict) and ret.get("id") and e.get("result") == "MAJORITY_AGREE":
             rec["cases"].setdefault(case, {})["id"] = ret["id"]
             save()
             return ret["id"]
-    raise SystemExit(f"case {case}: no agreed check after two attempts")
+    raise SystemExit(f"case {case}: no agreed check after three attempts")
 
 
 def wait_until(t, why):
@@ -132,9 +137,18 @@ def correct_pages(coin):
     print(f"pages corrected for {coin}: {ch}", flush=True)
 
 
+def bond_entry(case):
+    """The bond step of a case that went through (a bond refused because its check was not stored yet is sent again)."""
+    for lab in (f"bond case {case} (check stored)", f"bond case {case}"):
+        e = DONE.get(lab)
+        if e and (e.get("returned") or {}).get("ok") is True:
+            return e
+    return None
+
+
 def times(case):
     """The bond's own times, as the contract returned them."""
-    return {k: int(v) for k, v in DONE[f"bond case {case}"]["returned"].items() if k in ("close", "rc_open", "rc_end", "nc_from")}
+    return {k: int(v) for k, v in bond_entry(case)["returned"].items() if k in ("close", "rc_open", "rc_end", "nc_from")}
 
 
 OUTCOMES = []  # (case, time key, offset, label, who, fn, value, expect), run as soon as each is due
@@ -147,7 +161,7 @@ def due():
     _busy[0] = True
     try:
         for case, key, off, label, who, fn, value, expect in OUTCOMES:
-            if label in DONE or f"bond case {case}" not in DONE:
+            if label in DONE or bond_entry(case) is None:
                 continue
             if time.time() >= times(case)[key] + off:
                 step(label, who, fn, [rec["cases"][case]["id"]], value, expect)

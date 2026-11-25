@@ -2,7 +2,7 @@
  "network": "genlayer-studio",
  "chain_id": 61999,
  "contract_source": "contracts/launch_claim_checker_v2.py",
- "contract_sha256": "47765e4516936955010011c301641463ccbaabdf510c60cdf70d916588a8b4d5",
+ "contract_sha256": "e7edc51bd201c51240692fa953b96d0d19e43b5819d4f6bea70ff338f67bda42",
  "windows_seconds": [
   600,
   600,
@@ -28,7 +28,7 @@
     "No founder reward"
    ],
    "value": "0",
-   "tx": "0xe750867200070a73600e0264890f0e5710a54a9597c7cf2ff820a1aa0c78d95b",
+   "tx": "0x6d845d9b43a90a53cdb732446558e099ba18936733d07d5ffdf3e4df6afb1b0f",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -38,7 +38,7 @@
     "rule": "BOTH:P1",
     "verdict": "CONTRADICTED"
    },
-   "created_at": "2026-11-24T15:59:04.472079+00:00",
+   "created_at": "2026-11-25T17:42:18.534787+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -59,22 +59,22 @@
     "1"
    ],
    "value": "1000000000000000000",
-   "tx": "0xcd3d9574ecb458b3b1e4bcd6f5256d28b8c64a8877609470c55b22120cf801f7",
+   "tx": "0xa604c193ea271ac53d5b34677322a38b82cf92132cc5aeb7f14de3829120e88a",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
     "bonded": "1000000000000000000",
-    "close": 1795536611,
-    "nc_from": 1795538411,
+    "close": 1795629208,
+    "nc_from": 1795631008,
     "ok": true,
-    "rc_end": 1795537811,
-    "rc_open": 1795537211
+    "rc_end": 1795630408,
+    "rc_open": 1795629808
    },
-   "created_at": "2026-11-24T16:00:11.458810+00:00",
+   "created_at": "2026-11-25T17:43:28.828815+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 3,
+    "agree": 4,
     "of": 5
    },
    "expected": {
@@ -92,19 +92,19 @@
     "1"
    ],
    "value": "1000000000000000000",
-   "tx": "0xd5a7b48adb91a0dddba6dd42820db1c64a8f9acb7b4e42cff9f3a01eb586b93f",
+   "tx": "0x23d0da833e10efad9f5978156ab471be7cda7f27db23ff9540749acd40c90a5d",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
     "challenger": 1,
     "ok": true,
-    "recheck_from": 1795537211
+    "recheck_from": 1795629808
    },
-   "created_at": "2026-11-24T16:00:26.429208+00:00",
+   "created_at": "2026-11-25T17:43:38.618808+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 5,
+    "agree": 3,
     "of": 5
    },
    "expected": {
@@ -122,19 +122,19 @@
     "1"
    ],
    "value": "1000000000000000000",
-   "tx": "0x1dbdd263bcbd32c1669ddee903495d3f3fb7beb98bdf45ec7dc338a5c4d3296c",
+   "tx": "0xe942409afbf5fb5e8ac3cd70548eb6b23e34cc013571174abe335ef3cd6a9f14",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
     "challenger": 2,
     "ok": true,
-    "recheck_from": 1795537211
+    "recheck_from": 1795629808
    },
-   "created_at": "2026-11-24T16:00:50.000722+00:00",
+   "created_at": "2026-11-25T17:43:58.980867+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 4,
+    "agree": 3,
     "of": 5
    },
    "expected": {
@@ -152,7 +152,7 @@
     "1"
    ],
    "value": "1000000000000000000",
-   "tx": "0x6f441336e7dee61add260cbd09c8f98b9a79cfeae9cf0203c61db00ea8762cb7",
+   "tx": "0x06c3c39dfe72e51d716d5cab11130e688132a0cc9e8a686b044b52abf4a8a1e0",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -161,10 +161,10 @@
     "ok": false,
     "refunded": "1000000000000000000"
    },
-   "created_at": "2026-11-24T16:01:11.198818+00:00",
+   "created_at": "2026-11-25T17:44:08.498971+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 5,
+    "agree": 3,
     "of": 5
    },
    "expected": "refused:the requester cannot",
@@ -179,7 +179,7 @@
     "1"
    ],
    "value": "1000000000000000000",
-   "tx": "0x683040c99e9a71e7b1b0e574d3a9168f97b2829ce766f9a248b9af4034868f96",
+   "tx": "0xaa94fcec7bd4ab6ffb2970188a0fda4d81a2230407b16f3e2d523a5a51991549",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -188,10 +188,10 @@
     "ok": false,
     "refunded": "1000000000000000000"
    },
-   "created_at": "2026-11-24T16:01:30.388799+00:00",
+   "created_at": "2026-11-25T17:44:18.126090+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 3,
+    "agree": 4,
     "of": 5
    },
    "expected": "refused:already challenged",
@@ -210,7 +210,7 @@
     "No premine"
    ],
    "value": "0",
-   "tx": "0xa1f301f7f76379be0add6738572af3863bb74757e63fdb9cc29b3f8924990b89",
+   "tx": "0xc50895690095407a2f9b527a09f5ec644a32a658f64e07dab831c5571e5cd418",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -220,8 +220,8 @@
     "rule": "BOTH:P2",
     "verdict": "SUPPORTED"
    },
-   "created_at": "2026-11-24T16:01:48.251389+00:00",
-   "rotations": 1,
+   "created_at": "2026-11-25T17:44:32.872062+00:00",
+   "rotations": 0,
    "votes": {
     "agree": 3,
     "of": 5
@@ -241,19 +241,19 @@
     "2"
    ],
    "value": "1000000000000000000",
-   "tx": "0x40e9dc3e2a4bf1e1330c4381e54fe49e005e9ea65ab4bd05271f2c687365382f",
+   "tx": "0xf9b18b25a23490ef2c6ba0e7ce8e2e8f87a8777dd52d89c6e47f7358520e6a2b",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
     "bonded": "1000000000000000000",
-    "close": 1795536832,
-    "nc_from": 1795538632,
+    "close": 1795629352,
+    "nc_from": 1795631152,
     "ok": true,
-    "rc_end": 1795538032,
-    "rc_open": 1795537432
+    "rc_end": 1795630552,
+    "rc_open": 1795629952
    },
-   "created_at": "2026-11-24T16:03:52.738810+00:00",
+   "created_at": "2026-11-25T17:45:52.874720+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -274,7 +274,7 @@
     "2"
    ],
    "value": "999999999999999999",
-   "tx": "0xbc1545dcc70eb721dc01d3d422c4e6109095ba0b400ec45ae61fde7eac5d5d36",
+   "tx": "0x1383bb2ed94af1d25bdf97a51b5fbb2dd080837de1b11936a49ae1acf5781cf7",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -283,10 +283,10 @@
     "ok": false,
     "refunded": "999999999999999999"
    },
-   "created_at": "2026-11-24T16:04:20.818816+00:00",
+   "created_at": "2026-11-25T17:46:02.913565+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 4,
+    "agree": 3,
     "of": 5
    },
    "expected": "refused:exactly the bond",
@@ -298,14 +298,14 @@
    "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
    "fn": "check_claim",
    "args": [
-    "https://checker.brilliantnodes.com/v2/flipcoin-block-1.html",
-    "https://brilliantnodes.github.io/demo-explorer/flipcoin/block-1.html",
-    "Flipcoin",
+    "https://checker.brilliantnodes.com/v2/pivotcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/pivotcoin/block-1.html",
+    "Pivotcoin",
     "NO_FOUNDER_REWARD",
     ""
    ],
    "value": "0",
-   "tx": "0xcc6c4059e45b617821c2e6f5012cc0f416f2d545589db599ec2cc0df5e4fa259",
+   "tx": "0x4114293802863266acd7175703704f9368c53f3b0382bf45b57074f846303984",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -315,7 +315,7 @@
     "rule": "BOTH:P1",
     "verdict": "CONTRADICTED"
    },
-   "created_at": "2026-11-24T16:04:36.298798+00:00",
+   "created_at": "2026-11-25T17:46:17.638437+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -336,19 +336,19 @@
     "3"
    ],
    "value": "1000000000000000000",
-   "tx": "0x1a9ecf79e8e5f3896676ee323c529573308acb84ce2ccafd15569d7f39faff3b",
+   "tx": "0x30627514677d2e1906dd7fdb3bad12481d88c506f82d48d058f2b4f4e9ecbf43",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
     "bonded": "1000000000000000000",
-    "close": 1795536937,
-    "nc_from": 1795538737,
+    "close": 1795629418,
+    "nc_from": 1795631218,
     "ok": true,
-    "rc_end": 1795538137,
-    "rc_open": 1795537537
+    "rc_end": 1795630618,
+    "rc_open": 1795630018
    },
-   "created_at": "2026-11-24T16:05:37.538784+00:00",
+   "created_at": "2026-11-25T17:46:58.708062+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -369,16 +369,16 @@
     "3"
    ],
    "value": "1000000000000000000",
-   "tx": "0x90def21d005bce7ae4efe02399744cb0dfc46dee58b674414cad0ff1b8ef380c",
+   "tx": "0x717fb97ec15e8460c415df871c10c1c6a2103e871c470c1ef6fefe487767556b",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
     "challenger": 1,
     "ok": true,
-    "recheck_from": 1795537537
+    "recheck_from": 1795630018
    },
-   "created_at": "2026-11-24T16:05:51.289364+00:00",
+   "created_at": "2026-11-25T17:47:13.408814+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -396,16 +396,16 @@
    "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
    "fn": "check_claim",
    "args": [
-    "https://checker.brilliantnodes.com/v2/driftcoin-block-1.html",
-    "https://brilliantnodes.github.io/demo-explorer/driftcoin/block-1.html",
-    "Driftcoin",
+    "https://checker.brilliantnodes.com/v2/shiftcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/shiftcoin/block-1.html",
+    "Shiftcoin",
     "NO_FOUNDER_REWARD",
     ""
    ],
    "value": "0",
-   "tx": "0xd69a934ea861e049378bbca42688c121fe79ff7cd93d049dfb3da22e3b0424a5",
-   "status": "ACCEPTED",
-   "result": "MAJORITY_AGREE",
+   "tx": "0xdeff6cd7256e7216f3b7f4ac2e581eefa09dd923cbd133460144bea694dbc88b",
+   "status": "VALIDATORS_TIMEOUT",
+   "result": "TIMEOUT",
    "execution": "SUCCESS",
    "returned": {
     "id": "4",
@@ -413,10 +413,10 @@
     "rule": "BOTH:P1",
     "verdict": "CONTRADICTED"
    },
-   "created_at": "2026-11-24T16:07:19.248822+00:00",
+   "created_at": "2026-11-25T17:48:31.090022+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 3,
+    "agree": 2,
     "of": 5
    },
    "expected": {
@@ -434,22 +434,114 @@
     "4"
    ],
    "value": "1000000000000000000",
-   "tx": "0x6406156d5c1024cc4aa256a5996b9c8bdd2363e34def829a3ff3ba32a5bde7db",
+   "tx": "0x88a52eced92ea872d9828ee77dbb891a5f7f819d0d0ad41633ec22681ee9a822",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "error": "no such check",
+    "ok": false,
+    "refunded": "1000000000000000000"
+   },
+   "created_at": "2026-11-25T17:49:09.052534+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "bonded": "1000000000000000000"
+   },
+   "as_expected": false
+  },
+  {
+   "label": "challenge B after the window",
+   "who": "challenger2",
+   "from": "0x3E1f7Ecc1f8Ec8a301F5bc73D58F017224BF10C9",
+   "fn": "challenge",
+   "args": [
+    "2"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0xfb4595a0d42cb6d1db896eb8abe6a301f34c946aabb906bced2794d74d9eb9ec",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "error": "the challenge window has closed",
+    "ok": false,
+    "refunded": "1000000000000000000"
+   },
+   "created_at": "2026-11-25T17:56:18.680282+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": "refused:window has closed",
+   "as_expected": true
+  },
+  {
+   "label": "case D check (retry)",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/shiftcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/shiftcoin/block-1.html",
+    "Shiftcoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0xede92d529cc372a6659a3c572894e176b431073415372753e68768bc75ac2f16",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "4",
+    "ok": true,
+    "rule": "BOTH:P1",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-25T17:56:29.609933+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "CONTRADICTED",
+    "rule": "BOTH:P1"
+   },
+   "as_expected": true
+  },
+  {
+   "label": "bond case D (check stored)",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "bond",
+   "args": [
+    "4"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0xbaa58b95c8e7958aa08a5b5af5162bf29f63adb8dc6de96189aa63c797f2062e",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
     "bonded": "1000000000000000000",
-    "close": 1795537108,
-    "nc_from": 1795538908,
+    "close": 1795630071,
+    "nc_from": 1795631871,
     "ok": true,
-    "rc_end": 1795538308,
-    "rc_open": 1795537708
+    "rc_end": 1795631271,
+    "rc_open": 1795630671
    },
-   "created_at": "2026-11-24T16:08:28.632661+00:00",
+   "created_at": "2026-11-25T17:57:51.234324+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 4,
+    "agree": 3,
     "of": 5
    },
    "expected": {
@@ -467,16 +559,16 @@
     "4"
    ],
    "value": "1000000000000000000",
-   "tx": "0x49312b338292745a19a571f3e7d48367b31b9631cba3ce28d852a5dec5e17ec1",
+   "tx": "0xfc4beb4c642f2cf09a144c99fc38e56888018fc7bbe97261fd94f756af7fcd8b",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
     "challenger": 1,
     "ok": true,
-    "recheck_from": 1795537708
+    "recheck_from": 1795630671
    },
-   "created_at": "2026-11-24T16:08:43.118841+00:00",
+   "created_at": "2026-11-25T17:58:01.927673+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -501,7 +593,7 @@
     ""
    ],
    "value": "0",
-   "tx": "0x419f918c760a99eca2b47fb25ef8cd91b2d68eb66dd76bb2399ead21fe75d7ba",
+   "tx": "0xbf6e2d0263f72d9c539e54ef5f9393e2bd22b0a367be48dd266c23e37ffff214",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -511,7 +603,7 @@
     "rule": "BOTH:P1",
     "verdict": "CONTRADICTED"
    },
-   "created_at": "2026-11-24T16:09:41.948819+00:00",
+   "created_at": "2026-11-25T17:58:44.500047+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -532,19 +624,19 @@
     "5"
    ],
    "value": "1000000000000000000",
-   "tx": "0xa053581262ba34c60039002094bfc381632fe151d71567feb5bd1d33147a8684",
+   "tx": "0x5c580fc4185b9b46d6f0c38cccd3f01a03b4901e390ba3f642f5c4d7dc658c3f",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
     "bonded": "1000000000000000000",
-    "close": 1795537255,
-    "nc_from": 1795539055,
+    "close": 1795630207,
+    "nc_from": 1795632007,
     "ok": true,
-    "rc_end": 1795538455,
-    "rc_open": 1795537855
+    "rc_end": 1795631407,
+    "rc_open": 1795630807
    },
-   "created_at": "2026-11-24T16:10:55.706955+00:00",
+   "created_at": "2026-11-25T18:00:07.559712+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -565,16 +657,16 @@
     "5"
    ],
    "value": "1000000000000000000",
-   "tx": "0xcd9f2cb92eb644a32b6e52ffbec15f1ca826e0e08696483ccfcbf818a235f2f4",
+   "tx": "0x0deb046d6ae45a512ec6e7afb7be619e7a0d02d77052a9d764fd76e7e2000e46",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
     "challenger": 1,
     "ok": true,
-    "recheck_from": 1795537855
+    "recheck_from": 1795630807
    },
-   "created_at": "2026-11-24T16:11:16.278816+00:00",
+   "created_at": "2026-11-25T18:00:18.808793+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -599,7 +691,7 @@
     ""
    ],
    "value": "0",
-   "tx": "0xe3683396f2d6c4d4c280f790f90b42bb2ad0d5efbbf63f16dcdfed688ad662c5",
+   "tx": "0xb6bbea0f4ae725afa3287c9032c43db28c20486cbdd7a2c22b1b409725b2bfec",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -609,7 +701,7 @@
     "rule": "BOTH:M1",
     "verdict": "CONTRADICTED"
    },
-   "created_at": "2026-11-24T16:11:29.788840+00:00",
+   "created_at": "2026-11-25T18:00:28.278823+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -630,19 +722,19 @@
     "6"
    ],
    "value": "1000000000000000000",
-   "tx": "0x0ae4c6269444e0e418c546814e2ba323040fb91de31e2d0ae2eb852d5bd9cbff",
+   "tx": "0xc70e8cad8a57c00d195654a70504c803df8762fab790654233b0800c11b5ac76",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
-    "error": "only a BOTH:P1 or BOTH:P2 verdict on NO_PREMINE or NO_FOUNDER_REWARD can be bonded",
+    "error": "only a BOTH:P1 or BOTH:P2 verdict on block 0 or 1, on NO_PREMINE or NO_FOUNDER_REWARD, can be bonded",
     "ok": false,
     "refunded": "1000000000000000000"
    },
-   "created_at": "2026-11-24T16:12:16.469673+00:00",
+   "created_at": "2026-11-25T18:01:08.465226+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 4,
+    "agree": 3,
     "of": 5
    },
    "expected": "refused:BOTH:P1 or BOTH:P2",
@@ -661,7 +753,7 @@
     ""
    ],
    "value": "0",
-   "tx": "0x26d1fc6a63d19ce741a58750095723025d584b09b08565bd93a40a8fb52cf9d7",
+   "tx": "0x098ccc1321df3ede1fd9f6bd26fe37b7a0f2773b057cca6ec54a053721410029",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -671,7 +763,7 @@
     "rule": "D1_EXPLORERS_DISAGREE",
     "verdict": "UNDETERMINED"
    },
-   "created_at": "2026-11-24T16:12:37.364714+00:00",
+   "created_at": "2026-11-25T18:01:18.668816+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -692,16 +784,16 @@
     "7"
    ],
    "value": "1000000000000000000",
-   "tx": "0x41d22b163d79a709f876324bb9d66a6c9547c24cf0accea9807e125a201ccbc5",
+   "tx": "0xff41e17ffdfd6fb73384398a5a7b174186ad917d2da4d70154023c90c7e5d718",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
-    "error": "only a BOTH:P1 or BOTH:P2 verdict on NO_PREMINE or NO_FOUNDER_REWARD can be bonded",
+    "error": "only a BOTH:P1 or BOTH:P2 verdict on block 0 or 1, on NO_PREMINE or NO_FOUNDER_REWARD, can be bonded",
     "ok": false,
     "refunded": "1000000000000000000"
    },
-   "created_at": "2026-11-24T16:13:22.868845+00:00",
+   "created_at": "2026-11-25T18:01:58.438848+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -723,7 +815,7 @@
     "Fair launch"
    ],
    "value": "0",
-   "tx": "0x1d3d62d745e867d20bf7da94c87902d0eb81a987fd0513917d215334f9e0c10f",
+   "tx": "0x30212ee6ad15787ff8837ff9a90a7fda16b8a19379b865277af44f4d957a2929",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -733,7 +825,7 @@
     "rule": "BOTH:P1",
     "verdict": "CONTRADICTED"
    },
-   "created_at": "2026-11-24T16:13:39.834221+00:00",
+   "created_at": "2026-11-25T18:02:07.994396+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -746,33 +838,6 @@
    "as_expected": true
   },
   {
-   "label": "challenge B after the window",
-   "who": "challenger2",
-   "from": "0x3E1f7Ecc1f8Ec8a301F5bc73D58F017224BF10C9",
-   "fn": "challenge",
-   "args": [
-    "2"
-   ],
-   "value": "1000000000000000000",
-   "tx": "0x77ccb0676d3e777ae27e1484fd21dae94e8bb26c308bdf32142dd5dd0d38094f",
-   "status": "ACCEPTED",
-   "result": "MAJORITY_AGREE",
-   "execution": "SUCCESS",
-   "returned": {
-    "error": "the challenge window has closed",
-    "ok": false,
-    "refunded": "1000000000000000000"
-   },
-   "created_at": "2026-11-24T16:14:27.948649+00:00",
-   "rotations": 0,
-   "votes": {
-    "agree": 4,
-    "of": 5
-   },
-   "expected": "refused:window has closed",
-   "as_expected": true
-  },
-  {
    "label": "bond on a FAIR_LAUNCH verdict",
    "who": "requester",
    "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
@@ -781,16 +846,16 @@
     "8"
    ],
    "value": "1000000000000000000",
-   "tx": "0xa7511527c7ee3c417f77480cac56f425eac24afbc97afffd68bc7bcccebdfcb7",
+   "tx": "0x5e1eb965951cdbed055f948cb649a49819fe08bf927c3f55226c0fcf28fabcb7",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
-    "error": "only a BOTH:P1 or BOTH:P2 verdict on NO_PREMINE or NO_FOUNDER_REWARD can be bonded",
+    "error": "only a BOTH:P1 or BOTH:P2 verdict on block 0 or 1, on NO_PREMINE or NO_FOUNDER_REWARD, can be bonded",
     "ok": false,
     "refunded": "1000000000000000000"
    },
-   "created_at": "2026-11-24T16:14:43.208821+00:00",
+   "created_at": "2026-11-25T18:02:43.498828+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -812,7 +877,7 @@
     ""
    ],
    "value": "0",
-   "tx": "0xa9c0981aa1a1cc954d350614aa0d737381a0f8b1ddce31deb0e5cf921650eaff",
+   "tx": "0xc1d68a1bc01c0a0f111254ee0b867b4a8114eaf193ce628be8a8588b372c7f01",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -822,7 +887,7 @@
     "rule": "W1_WRONG_PAGE",
     "verdict": "UNDETERMINED"
    },
-   "created_at": "2026-11-24T16:15:01.358815+00:00",
+   "created_at": "2026-11-25T18:02:58.646026+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -831,6 +896,39 @@
    "expected": {
     "verdict": "UNDETERMINED",
     "rule": "W1_WRONG_PAGE"
+   },
+   "as_expected": true
+  },
+  {
+   "label": "recheck A",
+   "who": "challenger1",
+   "from": "0x2dE9cF445E20DeEb411C21b04dc833500eAb8AD6",
+   "fn": "recheck",
+   "args": [
+    "1"
+   ],
+   "value": "0",
+   "tx": "0x78d0d8352c7b1a3743744209e9a41629daaee48f142d87991c4470c114827c4f",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "decided": true,
+    "ok": true,
+    "rule": "BOTH:P1",
+    "state": "UPHELD",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-25T18:04:04.058799+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "decided": true,
+    "state": "UPHELD"
    },
    "as_expected": true
   },
@@ -847,7 +945,7 @@
     ""
    ],
    "value": "0",
-   "tx": "0x5c0248e92340ec5e9a39cd53f854f9de287c169d3cc4a3522664bea00e4af3b0",
+   "tx": "0xd0895cdf44d5025bb37ed5d05aeeb4cdfddda256ffe91dc139255f345db63654",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -857,7 +955,7 @@
     "rule": "BOTH:M1",
     "verdict": "CONTRADICTED"
    },
-   "created_at": "2026-11-24T16:15:49.198823+00:00",
+   "created_at": "2026-11-25T18:05:18.878797+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -870,39 +968,6 @@
    "as_expected": true
   },
   {
-   "label": "recheck A",
-   "who": "challenger1",
-   "from": "0x2dE9cF445E20DeEb411C21b04dc833500eAb8AD6",
-   "fn": "recheck",
-   "args": [
-    "1"
-   ],
-   "value": "0",
-   "tx": "0x95d0b87541c25f4b059fdab1d470e5f1025207a5156ff8fb4f21481d7d287943",
-   "status": "ACCEPTED",
-   "result": "MAJORITY_AGREE",
-   "execution": "SUCCESS",
-   "returned": {
-    "decided": true,
-    "ok": true,
-    "rule": "BOTH:P1",
-    "state": "UPHELD",
-    "verdict": "CONTRADICTED"
-   },
-   "created_at": "2026-11-24T16:20:18.398816+00:00",
-   "rotations": 0,
-   "votes": {
-    "agree": 3,
-    "of": 5
-   },
-   "expected": {
-    "ok": true,
-    "decided": true,
-    "state": "UPHELD"
-   },
-   "as_expected": true
-  },
-  {
    "label": "settle B (no challenger)",
    "who": "challenger1",
    "from": "0x2dE9cF445E20DeEb411C21b04dc833500eAb8AD6",
@@ -911,7 +976,7 @@
     "2"
    ],
    "value": "0",
-   "tx": "0x6d70aecb4f8b11b5774a6d1fa4925126761706a3c9d04298c5702da6e20d8f73",
+   "tx": "0xf6667ca1cee5b29d9f75a55e2f38d1206f6b2b8fc5a7aaf646756b7734f50fbd",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -919,7 +984,7 @@
     "ok": true,
     "state": "RELEASED"
    },
-   "created_at": "2026-11-24T16:23:59.120836+00:00",
+   "created_at": "2026-11-25T18:06:14.550505+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -940,7 +1005,7 @@
     "3"
    ],
    "value": "0",
-   "tx": "0xd20ffe7c6863c33d89457e99784e2a82bbf21c8f91efa0a60798f442a920b9e8",
+   "tx": "0x4800a6627cd004b880d4c595da38f1b29096dc58370d3170b5dd5751296006a1",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -951,8 +1016,8 @@
     "state": "OVERTURNED",
     "verdict": "SUPPORTED"
    },
-   "created_at": "2026-11-24T16:25:44.081117+00:00",
-   "rotations": 0,
+   "created_at": "2026-11-25T18:07:04.990334+00:00",
+   "rotations": 1,
    "votes": {
     "agree": 3,
     "of": 5
@@ -973,7 +1038,7 @@
     "4"
    ],
    "value": "0",
-   "tx": "0x14eb30fb1e8a8c4fca684713bcde1b7e1a6c9e9e60d14f8128a4060d4680414d",
+   "tx": "0x513f20f5ccbb897f77202f260b06d273493bb2326d97dfc90a9395ed7639356a",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -984,7 +1049,7 @@
     "state": "NOT_CONFIRMED",
     "verdict": "UNDETERMINED"
    },
-   "created_at": "2026-11-24T16:28:34.958818+00:00",
+   "created_at": "2026-11-25T18:17:58.354467+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1006,7 +1071,7 @@
     "5"
    ],
    "value": "0",
-   "tx": "0x062d32e0f287aa4acea7fd4de7aed659e01e0482024881db2c335e86c30266e2",
+   "tx": "0x25be0a6f55aba4b7be510b6c99afbf305695d6e0e953dc27630ce14040e7296d",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1014,10 +1079,10 @@
     "ok": true,
     "state": "NOT_CONFIRMED"
    },
-   "created_at": "2026-11-24T16:51:06.606334+00:00",
+   "created_at": "2026-11-25T18:40:14.568803+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 4,
+    "agree": 3,
     "of": 5
    },
    "expected": {
@@ -1035,7 +1100,7 @@
     "1"
    ],
    "value": "0",
-   "tx": "0x93ef76fb5fed022ca08a23ab49cac83aa19b912a6152e6702a3a8acebbd57b6d",
+   "tx": "0x26292ecf34f7397b24c4722dd5bd64002d4f70c4e2d680b44a1024f19681f8f2",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1044,10 +1109,10 @@
     "ok": true,
     "state": "UPHELD"
    },
-   "created_at": "2026-11-24T16:51:17.122299+00:00",
+   "created_at": "2026-11-25T18:40:25.266032+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 5,
+    "agree": 4,
     "of": 5
    },
    "expected": {
@@ -1065,7 +1130,7 @@
     "1"
    ],
    "value": "0",
-   "tx": "0xf7ad55a916f9b77a2e5b46f63eb1a924e30fcd6f40ff53815f3895ca36d52897",
+   "tx": "0x757dedb5acd5fc403f2413df10ee67cc54f5b20ab9efb15a5a7c65d067ff8f12",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1074,7 +1139,7 @@
     "ok": true,
     "state": "UPHELD"
    },
-   "created_at": "2026-11-24T16:51:25.785583+00:00",
+   "created_at": "2026-11-25T18:40:35.373840+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1095,7 +1160,7 @@
     "1"
    ],
    "value": "0",
-   "tx": "0x29e00b9115398b8ffb2eb2dc20b70c6bfeb18244c8917d9aafc0a895cb8db3c8",
+   "tx": "0x1978e9ac2358fc250bee1186edb7cec1125f158798bcbd6e3d90920c9e4204e5",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1104,10 +1169,10 @@
     "ok": true,
     "state": "UPHELD"
    },
-   "created_at": "2026-11-24T16:51:34.848810+00:00",
+   "created_at": "2026-11-25T18:40:50.340034+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 3,
+    "agree": 4,
     "of": 5
    },
    "expected": {
@@ -1125,7 +1190,7 @@
     "2"
    ],
    "value": "0",
-   "tx": "0x7fa52a5fe69f1c13721124a61227a524b4701fba07d9d3b78ed6bdf3ad1a6537",
+   "tx": "0x00feddcc3b161c954780bc610525241ee1d0fa82dbea28564fa851a05bc247e1",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1134,7 +1199,7 @@
     "ok": true,
     "state": "RELEASED"
    },
-   "created_at": "2026-11-24T16:51:45.977576+00:00",
+   "created_at": "2026-11-25T18:41:00.026589+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1155,7 +1220,7 @@
     "3"
    ],
    "value": "0",
-   "tx": "0xde2167821ebf23761a10af06e6b95a25721ec2ee6d67cd808cd8727a4ee98d8a",
+   "tx": "0x2a4b8e7ff039b54ab95d9b953dc5d6aad08e5a396ae432526eb049022b2aff5f",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1164,10 +1229,10 @@
     "ok": true,
     "state": "OVERTURNED"
    },
-   "created_at": "2026-11-24T16:51:54.718831+00:00",
+   "created_at": "2026-11-25T18:41:10.478827+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 3,
+    "agree": 4,
     "of": 5
    },
    "expected": {
@@ -1185,7 +1250,7 @@
     "3"
    ],
    "value": "0",
-   "tx": "0xb6bfa6000e1e3133d8bc98bafe1117e9505e0491a9e78c7349675d7252fd8ac4",
+   "tx": "0x51f9c99c8c85de123a69f55542baa8559cf1697358c79e703bf725c844e83413",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1194,10 +1259,10 @@
     "ok": true,
     "state": "OVERTURNED"
    },
-   "created_at": "2026-11-24T16:52:04.950212+00:00",
+   "created_at": "2026-11-25T18:41:25.418833+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 4,
+    "agree": 3,
     "of": 5
    },
    "expected": {
@@ -1215,7 +1280,7 @@
     "4"
    ],
    "value": "0",
-   "tx": "0x870221866850440ad71ab987d23a84839b80a61b3debb9d5860dec5193f3c8a9",
+   "tx": "0xd696d423e55317cefb9d68f3c3819fa0a6f15ab0ebbde0965e064ebb90d9300f",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1224,10 +1289,10 @@
     "ok": true,
     "state": "NOT_CONFIRMED"
    },
-   "created_at": "2026-11-24T16:52:16.003096+00:00",
+   "created_at": "2026-11-25T18:41:41.610531+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 5,
+    "agree": 3,
     "of": 5
    },
    "expected": {
@@ -1245,7 +1310,7 @@
     "4"
    ],
    "value": "0",
-   "tx": "0x9a43e5f4768ac703bbb7ad51d40818ed2340836d468532552ecd6a5bf8abce97",
+   "tx": "0x8cda16a002363378d20bdc38c30ec4bf3379588e4a6ff17d477b9210484678b7",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1254,10 +1319,10 @@
     "ok": true,
     "state": "NOT_CONFIRMED"
    },
-   "created_at": "2026-11-24T16:52:25.663012+00:00",
+   "created_at": "2026-11-25T18:41:50.958802+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 5,
+    "agree": 4,
     "of": 5
    },
    "expected": {
@@ -1275,7 +1340,7 @@
     "5"
    ],
    "value": "0",
-   "tx": "0xb9873c56d219c926ee61c8daaae62aa6bb85e28acfea5138c054a9e2edf1496c",
+   "tx": "0x6e9052561d800b96a00a57ef6ec15a75ff2e61c5507c0f349f13ff83ee576ff8",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1284,7 +1349,7 @@
     "ok": true,
     "state": "NOT_CONFIRMED"
    },
-   "created_at": "2026-11-24T16:52:34.361178+00:00",
+   "created_at": "2026-11-25T18:42:04.925116+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1305,7 +1370,7 @@
     "5"
    ],
    "value": "0",
-   "tx": "0x0d17265d0a61fbede7baf9e989a357c4e1c410be5f894f2950833d9814785311",
+   "tx": "0x5b8f41150583ba49c2146f9387e3090f91d735b73d68d5091be9b99e5af7542d",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1314,7 +1379,7 @@
     "ok": true,
     "state": "NOT_CONFIRMED"
    },
-   "created_at": "2026-11-24T16:52:44.214271+00:00",
+   "created_at": "2026-11-25T18:42:16.525071+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1335,16 +1400,16 @@
     0
    ],
    "value": "0",
-   "tx": "0x1b40f551ab71204879566ef2f798885d8567fb95648aeb14ab9db3f41bd94ad8",
+   "tx": "0xd5341a348e52ce999a9bde876c7e33e6c05e4fb6a817d5c0854984020c993afd",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
    "returned": {
-    "amount": "10000000000000000000",
+    "amount": "11000000000000000000",
     "left": "0",
     "ok": true
    },
-   "created_at": "2026-11-24T16:52:54.708846+00:00",
+   "created_at": "2026-11-25T18:42:27.171216+00:00",
    "rotations": 0,
    "votes": {
     "agree": 3,
@@ -1352,7 +1417,7 @@
    },
    "expected": {
     "ok": true,
-    "amount": "10000000000000000000"
+    "amount": "11000000000000000000"
    },
    "as_expected": true
   },
@@ -1365,7 +1430,7 @@
     0
    ],
    "value": "0",
-   "tx": "0x420032800e085e40d8e6c9d2c6a2105ad5c5271351be2cccfbe9a50b52dde553",
+   "tx": "0x95330d8f92f392ceb33d41ef742b4a7ccc2201d812f4bf2f816b9f00514a99b9",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1374,7 +1439,7 @@
     "left": "0",
     "ok": true
    },
-   "created_at": "2026-11-24T16:53:05.000988+00:00",
+   "created_at": "2026-11-25T18:42:38.208827+00:00",
    "rotations": 0,
    "votes": {
     "agree": 4,
@@ -1395,7 +1460,7 @@
     0
    ],
    "value": "0",
-   "tx": "0x8a1822075375bceb8ec29284a5cfba34a658c98702257c7dc4de5573d1321db5",
+   "tx": "0xb624f93c2c693774d1445bdbfbfb5c21bac46573a5c981a453ec82668c69c2d0",
    "status": "ACCEPTED",
    "result": "MAJORITY_AGREE",
    "execution": "SUCCESS",
@@ -1404,10 +1469,10 @@
     "left": "0",
     "ok": true
    },
-   "created_at": "2026-11-24T16:53:15.185186+00:00",
+   "created_at": "2026-11-25T18:42:49.081084+00:00",
    "rotations": 0,
    "votes": {
-    "agree": 3,
+    "agree": 4,
     "of": 5
    },
    "expected": {
@@ -1424,7 +1489,7 @@
    "detail": {
     "amount": 1000000000000000000,
     "burned": 0,
-    "clock": 1795537218,
+    "clock": 1795629844,
     "held": 0,
     "n": 2,
     "recheck": {
@@ -1436,7 +1501,7 @@
       "quote": "1 2,000,000.00000000 EXM Founders allocation to exm1qfounders0000000000000000000001",
       "rule": "P1"
      },
-     "at": 1795537218,
+     "at": 1795629844,
      "b": {
       "amount": "2000000",
       "amount_text": "2,000,000",
@@ -1450,7 +1515,7 @@
     },
     "req_collected": true,
     "state": "UPHELD",
-    "tb": 1795536011
+    "tb": 1795628608
    }
   },
   {
@@ -1459,13 +1524,13 @@
    "detail": {
     "amount": 1000000000000000000,
     "burned": 0,
-    "clock": 1795537439,
+    "clock": 1795629974,
     "held": 0,
     "n": 0,
     "recheck": null,
     "req_collected": true,
     "state": "RELEASED",
-    "tb": 1795536232
+    "tb": 1795628752
    }
   },
   {
@@ -1474,7 +1539,7 @@
    "detail": {
     "amount": 1000000000000000000,
     "burned": 500000000000000000,
-    "clock": 1795537544,
+    "clock": 1795630024,
     "held": 0,
     "n": 1,
     "recheck": {
@@ -1483,7 +1548,7 @@
       "height": 1,
       "rule": "P2"
      },
-     "at": 1795537544,
+     "at": 1795630024,
      "b": {
       "cls": "SUPPORTS",
       "height": 1,
@@ -1494,7 +1559,7 @@
     },
     "req_collected": true,
     "state": "OVERTURNED",
-    "tb": 1795536337
+    "tb": 1795628818
    }
   },
   {
@@ -1503,7 +1568,7 @@
    "detail": {
     "amount": 1000000000000000000,
     "burned": 0,
-    "clock": 1795537714,
+    "clock": 1795630678,
     "held": 0,
     "n": 1,
     "recheck": {
@@ -1511,7 +1576,7 @@
       "cls": "CONTRADICTS",
       "rule": "P1"
      },
-     "at": 1795537714,
+     "at": 1795630678,
      "b": {
       "cls": "SUPPORTS",
       "rule": "P2"
@@ -1521,7 +1586,7 @@
     },
     "req_collected": true,
     "state": "NOT_CONFIRMED",
-    "tb": 1795536508
+    "tb": 1795629471
    }
   },
   {
@@ -1530,13 +1595,13 @@
    "detail": {
     "amount": 1000000000000000000,
     "burned": 0,
-    "clock": 1795539066,
+    "clock": 1795632014,
     "held": 0,
     "n": 1,
     "recheck": null,
     "req_collected": true,
     "state": "NOT_CONFIRMED",
-    "tb": 1795536655
+    "tb": 1795629607
    }
   },
   {
@@ -1548,7 +1613,7 @@
      "height": 1,
      "rule": "P2"
     },
-    "at": 1795537544,
+    "at": 1795630024,
     "b": {
      "cls": "SUPPORTS",
      "height": 1,
@@ -1566,7 +1631,7 @@
      "cls": "CONTRADICTS",
      "rule": "P1"
     },
-    "at": 1795537714,
+    "at": 1795630678,
     "b": {
      "cls": "SUPPORTS",
      "rule": "P2"
@@ -1593,8 +1658,11 @@
   },
   {
    "label": "contract balance equals the burned GEN",
-   "ok": false,
-   "detail": 6999999999999999999
+   "ok": true,
+   "detail": {
+    "balance": 500000000000000000,
+    "reads": 2
+   }
   },
   {
    "label": "case C: half the bond burned",
@@ -1609,28 +1677,28 @@
  ],
  "page_changes": [
   {
-   "coin": "flipcoin",
+   "coin": "pivotcoin",
    "commits": {
-    "launch-claim-checker": "c279582",
-    "demo-explorer": "fc21222"
+    "launch-claim-checker": "a689784",
+    "demo-explorer": "38f4df3"
    },
    "live": {
     "a": true,
     "b": true
    },
-   "at": 1795536437
+   "at": 1795628909
   },
   {
-   "coin": "driftcoin",
+   "coin": "shiftcoin",
    "commits": {
     "launch-claim-checker": null,
-    "demo-explorer": "d3a2d70"
+    "demo-explorer": "75acb72"
    },
    "live": {
     "a": null,
     "b": true
    },
-   "at": 1795536580
+   "at": 1795629522
   }
  ],
  "cases": {
@@ -1666,39 +1734,25 @@
   }
  },
  "deploy": {
-  "tx": "0x42d43d2e5cf00a9f830663fde0c9a80acd564048692a92b348b2248ae421fa88",
-  "address": "0xf7A2399D91144AdF06550889fE16e919dD685F61",
+  "tx": "0x837d7e90132673e2498b510e3c7cdf4bb874157d039e0200c914b3ab506f2bad",
+  "address": "0xe1b1770448731b0AABf1DF9E62Df2faEf71d95dA",
   "status": "ACCEPTED",
   "result": "MAJORITY_AGREE",
   "execution": "SUCCESS",
-  "created_at": "2026-11-24T15:57:59.698831+00:00",
+  "created_at": "2026-11-25T17:42:08.405817+00:00",
   "rotations": 0,
   "votes": {
-   "agree": 4,
+   "agree": 3,
    "of": 5
   }
  },
- "address": "0xf7A2399D91144AdF06550889fE16e919dD685F61",
+ "address": "0xe1b1770448731b0AABf1DF9E62Df2faEf71d95dA",
  "summary": {
-  "steps": 45,
-  "steps_as_expected": 45,
+  "steps": 47,
+  "steps_as_expected": 46,
   "checks": 12,
-  "checks_ok": 11
+  "checks_ok": 12
  },
- "after_the_run": [
-  {
-   "at": 1795539377,
-   "what": "the contract's balance read again from the chain",
-   "balance_wei": "500000000000000000",
-   "totals": {
-    "locked": "0",
-    "credited": "0",
-    "burned": "500000000000000000"
-   },
-   "note": "The run's last check read the balance as 6999999999999999999 wei right after the three withdrawals, before Studio had made two of the three transfers (Studio sends each transfer as a transaction of its own). Read again a few minutes later it was 500000000000000000 wei: the burned half of case C's bond. The failed check above is kept as the run wrote it.",
-   "supersedes": "contract balance equals the burned GEN"
-  }
- ],
  "final_states": {
   "A": "UPHELD",
   "B": "RELEASED",
