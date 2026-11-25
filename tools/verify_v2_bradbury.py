@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check the Bradbury live-run record of LaunchClaimCheckerV2 against the chain. Reads only.
 
-    cd tools/bradbury && npm ci && cd ../..
+    cd tools/bradbury3 && npm ci && cd ../..      (records of Phase 3; tools/bradbury for Phase 2 records)
     python tools/verify_v2_bradbury.py [examples/live/v2-bradbury.json]
 
 1. bradbury/build/launch_claim_checker_v2.py is what tools/port_bradbury.py --pack
@@ -37,7 +37,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-JS = ROOT / "tools" / "bradbury"
+JS = ROOT / "tools" / "bradbury3"  # set from the record in main(): Phase 2 records use tools/bradbury
 NOTHING_STORED = ("UNDETERMINED", "LEADER_TIMEOUT", "VALIDATORS_TIMEOUT", "CANCELED")
 NO_DECISION = ("UNDETERMINED", "MAJORITY_DISAGREE", "NO_MAJORITY")  # the validators did not agree: nothing stored
 VOTE = {0: "NOT_VOTED", 1: "FINISHED_WITH_RETURN", 2: "FINISHED_WITH_ERROR", 3: "TIMEOUT", 4: "NONDET_DISAGREE", 5: "DETERMINISTIC_VIOLATION"}
@@ -146,13 +146,18 @@ def main() -> int:
     addr, bad = rec["address"], []
 
     # 1. the build is the source, ported and packed
-    build = (ROOT / "bradbury" / "build" / "launch_claim_checker_v2.py").read_bytes()
+    phase3 = rec.get("network") == "testnet-bradbury-phase-3"
+    global JS
+    JS = ROOT / "tools" / ("bradbury3" if phase3 else "bradbury")
+    build_path = ROOT / "bradbury" / ("build-phase3" if phase3 else "build") / "launch_claim_checker_v2.py"
+    build = build_path.read_bytes()
     with tempfile.TemporaryDirectory() as tmp:
         out = Path(tmp) / "build.py"
-        subprocess.run([sys.executable, str(ROOT / "tools" / "port_bradbury.py"), str(ROOT / "contracts" / "launch_claim_checker_v2.py"), str(out), "--pack"],
+        subprocess.run([sys.executable, str(ROOT / "tools" / "port_bradbury.py"), str(ROOT / "contracts" / "launch_claim_checker_v2.py"), str(out), "--pack"]
+                       + (["--phase3"] if phase3 else []),
                        check=True, capture_output=True)
         if out.read_bytes() != build:
-            bad.append("bradbury/build/launch_claim_checker_v2.py is not what port_bradbury.py --pack makes from the source")
+            bad.append(f"{build_path.relative_to(ROOT)} is not what port_bradbury.py makes from the source")
     if hashlib.sha256(build).hexdigest() != rec.get("build_sha256"):
         bad.append("the build does not have the sha256 recorded for the run")
 

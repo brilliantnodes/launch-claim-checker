@@ -1,6 +1,11 @@
 """Make the Bradbury Phase 2 (GenVM v0.6) build of a contract written for Studio (GenVM v0.2).
 
-    python3 tools/port_bradbury.py <source.py> <out.py> [--pack]
+    python3 tools/port_bradbury.py <source.py> <out.py> [--pack] [--phase3]
+
+--phase3: Bradbury Phase 3 (deployed 24 Nov 2026, GenVM v0.6.0-rc17) uses another runner and the plain
+header form of GenLayer's own Phase 3 boilerplate (genlayer-project-boilerplate, branch fix/bradbury-phase3):
+  # { "Depends": "py-genlayer:kzybg95x...6bz0" }
+Without it the Phase 2 runner and header are used, as for every build made before Phase 3.
 
 Rewrites, in the direction of GenLayer Foundation's own Studio/Bradbury targets
 (genlayer-foundation/uptime, contracts/targets.json):
@@ -29,6 +34,10 @@ import zlib
 
 RUNNER = "py-genlayer:babwp9t37jw9g4j2bccgn14g6x7x9s1f7dsmh7emvz735pz4zxa0"
 HEADER = '# { "Seq": [{"Depends": "%s"}] }\n' % RUNNER
+RUNNER_PHASE3 = "py-genlayer:kzybg95x1gn21dw72m7hyg0maaap04n4nx55j9yt6fkdqxtz6bz0"
+HEADER_PHASE3 = '# { "Depends": "%s" }\n' % RUNNER_PHASE3
+if "--phase3" in sys.argv[3:]:
+    HEADER = HEADER_PHASE3
 IMPORTS = "import genlayer as gl\nfrom genlayer.storage import DynArray, TreeMap, allow as allow_storage\nfrom genlayer.types import *\n"
 RENAMES = [
     (r"\bgl\.Contract\b", "gl.contract.Contract"),

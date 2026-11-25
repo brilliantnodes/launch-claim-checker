@@ -1,0 +1,8 @@
+{
+  "name": "launch-claim-checker-bradbury-phase3",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "genlayer-js": "2.1.0"
+  }
+}

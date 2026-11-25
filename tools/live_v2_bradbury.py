@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Live cases for LaunchClaimCheckerV2 on GenLayer Testnet Bradbury Phase 2 (packed GenVM v0.6 build).
 
-    cd tools/bradbury && npm ci && cd ../..
+    cd tools/bradbury3 && npm ci && cd ../..      (Bradbury Phase 3; LCC2_PHASE=2 and tools/bradbury for Phase 2)
     LCC2_KEYS=/path/to/keys DEMO_REPO=/path/to/demo-explorer python tools/live_v2_bradbury.py [record.json] [--resume]
 
 Three testnet wallets whose keys stay in files outside the repository, never
@@ -39,13 +39,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import v2_pages  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
-JS = ROOT / "tools" / "bradbury"
+PHASE = os.environ.get("LCC2_PHASE", "3")  # Bradbury Phase 3 replaced Phase 2 on 24 Nov 2026
+JS = ROOT / "tools" / ("bradbury3" if PHASE == "3" else "bradbury")
 KEYS = Path(os.environ.get("LCC2_KEYS", str(Path.home() / ".lcc2-keys")))
 DEMO_REPO = Path(os.environ.get("DEMO_REPO", str(ROOT.parent / "demo-explorer")))
 RESUME = "--resume" in sys.argv
 _args = [a for a in sys.argv[1:] if not a.startswith("--")]
 OUT = Path(_args[0]) if _args else ROOT / "examples" / "live" / "v2-bradbury.json"
-BUILD = ROOT / "bradbury" / "build" / "launch_claim_checker_v2.py"
+BUILD = ROOT / "bradbury" / ("build-phase3" if PHASE == "3" else "build") / "launch_claim_checker_v2.py"
 ADDRESS = os.environ["LCC2_BRADBURY"]  # the deployment this run uses (no default: each run names its own)
 WINDOWS = [int(x) for x in os.environ.get("LCC2_WINDOWS", "600,600,600,600").split(",")]
 COIN_C, COIN_D = os.environ.get("LCC2_COINS", "turncoin,veercoin").split(",")
@@ -68,7 +69,7 @@ for r in ROLES[1:]:
         KEY[r].chmod(0o600)
 ADDR = {r: create_account(KEY[r].read_text().strip()).address for r in ROLES}
 
-rec = {"network": "testnet-bradbury-phase-2", "chain_id": 4221, "build": "bradbury/build/launch_claim_checker_v2.py (GenVM v0.6)",
+rec = {"network": f"testnet-bradbury-phase-{PHASE}", "chain_id": 4221, "build": f"{BUILD.relative_to(ROOT)} (GenVM v0.6)",
        "build_sha256": hashlib.sha256(BUILD.read_bytes()).hexdigest(), "address": ADDRESS, "deploy_tx": DEPLOY_TX,
        "windows_seconds": WINDOWS, "bond_wei": str(BOND), "accounts": ADDR, "steps": [], "checks": [], "page_changes": [], "cases": {}}
 if RESUME:
