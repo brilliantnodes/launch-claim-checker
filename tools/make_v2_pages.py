@@ -33,9 +33,15 @@ COINS = {
     # and once more, for the second Bradbury run of the fixed build
     "Swaycoin": ("SWY", "swy1q", "900,000.00000000", "900,000"),
     "Tiltcoin": ("TLT", "tlt1q", "2,600,000.00000000", "2,600,000"),
+    # and for the runs after review 3 (Studio: Pivotcoin, Shiftcoin; Bradbury: Swervecoin, Skewcoin)
+    "Pivotcoin": ("PVT", "pvt1q", "1,400,000.00000000", "1,400,000"),
+    "Shiftcoin": ("SHF", "shf1q", "3,300,000.00000000", "3,300,000"),
+    "Swervecoin": ("SWV", "swv1q", "700,000.00000000", "700,000"),
+    "Skewcoin": ("SKW", "skw1q", "2,900,000.00000000", "2,900,000"),
 }
 CORRECTABLE = {"flipcoin": ("a", "b"), "driftcoin": ("b",), "turncoin": ("a", "b"), "veercoin": ("b",),
-               "swaycoin": ("a", "b"), "tiltcoin": ("b",)}
+               "swaycoin": ("a", "b"), "tiltcoin": ("b",), "pivotcoin": ("a", "b"), "shiftcoin": ("b",),
+               "swervecoin": ("a", "b"), "skewcoin": ("b",)}
 
 
 def page_a(coin, ticker, pre, alloc, corrected=False):

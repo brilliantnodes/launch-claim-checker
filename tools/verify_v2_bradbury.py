@@ -194,8 +194,8 @@ def main() -> int:
             bad.append(f"step {s['n']}: sender on chain {raw.get('sender')}, recorded {s['from']}")
         if str(raw.get("recipient", "")).lower() != addr.lower():
             bad.append(f"step {s['n']}: sent to {raw.get('recipient')}, not to the recorded contract")
-        if not s.get("as_expected"):
-            if s["result"] != "MAJORITY_AGREE" and repeated(s):
+        if s.get("as_expected") is not True:
+            if s["result"] != "MAJORITY_AGREE" and (raw.get("lifecycle") or {}).get("outcome") == "undetermined" and repeated(s):
                 # no majority, so nothing was stored or decided; the record shows the same call sent again and agreed
                 print(f"  note: step {s['n']} ({s['label']}): no majority ({s['result']}), sent again and agreed later")
             else:
@@ -232,19 +232,42 @@ def main() -> int:
             bad.append(f"case {case}: bonded {got['bond']['amount']} wei, recorded {rec['bond_wei']}")
         if want == "OVERTURNED" and int(got["bond"].get("burned") or 0) != int(rec["bond_wei"]) // 2:
             bad.append(f"case {case}: {got['bond'].get('burned')} wei burned, not half the bond")
-    for chk in rec.get("checks", []):
+    checks = rec.get("checks", [])
+    for i, chk in enumerate(checks):
         if chk["ok"]:
             continue
         note = next((n for n in rec.get("after_the_run", []) if n.get("supersedes") == chk["label"]), None)
-        if note:
-            print(f"  note: the run's check '{chk['label']}' failed: {note['note']} (read from the chain above)")
+        if note and note.get("chain"):
+            # an excuse only stands on a value read again from the chain now
+            ch = note["chain"]
+            v = node("read", addr, ch["view"], json.dumps(ch.get("args", [])))["result"]
+            for k in ch.get("path", []):
+                v = v.get(k) if isinstance(v, dict) else None
+            if str(v) == str(ch["want"]):
+                print(f"  note: the run's check '{chk['label']}' failed (it read {chk.get('value')!r}); {note['note']} Read from the chain now: {v}")
+                continue
+            bad.append(f"record check failed: {chk['label']}; the chain now gives {v!r}, the note says {ch['want']!r}")
             continue
-        if any(c["label"] == chk["label"] and c["ok"] for c in rec["checks"]):
-            # the same read passed at another moment of the run: a re-read on a resume after the state had moved on,
-            # or an end state read before a step the node had refused was sent again
-            print(f"  note: the run's check '{chk['label']}' failed once and passed at another moment of the run")
+        case = chk["label"].split(":", 1)[0][5:] if chk["label"].startswith("case ") else None
+        later_pass = any(c["label"] == chk["label"] and c["ok"] for c in checks[i + 1:])
+        moved_on = case is not None and chk.get("value") == rec.get("final_states", {}).get(case) and chk.get("value") is not None
+        if later_pass or moved_on:
+            # a read that passed later (an end state read before a refused send was sent again), or a re-read on a
+            # resume that found the case's recorded final state (the state had moved on)
+            why = "passed when read again later in the run" if later_pass else "read again on a resume, it found the case's final state"
+            print(f"  note: the run's check '{chk['label']}' failed (it read {chk.get('value')!r}); {why}")
             continue
-        bad.append(f"record check failed: {chk['label']}")
+        bad.append(f"record check failed: {chk['label']} (it read {chk.get('value')!r})")
+
+    # the windows and the number of checks, read from the contract
+    rules = node("read", addr, "get_rules", "[]")["result"]
+    w = rules.get("windows_seconds") or {}
+    if [w.get(k) for k in ("bond_win", "ch_win", "grace", "rc_win")] != rec.get("windows_seconds"):
+        bad.append(f"windows on chain {w}, recorded {rec.get('windows_seconds')}")
+    agreed = sum(1 for x in rec["steps"] if x["method"] == "check_claim" and x.get("as_expected") is True)
+    t0 = node("read", addr, "totals", "[]")["result"]
+    if int(t0.get("checks", -1)) != agreed:
+        bad.append(f"the contract holds {t0.get('checks')} checks; the record has {agreed} agreed checks")
 
     # 6. money
     t = node("read", addr, "totals", "[]")["result"]

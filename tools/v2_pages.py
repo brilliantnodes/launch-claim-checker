@@ -15,15 +15,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 A_URL = "https://checker.brilliantnodes.com/v2/{c}-block-1.html"
 B_URL = "https://brilliantnodes.github.io/demo-explorer/{c}/block-1.html"
-CORRECTABLE = {"flipcoin": ("a", "b"), "driftcoin": ("b",), "turncoin": ("a", "b"), "veercoin": ("b",),
-               "swaycoin": ("a", "b"), "tiltcoin": ("b",)}  # as in tools/make_v2_pages.py
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from make_v2_pages import CORRECTABLE  # noqa: E402  (one list, in the page generator)
 MARK_A, MARK_B = "Correction (fictional)", "Data correction (fictional)"
 SIGN = "\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01PmboiXeSxAX9LMvc5cn1bn\n"
 
 
 def corrected_now(demo: Path) -> list:
     """The coins whose Blockfield page already shows a correction (every correctable coin corrects page B)."""
-    return [c for c in CORRECTABLE if MARK_B in (demo / c / "block-1.html").read_text()]
+    return [c for c in CORRECTABLE if (demo / c / "block-1.html").exists() and MARK_B in (demo / c / "block-1.html").read_text()]
 
 
 def live(url: str, text: str, tries: int = 48) -> bool:

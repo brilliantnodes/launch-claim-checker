@@ -14,6 +14,7 @@ Cases (all coins and both explorers fictional, both run by Brilliant Nodes):
   B  Controlcoin NO_PREMINE         bonded, no challenger               -> RELEASED
   C  Flipcoin NO_FOUNDER_REWARD     bonded, challenged; both explorers then correct block 1 -> OVERTURNED
   D  Driftcoin NO_FOUNDER_REWARD    bonded, challenged; only Blockfield corrects block 1    -> NOT_CONFIRMED
+     (LCC2_COINS names other coins for C and D, e.g. "pivotcoin,shiftcoin": each correction is used once)
   E  Examplecoin NO_PREMINE         bonded, challenged, nobody re-checks                    -> NOT_CONFIRMED
   F  free checks: explorer B shows another coin (W1); an instruction planted on B (verdict
      unchanged); bonds refused on a mining verdict, on "explorers disagree" and on FAIR_LAUNCH;
@@ -32,6 +33,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from bounty import G, balance, client, fund, read  # noqa: E402
 from studio_fees import deploy, send  # noqa: E402
+
+COIN_C, COIN_D = os.environ.get("LCC2_COINS", "flipcoin,driftcoin").split(",")
 import v2_pages  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -169,8 +172,8 @@ P1 = {"verdict": "CONTRADICTED", "rule": "BOTH:P1"}
 CASES = {
     "A": ([A.format(c="examplecoin"), B.format(c="examplecoin"), "Examplecoin", "NO_FOUNDER_REWARD", "No founder reward"], P1),
     "B": ([A.format(c="controlcoin"), B.format(c="controlcoin"), "Controlcoin", "NO_PREMINE", "No premine"], {"verdict": "SUPPORTED", "rule": "BOTH:P2"}),
-    "C": ([A.format(c="flipcoin"), B.format(c="flipcoin"), "Flipcoin", "NO_FOUNDER_REWARD", ""], P1),
-    "D": ([A.format(c="driftcoin"), B.format(c="driftcoin"), "Driftcoin", "NO_FOUNDER_REWARD", ""], P1),
+    "C": ([A.format(c=COIN_C), B.format(c=COIN_C), COIN_C.capitalize(), "NO_FOUNDER_REWARD", ""], P1),
+    "D": ([A.format(c=COIN_D), B.format(c=COIN_D), COIN_D.capitalize(), "NO_FOUNDER_REWARD", ""], P1),
     "E": ([A.format(c="examplecoin"), B.format(c="examplecoin"), "Examplecoin", "NO_PREMINE", ""], P1),
 }
 OUTCOMES += [
@@ -194,10 +197,10 @@ for case, (args, expect) in CASES.items():
         step("challenge B with the wrong amount", "challenger1", "challenge", [ids["B"]], BOND - 1, "refused:exactly the bond")
     elif case == "C":
         step("challenge C by challenger1", "challenger1", "challenge", [ids["C"]], BOND, {"ok": True, "challenger": 1})
-        correct_pages("flipcoin")
+        correct_pages(COIN_C)
     elif case == "D":
         step("challenge D by challenger2", "challenger2", "challenge", [ids["D"]], BOND, {"ok": True, "challenger": 1})
-        correct_pages("driftcoin")
+        correct_pages(COIN_D)
     elif case == "E":
         step("challenge E by challenger1", "challenger1", "challenge", [ids["E"]], BOND, {"ok": True, "challenger": 1})
 
@@ -244,13 +247,12 @@ check_view("totals: nothing locked or credited; half of case C's bond burned", t
 def settled_balance():
     """Studio makes each withdrawal's transfer as a transaction of its own, a little after the withdrawal: read the
     balance until it stops changing (up to five minutes)."""
-    last, reads = None, 0
+    reads = 0
     while reads < 11:
         now = balance(C["requester"], rec["address"])
         reads += 1
-        if now == BOND // 2 or now == last:
+        if now == BOND // 2:
             break
-        last = now
         time.sleep(30)
     return now, reads
 

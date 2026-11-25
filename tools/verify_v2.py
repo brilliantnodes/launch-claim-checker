@@ -78,8 +78,8 @@ def verify(path: Path, c) -> list:
             bad.append(f"step {n}: sent to {t.get('to_address')}, not to the recorded contract")
         if int(t.get("value") or 0) != int(s["value"]):
             bad.append(f"step {n}: value on chain {t.get('value')}, recorded {s['value']}")
-        if s.get("as_expected") is False and not s.get("explained"):
-            bad.append(f"step {n} ({s['label']}): the record itself says not as expected")
+        if s.get("as_expected") is not True:
+            bad.append(f"step {n} ({s['label']}): the record itself says not as expected ({s.get('as_expected')!r})")
 
     for s in rec["steps"]:
         r = s.get("returned")
@@ -105,7 +105,7 @@ def verify(path: Path, c) -> list:
         if chk["ok"]:
             continue
         n = reread.get(chk["label"])
-        if n and n.get("balance_wei") is not None and int(n["balance_wei"]) == held:
+        if n and n.get("balance_wei") is not None and int(n["balance_wei"]) == held and "balance" in chk["label"]:
             # the run read the balance too soon; the reading noted after the run is what the chain shows now
             print(f"  note: the run's check '{chk['label']}' failed; read after the run, and now, the balance is {held} wei")
             continue
@@ -139,12 +139,18 @@ def verify_site(path: Path, c) -> list:
             call = {}
         if call.get("method", call.get("")) != oc.get("method"):
             bad.append(f"click {s['n']}: method on chain {call.get('method', call.get(''))}, recorded {oc.get('method')}")
-        for key in ("result", "execution", "returned", "votes"):
+        if plain(call.get("args", [])) != plain(oc.get("args", [])):
+            bad.append(f"click {s['n']}: arguments on chain {call.get('args')}, recorded {oc.get('args')}")
+        if str(t.get("from_address", "")).lower() != str(oc.get("from", "")).lower():
+            bad.append(f"click {s['n']}: sender on chain {t.get('from_address')}, recorded {oc.get('from')}")
+        if int(t.get("value") or 0) != int(oc.get("value") or 0):
+            bad.append(f"click {s['n']}: value on chain {t.get('value')}, recorded {oc.get('value')}")
+        for key in ("result", "execution", "returned", "votes", "created_at"):
             if plain(got.get(key)) != plain(oc.get(key)):
                 bad.append(f"click {s['n']}: {key} on chain {got.get(key)!r}, recorded {oc.get(key)!r}")
         if str(t.get("to_address", "")).lower() != addr.lower():
             bad.append(f"click {s['n']}: sent to {t.get('to_address')}")
-        if not s.get("as_expected"):
+        if s.get("as_expected") is not True:
             bad.append(f"click {s['n']}: the record says not as expected")
     print(f"{path.name}: page contract {addr}, {len(rec['steps'])} clicks: {'OK' if not bad else 'MISMATCH'}")
     return bad

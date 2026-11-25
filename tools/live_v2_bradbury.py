@@ -46,11 +46,11 @@ RESUME = "--resume" in sys.argv
 _args = [a for a in sys.argv[1:] if not a.startswith("--")]
 OUT = Path(_args[0]) if _args else ROOT / "examples" / "live" / "v2-bradbury.json"
 BUILD = ROOT / "bradbury" / "build" / "launch_claim_checker_v2.py"
-ADDRESS = os.environ.get("LCC2_BRADBURY", "0x106980F7bA1C2101488b99f13df51b07C0DAAc16")
+ADDRESS = os.environ["LCC2_BRADBURY"]  # the deployment this run uses (no default: each run names its own)
 WINDOWS = [int(x) for x in os.environ.get("LCC2_WINDOWS", "600,600,600,600").split(",")]
 COIN_C, COIN_D = os.environ.get("LCC2_COINS", "turncoin,veercoin").split(",")
 OPTIONAL = set(filter(None, os.environ.get("LCC2_OPTIONAL_CASES", "").split(",")))  # unbonded cases the run may skip
-DEPLOY_TX = os.environ.get("LCC2_BRADBURY_DEPLOY", "0x0cb38f6ec9f127292493ed40da22a3b8496d42121baf6c5ca40deda692a6eea0")
+DEPLOY_TX = os.environ["LCC2_BRADBURY_DEPLOY"]
 G = 10**18
 BOND = G // 10
 A_URL = "https://checker.brilliantnodes.com/v2/{c}-block-1.html"
@@ -181,9 +181,10 @@ def step(label, role, fn, args, value=0, raises=False, credited_back=False, paye
         d = node(role, "write", ADDRESS, fn, json.dumps(args, default=str), str(value), payees)
         h = d.get("hash")
         err = str(d.get("error") or "")
-        # the node refused the send itself (a fee just under a rising base fee, a dropped connection): nothing
-        # reached the chain, so the same call is sent again a little later
-        if h or not ("base fee" in err or "fetch failed" in err):
+        # the node refused the send itself for a fee just under a rising base fee: nothing reached the chain, so the
+        # same call is sent again a little later. (A dropped connection is not retried here: the send may have
+        # reached the node; it is left for a person to check before a resume sends it again.)
+        if h or "base fee" not in err:
             break
         time.sleep(20)
     if h and not decided(d.get("raw") or {}):
