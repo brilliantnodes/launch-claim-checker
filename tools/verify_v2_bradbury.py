@@ -245,7 +245,10 @@ def main() -> int:
         if note and note.get("chain"):
             # an excuse only stands on a value read again from the chain now
             ch = note["chain"]
-            v = node("read", addr, ch["view"], json.dumps(ch.get("args", [])))["result"]
+            if ch["view"] == "balance":  # the contract's own balance, not a contract view
+                v = node("balance", addr)["result"]
+            else:
+                v = node("read", addr, ch["view"], json.dumps(ch.get("args", [])))["result"]
             for k in ch.get("path", []):
                 v = v.get(k) if isinstance(v, dict) else None
             if str(v) == str(ch["want"]):

@@ -33,7 +33,7 @@ const link = (href, text) => {
   return a;
 };
 const RPC = studionet.rpcUrls.default.http[0];
-const reader = BRADBURY ? v2.createClient({ chain: v2chains.testnetBradbury, endpoint: NET.rpc }) : createClient({ chain: studionet });
+const reader = BRADBURY ? v2.createClient({ chain: v2chains.testnetBradbury, endpoint: NET.checkerV2Rpc || NET.rpc }) : createClient({ chain: studionet });
 
 function plain(v) {
   if (v instanceof Map) return Object.fromEntries([...v.entries()].map(([k, x]) => [k, plain(x)]));
@@ -42,7 +42,23 @@ function plain(v) {
   if (v && typeof v === "object") return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, plain(x)]));
   return v;
 }
-const read = async (functionName, args = []) => plain(await reader.readContract({ address: ADDRESS, functionName, args }));
+// Reads go one at a time, and a "rate limit" answer (the Bradbury Phase 3 public node limits gen_call) is asked again.
+let readQueue = Promise.resolve();
+const readOnce = async (functionName, args) => {
+  for (let i = 0; ; i++) {
+    try {
+      return plain(await reader.readContract({ address: ADDRESS, functionName, args }));
+    } catch (e) {
+      if (i >= 5 || !/rate limit/i.test(String(e?.message || e))) throw e;
+      await new Promise((r) => setTimeout(r, 1500 * (i + 1)));
+    }
+  }
+};
+const read = (functionName, args = []) => {
+  const p = readQueue.then(() => readOnce(functionName, args));
+  readQueue = p.catch(() => {});
+  return p;
+};
 const short = (e) => String((e && (e.shortMessage || e.message)) || e).slice(0, 300);
 const shortAddr = (a) => (a ? `${a.slice(0, 6)}…${a.slice(-4)}` : "");
 const same = (a, b) => !!a && !!b && String(a).toLowerCase() === String(b).toLowerCase();
@@ -393,7 +409,7 @@ async function loadList() {
     const list = await read("get_latest", [10, nowS()]);
     const challengers = await Promise.all(list.map((c) => (c.bond.state !== "NONE" ? read("get_challengers", [c.id]).catch(() => []) : [])));
     $("list").replaceChildren(...list.map((c, i) => checkCard(c, challengers[i])));
-    $("list-state").textContent = list.length ? `The ${list.length} latest checks. Times are shown in UTC.` : "No checks yet.";
+    $("list-state").textContent = list.length ? (list.length === 1 ? "The latest check. Times are shown in UTC." : `The ${list.length} latest checks. Times are shown in UTC.`) : "No checks yet.";
   } catch (e) {
     $("list-state").textContent = `Could not read the contract: ${short(e)}`;
   }
@@ -421,7 +437,7 @@ async function loadRules() {
     ];
     $("rules").replaceChildren(...rows.map(([k, v]) => { const tr = el("tr"); tr.append(el("th", null, k), el("td", null, v)); return tr; }));
     const t = await read("totals");
-    $("totals").textContent = `${t.checks} checks so far. Locked in bonds and challenges: ${gen(t.locked)}. Credited, waiting to be withdrawn: ${gen(t.credited)}. Burned: ${gen(t.burned || "0")}.`;
+    $("totals").textContent = `${t.checks} ${Number(t.checks) === 1 ? "check" : "checks"} so far. Locked in bonds and challenges: ${gen(t.locked)}. Credited, waiting to be withdrawn: ${gen(t.credited)}. Burned: ${gen(t.burned || "0")}.`;
   } catch (e) {
     $("totals").textContent = `Could not read the rules: ${short(e)}`;
   }
@@ -452,7 +468,7 @@ function netSwitch() {
     const b = $("net-banner");
     b.hidden = false;
     b.replaceChildren(
-      el("strong", null, "Testnet Bradbury Phase 2. "),
+      el("strong", null, "Testnet Bradbury Phase 3. "),
       el("span", null, "GenLayer's public testnet, where validators use real models and real web access. This view shows the checks and bonds decided there. It only reads, so it needs no wallet. "),
       Object.assign(el("a", null, "Try it free on Studio"), { href: "?net=studio" }),
     );

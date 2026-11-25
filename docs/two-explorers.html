@@ -6,13 +6,13 @@
     <title>Two explorers, a bond and a challenge · Launch Claim Checker</title>
     <meta name="description" content="Launch Claim Checker v2: two explorers on different domains must agree on a launch claim. A verdict can be bonded, challenged and re-checked; GenLayer validators decide where the money goes." />
     <link rel="icon" href="./logo.svg" type="image/svg+xml" />
-    <script type="module" crossorigin src="./assets/twoExplorers-BbA0JSQn.js"></script>
+    <script type="module" crossorigin src="./assets/twoExplorers-b9K55fED.js"></script>
     <link rel="modulepreload" crossorigin href="./assets/defineChain-D1SuaLFt.js">
     <link rel="modulepreload" crossorigin href="./assets/utils-p0bEcrd5.js">
     <link rel="modulepreload" crossorigin href="./assets/withTimeout-B-Ytf9Fu.js">
     <link rel="modulepreload" crossorigin href="./assets/secp256k1-BM-95uel.js">
     <link rel="modulepreload" crossorigin href="./assets/privateKeyToAccount-CJa2Deep.js">
-    <link rel="modulepreload" crossorigin href="./assets/config-De2llpVc.js">
+    <link rel="modulepreload" crossorigin href="./assets/config-D8VbiR2s.js">
     <link rel="stylesheet" crossorigin href="./assets/config-CISUaMU9.css">
     <link rel="stylesheet" crossorigin href="./assets/bounties-BY75j-AD.css">
   </head>
@@ -39,16 +39,16 @@
         </p>
         <ol class="how">
           <li><strong>Check.</strong> Anyone names the coin, the claim and two block-1 pages (or two mining pages). Free, apart from the network fee.</li>
-          <li><strong>Bond.</strong> Within the bond window the requester can put test GEN behind a "no premine" or "no founder reward" verdict that both explorers agree on about a coin's earliest blocks (rules BOTH:P1 or BOTH:P2).</li>
+          <li><strong>Bond.</strong> Within the bond window the requester can put test GEN behind a "no premine" or "no founder reward" verdict that both explorers agree on about a coin's block 0 or 1 (rules BOTH:P1 or BOTH:P2).</li>
           <li><strong>Challenge.</strong> While the challenge window is open, anyone else can deposit the same amount to say the verdict is wrong.</li>
-          <li><strong>Re-check.</strong> After a short grace period anyone can have the validators read both pages again. The same fact again: <em>upheld</em>, the requester takes the challengers' deposits. The opposite verdict: <em>overturned</em>, half the bond is burned and the challengers share the rest, so challenging yourself from other wallets does not pay. Anything else, or no decided re-check in time: <em>not confirmed</em>, everyone gets their own money back. A bond nobody challenges is released.</li>
+          <li><strong>Re-check.</strong> After a short grace period anyone can have the validators read both pages again. The same fact again: <em>upheld</em>, the requester takes the challengers' deposits. The opposite verdict about the same block: <em>overturned</em>, half the bond is burned and the challengers share the rest, so challenging yourself from other wallets does not pay. The explorers now showing opposite facts, or no decided re-check in time: <em>not confirmed</em>, everyone gets their own money back. A reading where a page cannot be read or shows nothing that decides (an error page) decides nothing, and the re-check window stays open. A bond nobody challenges is released.</li>
         </ol>
         <p class="small">
           <strong>Read this first.</strong> A check trusts the two pages: whoever runs both explorers can decide what they show. Two domains make that harder, not impossible.
           A verdict says what the pages showed when they were read; it is not a finding about the coin. Test GEN only.
         </p>
         <p class="small" id="windows-line"></p>
-        <p class="small"><a href="./two-explorers-demo-v4.mp4">Watch the 90-second video</a> · <a href="./article-two-explorers.html">Read the article</a> · <a href="https://github.com/brilliantnodes/launch-claim-checker#version-2-two-explorers-a-bond-and-a-challenge">How it works, the tests and the live runs</a></p>
+        <p class="small"><a href="./two-explorers-demo-v5.mp4">Watch the 92-second video</a> · <a href="./article-two-explorers.html">Read the article</a> · <a href="https://github.com/brilliantnodes/launch-claim-checker#version-2-two-explorers-a-bond-and-a-challenge">How it works, the tests and the live runs</a></p>
       </section>
 
       <section class="card" id="accounts-card" aria-labelledby="acct-h">
@@ -127,9 +127,9 @@
         <h3>Limits</h3>
         <ul class="how">
           <li>Two pages run by the same party are not two witnesses. The contract only requires two different domains; it cannot tell who runs them.</li>
-          <li>Rules P1 and M1 are a model's reading with code checks, not a proof: code checks that every amount, block number and miner name the model gives is printed on that validator's own copy of the page.</li>
-          <li>Only "no premine" and "no founder reward" verdicts about a coin's earliest blocks can be bonded. A mining verdict changes from block to block, and "fair launch" is never supported (so its bond could never be overturned); neither can be bonded.</li>
-          <li>A re-check reads the pages as they are then: a page that changed decides the outcome; that is the point of a re-check, and also its limit. A page that cannot be read or does not show the coin (an error page) decides nothing, so whoever controls one of the two explorers can keep a re-check from deciding, and the bond then ends not confirmed.</li>
+          <li>All four rules are a model's reading with code checks, not a proof: code checks that every amount, block number and miner name the model gives is printed on that validator's own copy of the page.</li>
+          <li>Only "no premine" and "no founder reward" verdicts about a coin's block 0 or 1 can be bonded: only there can the opposite reading exist, so a verdict on a later block could never be overturned. A mining verdict changes from block to block, and "fair launch" is never supported (so its bond could never be overturned); neither can be bonded.</li>
+          <li>A re-check reads the pages as they are then: a page that changed decides the outcome; that is the point of a re-check, and also its limit. A page that cannot be read, does not show the coin or shows nothing that decides (an error page) decides nothing, so whoever controls one of the two explorers can keep a re-check from deciding, and the bond then ends not confirmed. The first decided re-check is final, so a correction has to be on both explorers when the re-check window opens.</li>
           <li>When the verdict is undetermined, only each page's class and rule are stored: no amount or line that the validators did not all see.</li>
           <li>Refused bonds and challenges are credited straight back; withdraw them any time. Withdrawals reach the wallet when the transaction is finalized.</li>
           <li>The network follows redirects without saying so. Use pages that do not redirect.</li>
