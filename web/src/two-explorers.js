@@ -293,7 +293,7 @@ const RULE_TEXT = {
   "BOTH:M1": "on both explorers the same miner has more than half of the blocks",
   "BOTH:M2": "on both explorers the largest miner has a third of the blocks or less",
   D1_EXPLORERS_DISAGREE: "the two explorers do not show the same thing",
-  W1_WRONG_PAGE: "a page is not the page the claim needs (another block, or the coin is not named)",
+  W1_WRONG_PAGE: "a page does not name the coin near the top",
   D2_NOT_SHOWN_BY_BOTH: "the rule needs both explorers to show it; one does not",
   U1_NOT_ENOUGH_EVIDENCE: "the pages do not show enough to decide",
 };
@@ -356,7 +356,9 @@ function checkCard(c, challengers) {
   if (BRADBURY) return card;
 
   const box = el("div", "acts"), now = nowS();
-  const bondable = (rules?.bondable || ["BOTH:P1", "BOTH:P2"]).includes(r.rule) && (rules?.bondable_claims || ["NO_PREMINE", "NO_FOUNDER_REWARD"]).includes(c.claim_type);
+  // as the contract: block 0 or 1 on both pages, and a BOTH:P1 verdict only when both pages also show the block's ordinary reward
+  const bondable = (rules?.bondable || ["BOTH:P1", "BOTH:P2"]).includes(r.rule) && (rules?.bondable_claims || ["NO_PREMINE", "NO_FOUNDER_REWARD"]).includes(c.claim_type)
+    && [r.a, r.b].every((p) => Number(p?.height ?? 2) <= 1) && (r.rule !== "BOTH:P1" || [r.a, r.b].every((p) => p?.reward_text));
   const mine = roles.requester && same(roles.requester.address, c.requester);
   const bondWin = Number(rules?.windows_seconds?.bond_win || 600);
   const min = BigInt(rules?.min_bond_wei || "10000000000000000");
@@ -423,11 +425,11 @@ async function loadRules() {
     const w = rules.windows_seconds, m = (s) => `${Math.round(s / 60)} min`;
     $("windows-line").textContent = `On this contract: ${m(w.bond_win)} to bond after a check, ${m(w.ch_win)} to challenge, then ${m(w.grace)} of grace, ${m(w.rc_win)} to re-check and ${m(w.grace)} more before a challenged bond can be settled as not confirmed. Minimum bond ${gen(rules.min_bond_wei)}.`;
     const rows = [
-      ["Bondable verdicts", rules.bondable.join(", ")],
+      ["Bondable verdicts", `${rules.bondable.join(", ")} on block 0 or 1; BOTH:P1 only when both pages also show the block's ordinary reward (not zero)`],
       ["Claims", rules.claim_types.join(", ")],
       ["Bondable claims", (rules.bondable_claims || []).join(", ")],
       ["Upheld", `${rules.upheld || "the same fact again"}: the requester gets the bond back plus every challenger's deposit`],
-      ["Overturned", rules.overturned || "half the bond is burned; each challenger gets its deposit back and an equal share of the rest"],
+      ["Overturned", `the opposite rule about the same block on both explorers: ${rules.overturned || "half the bond is burned; each challenger gets its deposit back and an equal share of the rest"}`],
       ["Not confirmed", "everyone gets back what they put in"],
       ["Released", "no challenger: the requester gets the bond back"],
       ["P1, extra allocation", `an output in blocks 0 to ${rules.max_height} beyond the block reward, printed on the page`],
@@ -456,7 +458,7 @@ function netSwitch() {
     } else {
       const a = el("a", null, n.label);
       a.href = `?net=${n.key}`;
-      a.title = `Switch to ${n.name}`;
+      a.title = n.key === "bradbury" ? "Switch to GenLayer Testnet Bradbury (version 2 is on Phase 3)" : `Switch to ${n.name}`;
       net.append(a);
     }
   });
