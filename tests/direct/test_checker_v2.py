@@ -83,13 +83,13 @@ def ans(**kw) -> str:
 
 
 def p1a(**over):
-    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000.00000000", evidence_line=A_LINE, reward_amount="", reward_line="", top_miner_name="", top_miner_blocks="", blocks_inspected="")
+    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000.00000000", evidence_line=A_LINE, reward_amount="50.00000000", reward_line=A_REWARD, top_miner_name="", top_miner_blocks="", blocks_inspected="")
     d.update(over)
     return ans(**d)
 
 
 def p1b(**over):
-    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000", evidence_line=B_LINE, reward_amount="", reward_line="", top_miner_name="", top_miner_blocks="", blocks_inspected="")
+    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000", evidence_line=B_LINE, reward_amount="50", reward_line=B_REWARD, top_miner_name="", top_miner_blocks="", blocks_inspected="")
     d.update(over)
     return ans(**d)
 
@@ -254,7 +254,8 @@ def test_both_explorers_show_the_founder_allocation_contradicted(env):
     assert out == {"ok": True, "id": "1", "verdict": "CONTRADICTED", "rule": "BOTH:P1"}
     c = env.c.get_check("1")
     r = c["result"]
-    assert r["a"] == {"cls": "CONTRADICTS", "rule": "P1", "height": 1, "amount": "2000000", "amount_text": "2,000,000.00000000", "quote": A_LINE}
+    assert r["a"] == {"cls": "CONTRADICTS", "rule": "P1", "height": 1, "amount": "2000000", "amount_text": "2,000,000.00000000", "quote": A_LINE,
+                      "reward_text": "50.00000000", "reward_quote": A_REWARD}
     assert r["b"]["amount"] == "2000000" and r["b"]["quote"] == B_LINE
     assert c["domains"] == ["examplescan.example", "blockfield.example"] and c["bond"]["state"] == "NONE"
     assert c["requester"] == env.req and env.c.get_by_address(env.req) == ["1"] and env.c.get_count() == 1

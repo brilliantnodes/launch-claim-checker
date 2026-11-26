@@ -202,6 +202,13 @@ def step(label, role, fn, args, value=0, raises=False, credited_back=False, paye
            "expected": "refused with an error" if raises else ("refused, GEN credited back" if credited_back else "accepted"),
            "result": result, "execution": execution, "validators": {"of": len(votes), "same_as_the_result": sum(1 for v in votes if v == execution), "votes": votes},
            "created": raw.get("createdTimestamp"), "seconds": int(time.time() - t0), "as_expected": ok}
+    if fn == "recheck" and ok:
+        # an agreed re-check can decide nothing (a page unreadable or showing nothing that decides): the bond is still
+        # BONDED, and the run sends it again while the window allows
+        row["bond_after"] = read("get_check", [args[0]])["bond"]["state"]
+        if row["bond_after"] == "BONDED":
+            row["decided"] = False
+            row["as_expected"] = ok = False
     if credited_back and ok:
         reads = 0
         while True:
@@ -269,6 +276,11 @@ def times(case):
 
 
 OUTCOMES = []  # (case, time key, offset, label, role, fn, kwargs), each run as soon as it is due
+
+
+def undecided(row):
+    """A re-check step that decided nothing: no majority, or agreed and the bond still BONDED."""
+    return row["result"] != "MAJORITY_AGREE" or row.get("decided") is False
 _busy = [False]
 
 
@@ -291,8 +303,9 @@ def due():
                 if label in DONE:
                     continue
             elif label in DONE:
-                # a re-check nobody agreed on decided nothing: once more while the window leaves time for it
-                if fn != "recheck" or DONE[label]["result"] == "MAJORITY_AGREE" or label.endswith(" (again)"):
+                # a re-check that decided nothing (nobody agreed, or agreed on a reading that decides nothing): once
+                # more while the window leaves time for it
+                if fn != "recheck" or not undecided(DONE[label]) or label.endswith(" (again)"):
                     continue
                 label += " (again)"
                 if label in DONE or time.time() > int(t["rc_end"]) - 420:
@@ -379,7 +392,7 @@ step("bond on a FAIR_LAUNCH verdict", "requester", "bond", [rec["cases"]["F-fair
 def again_due(o):
     """A re-check that decided nothing, with time left in its window for one more."""
     lab = o[3] + " (again)"
-    return (o[5] == "recheck" and o[3] in DONE and DONE[o[3]]["result"] != "MAJORITY_AGREE" and lab not in DONE
+    return (o[5] == "recheck" and o[3] in DONE and undecided(DONE[o[3]]) and lab not in DONE
             and time.time() <= int(rec["cases"][o[0]]["times"]["rc_end"]) - 420)
 
 

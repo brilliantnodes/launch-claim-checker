@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Mutation check for LaunchClaimCheckerV2: break the contract on purpose, one
 change at a time, and confirm that the v2 tests (tests/direct/test_checker_v2.py,
-tests/direct/test_checker_v2_review.py and tests/direct/test_checker_v2_review3.py) catch every break.
+tests/direct/test_checker_v2_review.py, tests/direct/test_checker_v2_review3.py and
+tests/direct/test_checker_v2_review4.py) catch every break.
 
     PYTHONPATH=. python tools/mutate_v2.py            # all mutants
     PYTHONPATH=. python tools/mutate_v2.py 12 40      # only mutants 12 and 40
@@ -42,6 +43,12 @@ Left out on purpose (changes that make no difference to what the contract does):
 - the bond's block test on one page instead of both: a BOTH:P1 or BOTH:P2
   verdict needs the same block on both pages (_combine), so one page's block is
   the other's;
+- the bond's P1 reward test on one page's block only is not left out; but the
+  per-page block test in _outcome ("overturn: page A's block only" below) is
+  defensive: a stored BOTH:P2 result has the same block on both pages
+  (_check_result re-runs _combine), so that mutant is caught only by a test
+  that hands _outcome a result that cannot occur, and in practice it is
+  equivalent;
 - a challenge on a decided bond: a decision comes after the challenge window,
   which refuses it first;
 - booleans as windows: True and False are below the 600-second floor.
@@ -82,7 +89,7 @@ MUTANTS = [
     ("P1 amount unparsed", 'if amount is None or not _quote_ok(quote, text, lines):', 'if not _quote_ok(quote, text, lines):'),
     ("P2 any height", 'if h is None or h > 1 or not _block_printed(lines, h):', 'if h is None or not _block_printed(lines, h):'),
     ("P2 needs no", 'if str(ans.get("extra_allocation", "")).strip().lower() != "no":', 'if str(ans.get("extra_allocation", "")).strip().lower() == "yes":'),
-    ("P2 line unchecked", 'if _parse_amount(text) is None or not _quote_ok(ans.get("reward_line"), text, lines):', 'if _parse_amount(text) is None:'),
+    ("P2 line unchecked", 'if _parse_amount(text) is None or not _quote_ok(ans.get("reward_line"), text, lines):\n        return None', 'if _parse_amount(text) is None:\n        return None'),
     # M1
     ("M1 half counts", 'if total < MIN_BLOCKS or 2 * top <= total:', 'if total < MIN_BLOCKS or 2 * top < total:'),
     ("M1 no floor", 'if total < MIN_BLOCKS or 2 * top <= total:', 'if 2 * top <= total:'),
@@ -200,13 +207,26 @@ MUTANTS = [
     ("recheck: disagreeing explorers decide nothing", 'if not (r["rule"].startswith("BOTH:") or r["rule"] == "D1_EXPLORERS_DISAGREE"):', 'if not r["rule"].startswith("BOTH:"):'),
     ("field names allowed as coin names", '"difficulty", "nonce", "version", "merkle", "root", "previous", "prev", "next", "timestamp", "weight", "bits", "height",', ''),
     ("mining counts not digits only", "that miner\\'s number of blocks as printed, digits only", "that miner\\'s number of blocks exactly as printed"),
+    # from review 4
+    ("bond: block 2 allowed", 'or any(int(rec["result"][p].get("height", 2)) > 1 for p in ("a", "b"))):', 'or any(int(rec["result"][p].get("height", 2)) > 2 for p in ("a", "b"))):'),
+    ("bond: P1 without the reward", 'elif rec["result"]["rule"] == "BOTH:P1" and any("reward_text" not in rec["result"][p] for p in ("a", "b")):', 'elif False:'),
+    ("bond: P1 reward on page A only", 'any("reward_text" not in rec["result"][p] for p in ("a", "b")):', 'any("reward_text" not in rec["result"][p] for p in ("a",)):'),
+    ("P1 keeps no reward", 'return {**found, **_reward(ans, lines)}', 'return found'),
+    ("reward line not checked on the page", 'if _parse_amount(text) is None or not _quote_ok(ans.get("reward_line"), text, lines):\n        return {}', 'if _parse_amount(text) is None:\n        return {}'),
+    ("allocation taken as the reward", 'if _fold(ans.get("reward_line")) == _fold(ans.get("evidence_line")) and _parse_amount(text) == _parse_amount(_amount_text(ans.get("allocation_amount"))):', 'if False:'),
+    ("passed-on reward not checked", 'if "reward_text" in p or "reward_quote" in p:', 'if False:'),
+    ("passed-on reward of 0 allowed", 'if not isinstance(rt, str) or _parse_amount(rt) is None:', 'if not isinstance(rt, str):'),
+    ("passed-on reward line not checked", 'if not isinstance(rq, str) or not QUOTE_MIN <= len(_fold(rq)) <= QUOTE_MAX or not _stands(_fold(rq), _fold(rt)):', 'if not isinstance(rq, str):'),
+    ("passed-on allocation as reward", 'if _fold(rq) == _fold(quote) and _parse_amount(rt) == amount:', 'if False:'),
+    ("leader's reward line not checked", 'reward_ok = "reward_text" not in lp or _quote_ok(lp["reward_quote"], lp["reward_text"], lines)', 'reward_ok = True'),
+    ("reward asked only on no", '"reward_amount": the ordinary block reward paid to this block', '"reward_amount": if "no", the ordinary block reward paid to this block'),
 ]
 
 
 def run_one(job) -> tuple:
     i, name, path, env = job
     r = subprocess.run([sys.executable, "-m", "pytest", "tests/direct/test_checker_v2.py", "tests/direct/test_checker_v2_review.py",
-                        "tests/direct/test_checker_v2_review3.py", "-q", "-x", "-p", "no:cacheprovider"],
+                        "tests/direct/test_checker_v2_review3.py", "tests/direct/test_checker_v2_review4.py", "-q", "-x", "-p", "no:cacheprovider"],
                        cwd=ROOT, env={**env, "LCC2_CONTRACT": str(path)}, capture_output=True, text=True)
     return i, name, r.returncode != 0
 

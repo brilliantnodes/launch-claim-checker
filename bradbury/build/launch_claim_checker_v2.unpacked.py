@@ -336,7 +336,16 @@ def _p1(ans: dict, lines: list):
  quote = ans.get('evidence_line')
  if amount is None or not _quote_ok(quote, text, lines):
   return None
- return {'cls': 'CONTRADICTS', 'rule': 'P1', 'height': h, 'amount': amount, 'amount_text': text.strip(), 'quote': ' '.join(_clean(quote).split())}
+ found = {'cls': 'CONTRADICTS', 'rule': 'P1', 'height': h, 'amount': amount, 'amount_text': text.strip(), 'quote': ' '.join(_clean(quote).split())}
+ return {**found, **_reward(ans, lines)}
+
+def _reward(ans: dict, lines: list) -> dict:
+ text = _amount_text(ans.get('reward_amount'))
+ if _parse_amount(text) is None or not _quote_ok(ans.get('reward_line'), text, lines):
+  return {}
+ if _fold(ans.get('reward_line')) == _fold(ans.get('evidence_line')) and _parse_amount(text) == _parse_amount(_amount_text(ans.get('allocation_amount'))):
+  return {}
+ return {'reward_text': text.strip(), 'reward_quote': ' '.join(_clean(ans.get('reward_line')).split())}
 
 def _p2(ans: dict, lines: list):
  h = _parse_count(ans.get('block_number'))
@@ -445,7 +454,17 @@ def _check_page(p, claim_type: str) -> dict:
    raise ValueError('bad amount')
   if not isinstance(quote, str) or not QUOTE_MIN <= len(_fold(quote)) <= QUOTE_MAX or (not _stands(_fold(quote), _fold(text))):
    raise ValueError('bad quote')
-  return {'cls': cls, 'rule': rule, 'height': h, 'amount': amount, 'amount_text': text.strip(), 'quote': ' '.join(_clean(quote).split())}
+  out = {'cls': cls, 'rule': rule, 'height': h, 'amount': amount, 'amount_text': text.strip(), 'quote': ' '.join(_clean(quote).split())}
+  if 'reward_text' in p or 'reward_quote' in p:
+   rt, rq = (p.get('reward_text'), p.get('reward_quote'))
+   if not isinstance(rt, str) or _parse_amount(rt) is None:
+    raise ValueError('bad reward')
+   if not isinstance(rq, str) or not QUOTE_MIN <= len(_fold(rq)) <= QUOTE_MAX or (not _stands(_fold(rq), _fold(rt))):
+    raise ValueError('bad reward line')
+   if _fold(rq) == _fold(quote) and _parse_amount(rt) == amount:
+    raise ValueError('the reward is the allocation itself')
+   out.update(reward_text=rt.strip(), reward_quote=' '.join(_clean(rq).split()))
+  return out
  if rule == 'P2':
   h = p.get('height')
   if isinstance(h, bool) or h not in (0, 1):
@@ -504,7 +523,8 @@ def _same_page(lp: dict, mp: dict, lines: list) -> bool:
  if lp['cls'] != mp['cls'] or lp.get('rule') != mp.get('rule'):
   return False
  if lp.get('rule') == 'P1':
-  return lp['height'] == mp['height'] and lp['amount'] == mp['amount'] and _quote_ok(lp['quote'], lp['amount_text'], lines)
+  reward_ok = 'reward_text' not in lp or _quote_ok(lp['reward_quote'], lp['reward_text'], lines)
+  return lp['height'] == mp['height'] and lp['amount'] == mp['amount'] and _quote_ok(lp['quote'], lp['amount_text'], lines) and reward_ok
  if lp.get('rule') == 'P2':
   return lp['height'] == mp['height']
  if lp.get('rule') == 'M1':
@@ -527,7 +547,7 @@ def _prompt(claim_type: str, coin: str, page: str) -> str:
   fields += ['- "block_number": the number (height) of the one block this page shows, digits only, as printed; "" if the page does not show exactly one block.', '- "extra_allocation": "yes" if this block itself creates new coins that go to anyone in addition to the ordinary block reward paid to its miner (for example to founders, developers, a treasury or a premine); "no" if the page shows this block\'s outputs and the only newly created coins are the ordinary block reward; "not_shown" otherwise.', '- "allocation_amount": if "yes", that extra amount exactly as printed (the first one if several), digits and separators only, without the coin\'s name; otherwise "".', '- "evidence_line": if "yes", the one whole line of the page that shows that amount, copied exactly, at most 200 characters; otherwise "".']
   keys += ['block_number', 'extra_allocation', 'allocation_amount', 'evidence_line']
   if claim_type != 'FAIR_LAUNCH':
-   fields += ['- "reward_amount": if "no", the ordinary block reward paid in this block exactly as printed, digits and separators only; otherwise "".', '- "reward_line": if "no", the one whole line of the page that shows that reward, copied exactly, at most 200 characters; otherwise "".']
+   fields += ['- "reward_amount": the ordinary block reward paid to this block\'s miner exactly as printed, digits and separators only; "" if the page does not print it.', '- "reward_line": the one whole line of the page that shows that ordinary reward, copied exactly, at most 200 characters; "" if the page does not print it.']
    keys += ['reward_amount', 'reward_line']
  if claim_type in ('DECENTRALIZED_MINING', 'FAIR_LAUNCH'):
   fields += ['- "top_miner_name": the name or address of the single miner or pool with the most blocks in the page\'s table of blocks per miner, exactly as printed; "" if there is no such table.', '- "top_miner_blocks": that miner\'s number of blocks as printed, digits only, as a string; "" if there is no such table. Never compute it from a percentage.', '- "blocks_inspected": the total number of blocks the table covers as printed, digits only, as a string; "" if not printed. Never add up rows yourself.']
@@ -741,6 +761,8 @@ class LaunchClaimCheckerV2(gl.contract.Contract):
    problem = 'only the requester can bond its check'
   elif rec['claim_type'] not in BONDABLE_CLAIMS or rec['result']['rule'] not in OPPOSITE or any((int(rec['result'][p].get('height', 2)) > 1 for p in ('a', 'b'))):
    problem = 'only a BOTH:P1 or BOTH:P2 verdict on block 0 or 1, on NO_PREMINE or NO_FOUNDER_REWARD, can be bonded'
+  elif rec['result']['rule'] == 'BOTH:P1' and any(('reward_text' not in rec['result'][p] for p in ('a', 'b'))):
+   problem = "a BOTH:P1 verdict can be bonded only when both pages also show the block's ordinary reward (not zero) on a line of its own"
   elif bd['state'] != 'NONE':
    problem = 'this check is already bonded'
   elif value < MIN_BOND:

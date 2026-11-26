@@ -203,6 +203,9 @@ def main() -> int:
             if s["result"] != "MAJORITY_AGREE" and (raw.get("lifecycle") or {}).get("outcome") == "undetermined" and repeated(s):
                 # no majority, so nothing was stored or decided; the record shows the same call sent again and agreed
                 print(f"  note: step {s['n']} ({s['label']}): no majority ({s['result']}), sent again and agreed later")
+            elif s["method"] == "recheck" and s["result"] == "MAJORITY_AGREE" and s.get("decided") is False and repeated(s):
+                # agreed on a reading that decides nothing (the bond stayed BONDED); the same re-check sent again decided
+                print(f"  note: step {s['n']} ({s['label']}): agreed, decided nothing (bond still {s.get('bond_after')}); sent again and decided later")
             else:
                 bad.append(f"step {s['n']} ({s['label']}): the record itself says not as expected")
         if s["method"] == "withdraw" and s["execution"] == "FINISHED_WITH_RETURN":
@@ -251,7 +254,7 @@ def main() -> int:
                 v = node("read", addr, ch["view"], json.dumps(ch.get("args", [])))["result"]
             for k in ch.get("path", []):
                 v = v.get(k) if isinstance(v, dict) else None
-            if str(v) == str(ch["want"]):
+            if str(v) == str(ch["want"]) and str(ch["want"]) == str(chk.get("want")):  # the value the failed check wanted
                 print(f"  note: the run's check '{chk['label']}' failed (it read {chk.get('value')!r}); {note['note']} Read from the chain now: {v}")
                 continue
             bad.append(f"record check failed: {chk['label']}; the chain now gives {v!r}, the note says {ch['want']!r}")

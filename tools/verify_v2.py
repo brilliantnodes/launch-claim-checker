@@ -84,8 +84,10 @@ def verify(path: Path, c) -> list:
             # Two cases are reported as notes, both followed in the record by the same call that went through:
             # a check the validators did not agree on in time (nothing stored; a leader's return value is not a
             # stored check), and a payment refused only because that check had not been stored.
-            if (not agreed or refused_no_check) and repeated(rec, n - 1):
-                why = f"not agreed ({got.get('result')}), nothing stored" if not agreed else "refused: its check had not been stored"
+            undecided = s["fn"] == "recheck" and agreed and (s.get("returned") or {}).get("decided") is False
+            if (not agreed or refused_no_check or undecided) and repeated(rec, n - 1):
+                why = (f"not agreed ({got.get('result')}), nothing stored" if not agreed else
+                       "agreed, decided nothing (the bond stayed BONDED)" if undecided else "refused: its check had not been stored")
                 print(f"  note: step {n} ({s['label']}): {why}; sent again and agreed later")
             else:
                 bad.append(f"step {n} ({s['label']}): not as expected (chain {got.get('result')}, record {s.get('as_expected')!r})")
@@ -125,7 +127,7 @@ def verify(path: Path, c) -> list:
 
 
 def base_label(label: str) -> str:
-    for tail in (" (check stored)", " (retry 2)", " (retry)"):
+    for tail in (" (check stored)", " (retry 2)", " (retry)", " (again)"):
         if label.endswith(tail):
             return label[: -len(tail)]
     return label
@@ -134,7 +136,8 @@ def base_label(label: str) -> str:
 def repeated(rec: dict, i: int) -> bool:
     """A later step with the same label (apart from a retry mark) and the same method that went through."""
     s = rec["steps"][i]
-    return any(base_label(x["label"]) == base_label(s["label"]) and x["fn"] == s["fn"] and x.get("as_expected") is True
+    return any(base_label(x["label"]) == base_label(s["label"]) and x["fn"] == s["fn"] and plain(x["args"]) == plain(s["args"])
+               and x.get("as_expected") is True
                and x.get("result") == "MAJORITY_AGREE" for x in rec["steps"][i + 1:])
 
 
