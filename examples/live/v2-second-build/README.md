@@ -13,3 +13,7 @@ Review 3 read the stopped deployment and found its record's `stopped` note wrong
 
 - **Case D (Veercoin) was decided.** The run sent its re-check about a minute before it was stopped, and the record was not saved after it: the transaction is missing from the record's 26 steps. On chain, `get_check("4")` on `0x1069…Ac16` shows the bond `NOT_CONFIRMED` by `D1_EXPLORERS_DISAGREE`, re-checked at 16:50:52 UTC, inside its window. So only case C's re-check window closed undecided, not C's and D's.
 - **What is left on that deployment.** Cases A and B were decided (upheld, released) but never collected; case D was decided but not collected; cases C and E were bonded and challenged and never settled. Their test GEN stays in the contract until someone settles and collects them.
+
+## Verifying these records
+
+The builds and tools have changed since: to verify these records, check out commit df3567b (the tools and builds they were made with) and run `tools/verify_v2.py` and `tools/verify_v2_bradbury.py` there. (The records' Bradbury build has `build_sha256` `aa32cf2f…`; later Phase 2 builds differ.)

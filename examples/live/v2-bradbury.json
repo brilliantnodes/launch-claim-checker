@@ -2,9 +2,9 @@
  "network": "testnet-bradbury-phase-3",
  "chain_id": 4221,
  "build": "bradbury/build-phase3/launch_claim_checker_v2.py (GenVM v0.6)",
- "build_sha256": "96d5a78a9686926a7892edaab1fb71c51cedcf03d9b9252ab5cb7d5d09f9ab66",
- "address": "0xBa377D0FED0E0A40eA3978716F4495D234DF6e46",
- "deploy_tx": "0xd2657987ee8a83769928845c15deeeb3284a1fbbbbb285906ac01c05f3ef43f9",
+ "build_sha256": "0e7b3c526cc579f923ad624faa4299905b87a4842fb49c2dcc7c8b544f9f08b0",
+ "address": "0xDB8f4cF9824D1E41Fdb1C252a09BaDA6b45f4F52",
+ "deploy_tx": "0x6dc4c9847eb9c9016114bb1e604821622a949a3e6d63597f6d862232974cf8a2",
  "windows_seconds": [
   600,
   600,
@@ -32,7 +32,7 @@
     "No founder reward"
    ],
    "value": "0",
-   "tx": "0x3c6865dd85057b9bd1dc87165f8e383ed684903898bcbb5b2b5123fdfc8c817f",
+   "tx": "0x90f3aea15b34d6b13964e33d684a6e7a71c5a75b13e6566c4c857022411902e9",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -47,8 +47,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637131",
-   "seconds": 36,
+   "created": "1795683954",
+   "seconds": 37,
    "as_expected": true
   },
   {
@@ -61,7 +61,7 @@
     "1"
    ],
    "value": "100000000000000000",
-   "tx": "0xd1955ec1f755d62b99b894da5727e4b5b7806f9507c4bb90ca2e5053f4f6b9d6",
+   "tx": "0xc73174f2a4a71041dd10a7e1266bb17bfa074f63423e6bcd6244b548eff59113",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -76,7 +76,7 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637170",
+   "created": "1795683994",
    "seconds": 11,
    "as_expected": true
   },
@@ -90,7 +90,7 @@
     "1"
    ],
    "value": "100000000000000000",
-   "tx": "0xf870c14f73ecce783f3cba21e89946ead51aadb38f156144226ca589ca794293",
+   "tx": "0x5ff715faf8556a532132bfe11bac2079d96d203c1261c49dbd99dce6bac9e33c",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -105,7 +105,7 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637186",
+   "created": "1795684009",
    "seconds": 11,
    "as_expected": true
   },
@@ -119,7 +119,7 @@
     "1"
    ],
    "value": "100000000000000000",
-   "tx": "0x6051c16228306407de218a0572bad5222d29bae781774c7ded984b0dc763f7fd",
+   "tx": "0xefca4c269710ea49a8c1726b0ad91bf377610fb6f94a91703df1a4d7599b448f",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -134,8 +134,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637198",
-   "seconds": 12,
+   "created": "1795684020",
+   "seconds": 10,
    "as_expected": true
   },
   {
@@ -148,7 +148,7 @@
     "1"
    ],
    "value": "100000000000000000",
-   "tx": "0x78d2cc4f9441ccaff26cf2f582f44120efa84972b1e0e1732f6e1b86bf9d99b2",
+   "tx": "0x8ce02d7bc67538be2c157121d5c8a70e48219c209a3236dad5c0f0b79933f5c6",
    "expected": "refused, GEN credited back",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -163,8 +163,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637212",
-   "seconds": 11,
+   "created": "1795684033",
+   "seconds": 9,
    "as_expected": true,
    "credited_back": "100000000000000000"
   },
@@ -178,7 +178,7 @@
     "1"
    ],
    "value": "100000000000000000",
-   "tx": "0xcdc9191c58a04eb03b6165d02bd16ca5889a27f9e178730c6f3114089dd406c2",
+   "tx": "0xc0b264b637d70fb5fa9cf3079ee6c95eb6cbb7e5d58cf2f4b1ed33275b298ce1",
    "expected": "refused, GEN credited back",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -193,8 +193,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637227",
-   "seconds": 11,
+   "created": "1795684047",
+   "seconds": 9,
    "as_expected": true,
    "credited_back": "100000000000000000"
   },
@@ -212,7 +212,7 @@
     "No premine"
    ],
    "value": "0",
-   "tx": "0x8045ed973ecf2936923ee21562d6274bd1f55fbc34878415b0b3b83634d45d97",
+   "tx": "0x3f3503c813bc16838e57be28ca8cdf0a4ef5123b816681d82f972c769ac896a4",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -227,8 +227,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637244",
-   "seconds": 37,
+   "created": "1795684061",
+   "seconds": 36,
    "as_expected": true
   },
   {
@@ -241,7 +241,7 @@
     "2"
    ],
    "value": "100000000000000000",
-   "tx": "0x92912b072fac4da6a68c0db5a44ae945ffbf33cd7efccfad8f53e774b947639b",
+   "tx": "0x38df8e777c5494475081ead0ea23c95a093558876dfd7c7984e1ac9ae957e5c7",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -256,8 +256,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637285",
-   "seconds": 10,
+   "created": "1795684100",
+   "seconds": 11,
    "as_expected": true
   },
   {
@@ -270,7 +270,7 @@
     "2"
    ],
    "value": "99999999999999999",
-   "tx": "0x3663b99ed11cdde0eb03e1ac2fe70e0ad7873a3a65c4e1e20d6c4e173ca32b04",
+   "tx": "0x17a42cc2179cc9d748053d65fb2625b8e9a47afd5ecb4eaeb02d35d9b204dcbe",
    "expected": "refused, GEN credited back",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -285,8 +285,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637300",
-   "seconds": 17,
+   "created": "1795684116",
+   "seconds": 10,
    "as_expected": true,
    "credited_back": "99999999999999999"
   },
@@ -300,7 +300,7 @@
     "2"
    ],
    "value": "0",
-   "tx": "0x64c36c7f434a6996f08555180bde93919a8ecc130d565bb6f5bee9a469d6c1e0",
+   "tx": "0xb1a5fdf2087de47e066f066c9ec273ef6cad52687e8d96bad21298658e3648f0",
    "expected": "refused with an error",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_ERROR",
@@ -315,8 +315,8 @@
      "FINISHED_WITH_ERROR"
     ]
    },
-   "created": "1795637320",
-   "seconds": 17,
+   "created": "1795684129",
+   "seconds": 9,
    "as_expected": true
   },
   {
@@ -326,14 +326,14 @@
    "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
    "method": "check_claim",
    "args": [
-    "https://checker.brilliantnodes.com/v2/lurchcoin-block-1.html",
-    "https://brilliantnodes.github.io/demo-explorer/lurchcoin/block-1.html",
-    "Lurchcoin",
+    "https://checker.brilliantnodes.com/v2/kinkcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/kinkcoin/block-1.html",
+    "Kinkcoin",
     "NO_FOUNDER_REWARD",
     ""
    ],
    "value": "0",
-   "tx": "0xffdef6da7743496e51de383407a15c60b7b01f53c011295db2657ef984714535",
+   "tx": "0x1eb12ed766d7bc05fc4fe1dd6100aa9a089155e543d9209c237036c6136faf7a",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -348,8 +348,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637340",
-   "seconds": 35,
+   "created": "1795684140",
+   "seconds": 34,
    "as_expected": true
   },
   {
@@ -362,7 +362,7 @@
     "3"
    ],
    "value": "100000000000000000",
-   "tx": "0xb0226f7e324a5b78daf8463823d3a7cfa7e6a60d5837143fd02955cb937366e3",
+   "tx": "0x51d6da434c70f9426701f55740d6bdd01f10c2e3035a0bfea592b1c27c8dcb24",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -377,8 +377,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637380",
-   "seconds": 30,
+   "created": "1795684178",
+   "seconds": 11,
    "as_expected": true
   },
   {
@@ -391,7 +391,7 @@
     "3"
    ],
    "value": "100000000000000000",
-   "tx": "0x410c1434f9309900b49377e7e2689c11626d0f426d47a5144c83a8ce61c01dec",
+   "tx": "0xd600d0816b11404c656db44502d84431adefeea23400ce85271a978f88bc44df",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -406,8 +406,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637415",
-   "seconds": 17,
+   "created": "1795684192",
+   "seconds": 10,
    "as_expected": true
   },
   {
@@ -417,14 +417,14 @@
    "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
    "method": "check_claim",
    "args": [
-    "https://checker.brilliantnodes.com/v2/skewcoin-block-1.html",
-    "https://brilliantnodes.github.io/demo-explorer/skewcoin/block-1.html",
-    "Skewcoin",
+    "https://checker.brilliantnodes.com/v2/bobblecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/bobblecoin/block-1.html",
+    "Bobblecoin",
     "NO_FOUNDER_REWARD",
     ""
    ],
    "value": "0",
-   "tx": "0xa0b8e5f7f437935ac019493907983c21712f450ca97181cc7e07a2b5b1792616",
+   "tx": "0x7abf59bbda95101e4505f46c83da3017ab39ecd1c5074bf3af6183e5ca27f5ba",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -439,8 +439,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637486",
-   "seconds": 36,
+   "created": "1795684301",
+   "seconds": 34,
    "as_expected": true
   },
   {
@@ -453,7 +453,7 @@
     "4"
    ],
    "value": "100000000000000000",
-   "tx": "0xfd790e8c72222546336da6651aee4de057575c06a0c984f37d4b5c250b11cbcd",
+   "tx": "0x23aa15d23eb35608941b37b2a65b9cbfc7f232444fe3323d7bf50e3941c5322e",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -468,7 +468,7 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637526",
+   "created": "1795684341",
    "seconds": 11,
    "as_expected": true
   },
@@ -482,7 +482,7 @@
     "4"
    ],
    "value": "100000000000000000",
-   "tx": "0x468b397c04de19f6bd1e797b14f3d5ed510f5cfc95465d47a4ce512bab6e5c3c",
+   "tx": "0xfb113b0721b409d5c509aa939ecf984b28af3d50ab68109a190144a095702b96",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -497,7 +497,7 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637541",
+   "created": "1795684354",
    "seconds": 10,
    "as_expected": true
   },
@@ -515,7 +515,7 @@
     ""
    ],
    "value": "0",
-   "tx": "0xc39bed6096460078f9112bdc77765b7dabacb91c85e8a5b71af0edbbf53e2d23",
+   "tx": "0x8aaaf35e7cbd65c204874b397b42994b45bcf065f0008a5ce5ba020f06b60022",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -530,12 +530,42 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637587",
-   "seconds": 36,
+   "created": "1795684703",
+   "seconds": 37,
    "as_expected": true
   },
   {
    "n": 18,
+   "label": "challenge B after the window",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "challenge",
+   "args": [
+    "2"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x17d0be28031d898f906fe5bd51b5567eeeee3a0b9d44f439a8284b8cfe4498c8",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795684745",
+   "seconds": 17,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 19,
    "label": "bond case E",
    "who": "requester",
    "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
@@ -544,7 +574,7 @@
     "5"
    ],
    "value": "100000000000000000",
-   "tx": "0xd01b224fdaaeb028ee6b11ce0de4a13f6089d4b1e47c1fc258b3dcad20cba30e",
+   "tx": "0xe00017947372e5c4b4100f521d28ff5cbb460e792618d51c10ae5b5bbfa18b1f",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -559,12 +589,12 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637628",
-   "seconds": 10,
+   "created": "1795684765",
+   "seconds": 16,
    "as_expected": true
   },
   {
-   "n": 19,
+   "n": 20,
    "label": "challenge E by challenger1",
    "who": "challenger1",
    "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
@@ -573,7 +603,7 @@
     "5"
    ],
    "value": "100000000000000000",
-   "tx": "0xd79abfd1903de62ebfb406dac2416371a40fb2a5226443f68da1f0a0e0ecf262",
+   "tx": "0x51ea2a69ed3c61bc874684839c1165ba4172fe7206beebcf485c8a57e2b8f914",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -588,12 +618,12 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637642",
-   "seconds": 47,
+   "created": "1795684785",
+   "seconds": 18,
    "as_expected": true
   },
   {
-   "n": 20,
+   "n": 21,
    "label": "recheck E too early",
    "who": "challenger1",
    "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
@@ -602,7 +632,7 @@
     "5"
    ],
    "value": "0",
-   "tx": "0x3ede7de1bdeed0db94695778dffe9592350b693db95eefbe281bd0fbc77c43bb",
+   "tx": "0x1af6a65282bce20ad69e54683811d5a1adcf3275ccb9047cc20e54047f9139c4",
    "expected": "refused with an error",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_ERROR",
@@ -617,12 +647,14 @@
      "FINISHED_WITH_ERROR"
     ]
    },
-   "created": "1795637690",
-   "seconds": 17,
-   "as_expected": true
+   "created": "1795684804",
+   "seconds": 11,
+   "as_expected": false,
+   "bond_after": "BONDED",
+   "decided": false
   },
   {
-   "n": 21,
+   "n": 22,
    "label": "case F-mining check",
    "who": "requester",
    "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
@@ -635,7 +667,7 @@
     ""
    ],
    "value": "0",
-   "tx": "0xb8cf2eaccec65df4f9c4111f44356e010877cb63fa83598fd121532e94fe122e",
+   "tx": "0x4ed694035768aa567715f721207c2c7f1af997d3447230e73d577e9661656412",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -650,12 +682,12 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637709",
-   "seconds": 41,
+   "created": "1795684819",
+   "seconds": 40,
    "as_expected": true
   },
   {
-   "n": 22,
+   "n": 23,
    "label": "bond on a mining verdict",
    "who": "requester",
    "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
@@ -664,7 +696,7 @@
     "6"
    ],
    "value": "100000000000000000",
-   "tx": "0x9dff69fcf13a78551c87b6b1f52f4ad1dadd2211a32d548ab84445058556257c",
+   "tx": "0xb090edc6dcd4460404ab88d90a88fb74d15024f1d8730ef25cb9ba6f0de29716",
    "expected": "refused, GEN credited back",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -679,13 +711,13 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637756",
-   "seconds": 12,
+   "created": "1795684864",
+   "seconds": 9,
    "as_expected": true,
    "credited_back": "100000000000000000"
   },
   {
-   "n": 23,
+   "n": 24,
    "label": "case F-disagree check",
    "who": "requester",
    "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
@@ -698,7 +730,7 @@
     ""
    ],
    "value": "0",
-   "tx": "0xac0a9595103a0f4dd1d71d9721d9fcb63c403ab4c4e4b7c07475350d4de21447",
+   "tx": "0x6f21d48ed3b4ad00e981ddd615409e6922c98c7f545b2b40b53e24fde41a52f9",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -713,12 +745,12 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637772",
-   "seconds": 36,
+   "created": "1795684877",
+   "seconds": 55,
    "as_expected": true
   },
   {
-   "n": 24,
+   "n": 25,
    "label": "bond on explorers that disagree",
    "who": "requester",
    "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
@@ -727,7 +759,7 @@
     "7"
    ],
    "value": "100000000000000000",
-   "tx": "0x11ecaeecfed3ae2b898edb18fd45beddb22aae000111c218b71851f740efc2e1",
+   "tx": "0x7e85e43723fa3ca30b3a1065ce2e8dca77500b19e40104220fcf8a61d0994f87",
    "expected": "refused, GEN credited back",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -742,13 +774,13 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637813",
+   "created": "1795684937",
    "seconds": 10,
    "as_expected": true,
    "credited_back": "100000000000000000"
   },
   {
-   "n": 25,
+   "n": 26,
    "label": "case F-fair check",
    "who": "requester",
    "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
@@ -761,7 +793,7 @@
     "Fair launch"
    ],
    "value": "0",
-   "tx": "0xe2dd9b4633db07385df2efb3a4fa0c99a27291c413b3b05c9cebdb7e7ed957e8",
+   "tx": "0x60aad8c3bb813a0a50aeb5241f7cd4e43e6dd250fb997b6336921be3df624f4a",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -776,12 +808,12 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637828",
-   "seconds": 34,
+   "created": "1795684950",
+   "seconds": 35,
    "as_expected": true
   },
   {
-   "n": 26,
+   "n": 27,
    "label": "bond on a FAIR_LAUNCH verdict",
    "who": "requester",
    "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
@@ -790,7 +822,7 @@
     "8"
    ],
    "value": "100000000000000000",
-   "tx": "0xf1cb1b35269950bd712376823800581102c0ba2894da220522dd5607f830ceb3",
+   "tx": "0xfe108d3c0abdc1b772fce9163c9b75210a58a35c25b76b4098b5288ffa60abb5",
    "expected": "refused, GEN credited back",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -805,38 +837,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795637868",
-   "seconds": 11,
-   "as_expected": true,
-   "credited_back": "100000000000000000"
-  },
-  {
-   "n": 27,
-   "label": "challenge B after the window",
-   "who": "challenger2",
-   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
-   "method": "challenge",
-   "args": [
-    "2"
-   ],
-   "value": "100000000000000000",
-   "tx": "0xa0fe0083720715643f96c62b4478f7cfdd403d49627943fcc8a260ed9fdc3eaa",
-   "expected": "refused, GEN credited back",
-   "result": "MAJORITY_AGREE",
-   "execution": "FINISHED_WITH_RETURN",
-   "validators": {
-    "of": 5,
-    "same_as_the_result": 5,
-    "votes": [
-     "FINISHED_WITH_RETURN",
-     "FINISHED_WITH_RETURN",
-     "FINISHED_WITH_RETURN",
-     "FINISHED_WITH_RETURN",
-     "FINISHED_WITH_RETURN"
-    ]
-   },
-   "created": "1795637893",
-   "seconds": 11,
+   "created": "1795684990",
+   "seconds": 10,
    "as_expected": true,
    "credited_back": "100000000000000000"
   },
@@ -850,7 +852,7 @@
     "1"
    ],
    "value": "0",
-   "tx": "0x4697ebf84f040091eec1271bfaad40031457ede97bddcbddd7e8dbfc30001535",
+   "tx": "0xf0d2b0147f22439e2ffc022a8c209916ff45878f92b9b3474f7b09e0007a3a21",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -865,9 +867,10 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795638377",
-   "seconds": 38,
-   "as_expected": true
+   "created": "1795685200",
+   "seconds": 41,
+   "as_expected": true,
+   "bond_after": "UPHELD"
   },
   {
    "n": 29,
@@ -879,7 +882,7 @@
     "2"
    ],
    "value": "0",
-   "tx": "0x4df0e84a9a308480f3d59e9c188158b57ce5201f5982b9f828c4facecfbdaa43",
+   "tx": "0xc33756bedf62ca8dcb4247a93079936a8b71da7c1e42295de9d748f9c5a30f6b",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -894,8 +897,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795638492",
-   "seconds": 11,
+   "created": "1795685309",
+   "seconds": 10,
    "as_expected": true
   },
   {
@@ -908,7 +911,7 @@
     "3"
    ],
    "value": "0",
-   "tx": "0x2079dc888acd7988d606e777dd49882d9ed2aa1099d2449d324f96366656fbed",
+   "tx": "0x3c56b97bcb247316bbb22b0d2607eb86aae6cb13ad0689759ee12280c4830fa8",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -923,9 +926,10 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795638587",
-   "seconds": 36,
-   "as_expected": true
+   "created": "1795685385",
+   "seconds": 37,
+   "as_expected": true,
+   "bond_after": "OVERTURNED"
   },
   {
    "n": 31,
@@ -937,7 +941,7 @@
     "4"
    ],
    "value": "0",
-   "tx": "0x9827b1532e9cbdebad593b41c6962db6f036e56bf71d584ed3e8dbe0962a775e",
+   "tx": "0x3524f58267666dc0c45fbd4687b31fcead7602f2c8b4d969b84f9c42708d5a3d",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -952,9 +956,10 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795638733",
-   "seconds": 36,
-   "as_expected": true
+   "created": "1795685549",
+   "seconds": 35,
+   "as_expected": true,
+   "bond_after": "NOT_CONFIRMED"
   },
   {
    "n": 32,
@@ -966,7 +971,7 @@
     "5"
    ],
    "value": "0",
-   "tx": "0xd29988ffa694a675b9bfac0e35d67750b5fa2bfdf8a26c8f129bdc404f5f4d59",
+   "tx": "0xce5013b6caea25befbdad0402f2867ef5d83a805ce1084950158b72f3bd3ab50",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -981,8 +986,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640636",
-   "seconds": 19,
+   "created": "1795687772",
+   "seconds": 11,
    "as_expected": true
   },
   {
@@ -995,7 +1000,7 @@
     "1"
    ],
    "value": "0",
-   "tx": "0xe2fb56ec7058c9895dfa38cbbcca8503175df215e4091192bb081419cbcb9296",
+   "tx": "0xa16d49d2333b6655c8d897f56be60934ac6903899a2e234f475827eb2aa1b528",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -1010,8 +1015,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640690",
-   "seconds": 24,
+   "created": "1795687796",
+   "seconds": 11,
    "as_expected": true
   },
   {
@@ -1024,7 +1029,7 @@
     "1"
    ],
    "value": "0",
-   "tx": "0x74d369806dcd8bdf218b04ee536081a0738d4889c85fb66419bc2eb6bbd88313",
+   "tx": "0xacc183cfabc7a6dadafedec361961f85b020b040e4a0525b300062c5910e1dd0",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -1039,7 +1044,7 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640720",
+   "created": "1795687811",
    "seconds": 10,
    "as_expected": true
   },
@@ -1053,7 +1058,7 @@
     "2"
    ],
    "value": "0",
-   "tx": "0xc0a57a2b35e299dd2ad3a898a2da8b0a1413bac70faedc70f090cc896c776d46",
+   "tx": "0xf05bb01123fac5b5c5ff3be6a5761f3ddda611c1850e343b3e28ae1121d3f1d6",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -1068,7 +1073,7 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640738",
+   "created": "1795687824",
    "seconds": 11,
    "as_expected": true
   },
@@ -1082,7 +1087,7 @@
     "3"
    ],
    "value": "0",
-   "tx": "0x677d80badd7dc99692a95ccb8ae488a841915e6dc656c985ad356840a7c50e95",
+   "tx": "0x0e468faca4f09e2e129768d8de1c56ccbe487471601275d4c3c3d18f5e0c6502",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -1097,8 +1102,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640758",
-   "seconds": 11,
+   "created": "1795687838",
+   "seconds": 9,
    "as_expected": true
   },
   {
@@ -1111,7 +1116,7 @@
     "4"
    ],
    "value": "0",
-   "tx": "0xf2718c064d876cbd1f4f5ba24f18ee55030378d6ac7d623d8749bd78b22610c6",
+   "tx": "0x33bd4ef05358987f5e8b59b2e4f965c02f6d9bc85ff9b3473cc598cb5495927d",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -1126,8 +1131,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640775",
-   "seconds": 18,
+   "created": "1795687851",
+   "seconds": 10,
    "as_expected": true
   },
   {
@@ -1140,7 +1145,7 @@
     "4"
    ],
    "value": "0",
-   "tx": "0x31ce1cb7f74b3a066bb8f3e9338dd0faa28ffe3b4c4444743ebcc63233fe9885",
+   "tx": "0xa6e8eba8a10090acb78ed8a193481bcdafc90d11d66f10a8e4e4a5ce9bd00d42",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -1155,8 +1160,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640798",
-   "seconds": 11,
+   "created": "1795687865",
+   "seconds": 9,
    "as_expected": true
   },
   {
@@ -1169,7 +1174,7 @@
     "5"
    ],
    "value": "0",
-   "tx": "0x84ab38341df6eaa8c10a648b15d3eb391e1d1bf611f33747d26c508e24efb59b",
+   "tx": "0x65bf5129bb7ad9e000c90346f73a2ea1c003988c1421e421eba455b0a207c587",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -1184,8 +1189,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640813",
-   "seconds": 11,
+   "created": "1795687877",
+   "seconds": 10,
    "as_expected": true
   },
   {
@@ -1198,7 +1203,7 @@
     "5"
    ],
    "value": "0",
-   "tx": "0x9c7e521b963320fc8e39fca0f62fe0359329200a2e2f3ec937647ffd0f3b2920",
+   "tx": "0xf99fc1ce25461e76f2b9d6b653e22df1370811be0e2792737a1ee63ebab894dd",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -1213,8 +1218,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640832",
-   "seconds": 17,
+   "created": "1795687891",
+   "seconds": 11,
    "as_expected": true
   },
   {
@@ -1227,7 +1232,7 @@
     "1"
    ],
    "value": "0",
-   "tx": "0x497010e9b34fdec51928201ab42552fd38e3518467b565c240a67bbe526f2856",
+   "tx": "0x723c993ef13dadb0a018439679f1a5731dc2a542a06de81185a30b528c03e5da",
    "expected": "refused with an error",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_ERROR",
@@ -1242,8 +1247,8 @@
      "FINISHED_WITH_ERROR"
     ]
    },
-   "created": "1795640855",
-   "seconds": 15,
+   "created": "1795687905",
+   "seconds": 10,
    "as_expected": true
   },
   {
@@ -1256,7 +1261,7 @@
     0
    ],
    "value": "0",
-   "tx": "0x88f9b16231746d8db24e2b558d20e7691f4f7817143b392c8b6490684b34a13b",
+   "tx": "0x9798221e6675d449a98c0edeb272d6afedd681f78d7ceee4bdc9a2ce7f9ae2ee",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -1271,8 +1276,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640874",
-   "seconds": 16,
+   "created": "1795687917",
+   "seconds": 12,
    "as_expected": true
   },
   {
@@ -1285,7 +1290,7 @@
     0
    ],
    "value": "0",
-   "tx": "0xf0d9aa337a4fa1c4ca129e6ba5c94b396499171c5d5a3c58f52b6e699775c92c",
+   "tx": "0x0270c8301f2701ed7ec2b17e1cfd1f48939a7c069c3669019409ec09f6992f4f",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -1300,8 +1305,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640899",
-   "seconds": 11,
+   "created": "1795687934",
+   "seconds": 10,
    "as_expected": true
   },
   {
@@ -1314,7 +1319,7 @@
     0
    ],
    "value": "0",
-   "tx": "0xd54442906d001747f6499a1ce1dc56712ddea0c52b6de9cfe8c0aaa49b78f657",
+   "tx": "0xa9fad3272565c5a81b2b07ddf3b282c242341266c08f6cfc1ac8328e67e9aab5",
    "expected": "accepted",
    "result": "MAJORITY_AGREE",
    "execution": "FINISHED_WITH_RETURN",
@@ -1329,8 +1334,8 @@
      "FINISHED_WITH_RETURN"
     ]
    },
-   "created": "1795640916",
-   "seconds": 16,
+   "created": "1795687951",
+   "seconds": 11,
    "as_expected": true
   }
  ],
@@ -1351,7 +1356,7 @@
    },
    "ok": true,
    "reads": 1,
-   "at": 1795637127
+   "at": 1795683951
   },
   {
    "label": "case A: check 1 is CONTRADICTED BOTH:P1",
@@ -1369,7 +1374,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795637168
+   "at": 1795683992
   },
   {
    "label": "case A: bonded",
@@ -1377,7 +1382,7 @@
    "want": "BONDED",
    "ok": true,
    "reads": 1,
-   "at": 1795637182
+   "at": 1795684005
   },
   {
    "label": "case A: two challengers, in order",
@@ -1391,7 +1396,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795637240
+   "at": 1795684057
   },
   {
    "label": "case B: check 2 is SUPPORTED BOTH:P2",
@@ -1409,7 +1414,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795637283
+   "at": 1795684098
   },
   {
    "label": "case B: bonded",
@@ -1417,7 +1422,7 @@
    "want": "BONDED",
    "ok": true,
    "reads": 1,
-   "at": 1795637295
+   "at": 1795684111
   },
   {
    "label": "case C: check 3 is CONTRADICTED BOTH:P1",
@@ -1425,17 +1430,17 @@
     "CONTRADICTED",
     "BOTH:P1",
     "0xc91e17e470443f62b9fb00d979053cec775f1755",
-    "Lurchcoin"
+    "Kinkcoin"
    ],
    "want": [
     "CONTRADICTED",
     "BOTH:P1",
     "0xc91e17e470443f62b9fb00d979053cec775f1755",
-    "Lurchcoin"
+    "Kinkcoin"
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795637378
+   "at": 1795684176
   },
   {
    "label": "case C: bonded",
@@ -1443,7 +1448,7 @@
    "want": "BONDED",
    "ok": true,
    "reads": 1,
-   "at": 1795637411
+   "at": 1795684189
   },
   {
    "label": "case D: check 4 is CONTRADICTED BOTH:P1",
@@ -1451,17 +1456,17 @@
     "CONTRADICTED",
     "BOTH:P1",
     "0xc91e17e470443f62b9fb00d979053cec775f1755",
-    "Skewcoin"
+    "Bobblecoin"
    ],
    "want": [
     "CONTRADICTED",
     "BOTH:P1",
     "0xc91e17e470443f62b9fb00d979053cec775f1755",
-    "Skewcoin"
+    "Bobblecoin"
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795637524
+   "at": 1795684337
   },
   {
    "label": "case D: bonded",
@@ -1469,7 +1474,7 @@
    "want": "BONDED",
    "ok": true,
    "reads": 1,
-   "at": 1795637537
+   "at": 1795684351
   },
   {
    "label": "case E: check 5 is CONTRADICTED BOTH:P1",
@@ -1487,7 +1492,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795637626
+   "at": 1795684742
   },
   {
    "label": "case E: bonded",
@@ -1495,7 +1500,7 @@
    "want": "BONDED",
    "ok": true,
    "reads": 1,
-   "at": 1795637638
+   "at": 1795684782
   },
   {
    "label": "case F-mining: check 6 is CONTRADICTED BOTH:M1",
@@ -1513,7 +1518,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795637753
+   "at": 1795684860
   },
   {
    "label": "case F-disagree: check 7 is UNDETERMINED D1_EXPLORERS_DISAGREE",
@@ -1531,7 +1536,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795637810
+   "at": 1795684934
   },
   {
    "label": "case F-fair: check 8 is CONTRADICTED BOTH:P1",
@@ -1549,7 +1554,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795637864
+   "at": 1795684987
   },
   {
    "label": "case A: bond state UPHELD",
@@ -1557,7 +1562,7 @@
    "want": "UPHELD",
    "ok": true,
    "reads": 1,
-   "at": 1795640655
+   "at": 1795687783
   },
   {
    "label": "case B: bond state RELEASED",
@@ -1565,7 +1570,7 @@
    "want": "RELEASED",
    "ok": true,
    "reads": 1,
-   "at": 1795640658
+   "at": 1795687785
   },
   {
    "label": "case C: bond state OVERTURNED",
@@ -1573,7 +1578,7 @@
    "want": "OVERTURNED",
    "ok": true,
    "reads": 1,
-   "at": 1795640664
+   "at": 1795687786
   },
   {
    "label": "case D: bond state NOT_CONFIRMED",
@@ -1581,7 +1586,7 @@
    "want": "NOT_CONFIRMED",
    "ok": true,
    "reads": 1,
-   "at": 1795640669
+   "at": 1795687787
   },
   {
    "label": "case E: bond state NOT_CONFIRMED",
@@ -1589,7 +1594,7 @@
    "want": "NOT_CONFIRMED",
    "ok": true,
    "reads": 1,
-   "at": 1795640671
+   "at": 1795687789
   },
   {
    "label": "case C: the re-check found SUPPORTED BOTH:P2",
@@ -1603,7 +1608,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795640679
+   "at": 1795687791
   },
   {
    "label": "case D: the re-check found the explorers disagree",
@@ -1611,7 +1616,7 @@
    "want": "D1_EXPLORERS_DISAGREE",
    "ok": true,
    "reads": 1,
-   "at": 1795640683
+   "at": 1795687793
   },
   {
    "label": "collect A by requester: credited 300000000000000000",
@@ -1619,7 +1624,7 @@
    "want": 300000000000000000,
    "ok": true,
    "reads": 1,
-   "at": 1795640715
+   "at": 1795687808
   },
   {
    "label": "collect A by challenger1: credited 0",
@@ -1627,7 +1632,7 @@
    "want": 0,
    "ok": true,
    "reads": 1,
-   "at": 1795640734
+   "at": 1795687821
   },
   {
    "label": "collect B by requester: credited 100000000000000000",
@@ -1635,7 +1640,7 @@
    "want": 100000000000000000,
    "ok": true,
    "reads": 1,
-   "at": 1795640751
+   "at": 1795687835
   },
   {
    "label": "collect C by challenger1: credited 150000000000000000",
@@ -1643,7 +1648,7 @@
    "want": 150000000000000000,
    "ok": true,
    "reads": 1,
-   "at": 1795640771
+   "at": 1795687848
   },
   {
    "label": "collect D by requester: credited 100000000000000000",
@@ -1651,7 +1656,7 @@
    "want": 100000000000000000,
    "ok": true,
    "reads": 1,
-   "at": 1795640794
+   "at": 1795687861
   },
   {
    "label": "collect D by challenger2: credited 100000000000000000",
@@ -1659,7 +1664,7 @@
    "want": 100000000000000000,
    "ok": true,
    "reads": 1,
-   "at": 1795640810
+   "at": 1795687874
   },
   {
    "label": "collect E by requester: credited 100000000000000000",
@@ -1667,7 +1672,7 @@
    "want": 100000000000000000,
    "ok": true,
    "reads": 1,
-   "at": 1795640828
+   "at": 1795687888
   },
   {
    "label": "collect E by challenger1: credited 100000000000000000",
@@ -1675,7 +1680,7 @@
    "want": 100000000000000000,
    "ok": true,
    "reads": 1,
-   "at": 1795640852
+   "at": 1795687903
   },
   {
    "label": "withdraw requester: one transfer of 1000000000000000000 to itself",
@@ -1693,7 +1698,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795640891
+   "at": 1795687930
   },
   {
    "label": "withdraw requester: nothing left credited",
@@ -1701,7 +1706,7 @@
    "want": 0,
    "ok": true,
    "reads": 1,
-   "at": 1795640895
+   "at": 1795687931
   },
   {
    "label": "withdraw challenger1: one transfer of 449999999999999999 to itself",
@@ -1719,7 +1724,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795640910
+   "at": 1795687945
   },
   {
    "label": "withdraw challenger1: nothing left credited",
@@ -1727,7 +1732,7 @@
    "want": 0,
    "ok": true,
    "reads": 1,
-   "at": 1795640913
+   "at": 1795687946
   },
   {
    "label": "withdraw challenger2: one transfer of 200000000000000000 to itself",
@@ -1745,7 +1750,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795640933
+   "at": 1795687961
   },
   {
    "label": "withdraw challenger2: nothing left credited",
@@ -1753,7 +1758,7 @@
    "want": 0,
    "ok": true,
    "reads": 1,
-   "at": 1795640935
+   "at": 1795687963
   },
   {
    "label": "totals: nothing locked or credited; half of case C's bond burned",
@@ -1769,7 +1774,7 @@
    ],
    "ok": true,
    "reads": 1,
-   "at": 1795640937
+   "at": 1795687964
   },
   {
    "label": "contract balance equals the burned GEN",
@@ -1777,7 +1782,7 @@
    "want": 50000000000000000,
    "ok": false,
    "reads": 7,
-   "at": 1795641001
+   "at": 1795688028
   },
   {
    "label": "case C: half the bond burned",
@@ -1785,102 +1790,102 @@
    "want": 50000000000000000,
    "ok": true,
    "reads": 1,
-   "at": 1795641003
+   "at": 1795688030
   }
  ],
  "page_changes": [
   {
-   "coin": "lurchcoin",
+   "coin": "kinkcoin",
    "commits": {
-    "launch-claim-checker": "cdf8437",
-    "demo-explorer": "42b23ff"
+    "launch-claim-checker": "213dde3",
+    "demo-explorer": "d481c78"
    },
    "live": {
     "a": true,
     "b": true
    },
-   "at": 1795637482
+   "at": 1795684299
   },
   {
-   "coin": "skewcoin",
+   "coin": "bobblecoin",
    "commits": {
     "launch-claim-checker": null,
-    "demo-explorer": "5dad1b8"
+    "demo-explorer": "740dc7e"
    },
    "live": {
     "a": null,
     "b": true
    },
-   "at": 1795637583
+   "at": 1795684700
   }
  ],
  "cases": {
   "A": {
    "id": "1",
-   "check_tx": "0x3c6865dd85057b9bd1dc87165f8e383ed684903898bcbb5b2b5123fdfc8c817f",
+   "check_tx": "0x90f3aea15b34d6b13964e33d684a6e7a71c5a75b13e6566c4c857022411902e9",
    "times": {
-    "close": 1795637770,
-    "nc_from": 1795640170,
-    "rc_end": 1795639570,
-    "rc_open": 1795638370
+    "close": 1795684594,
+    "nc_from": 1795686994,
+    "rc_end": 1795686394,
+    "rc_open": 1795685194
    }
   },
   "B": {
    "id": "2",
-   "check_tx": "0x8045ed973ecf2936923ee21562d6274bd1f55fbc34878415b0b3b83634d45d97",
+   "check_tx": "0x3f3503c813bc16838e57be28ca8cdf0a4ef5123b816681d82f972c769ac896a4",
    "times": {
-    "close": 1795637885,
-    "nc_from": 1795640285,
-    "rc_end": 1795639685,
-    "rc_open": 1795638485
+    "close": 1795684700,
+    "nc_from": 1795687100,
+    "rc_end": 1795686500,
+    "rc_open": 1795685300
    }
   },
   "C": {
    "id": "3",
-   "check_tx": "0xffdef6da7743496e51de383407a15c60b7b01f53c011295db2657ef984714535",
+   "check_tx": "0x1eb12ed766d7bc05fc4fe1dd6100aa9a089155e543d9209c237036c6136faf7a",
    "times": {
-    "close": 1795637980,
-    "nc_from": 1795640380,
-    "rc_end": 1795639780,
-    "rc_open": 1795638580
+    "close": 1795684778,
+    "nc_from": 1795687178,
+    "rc_end": 1795686578,
+    "rc_open": 1795685378
    }
   },
   "D": {
    "id": "4",
-   "check_tx": "0xa0b8e5f7f437935ac019493907983c21712f450ca97181cc7e07a2b5b1792616",
+   "check_tx": "0x7abf59bbda95101e4505f46c83da3017ab39ecd1c5074bf3af6183e5ca27f5ba",
    "times": {
-    "close": 1795638126,
-    "nc_from": 1795640526,
-    "rc_end": 1795639926,
-    "rc_open": 1795638726
+    "close": 1795684941,
+    "nc_from": 1795687341,
+    "rc_end": 1795686741,
+    "rc_open": 1795685541
    }
   },
   "E": {
    "id": "5",
-   "check_tx": "0xc39bed6096460078f9112bdc77765b7dabacb91c85e8a5b71af0edbbf53e2d23",
+   "check_tx": "0x8aaaf35e7cbd65c204874b397b42994b45bcf065f0008a5ce5ba020f06b60022",
    "times": {
-    "close": 1795638228,
-    "nc_from": 1795640628,
-    "rc_end": 1795640028,
-    "rc_open": 1795638828
+    "close": 1795685365,
+    "nc_from": 1795687765,
+    "rc_end": 1795687165,
+    "rc_open": 1795685965
    }
   },
   "F-mining": {
    "id": "6",
-   "check_tx": "0xb8cf2eaccec65df4f9c4111f44356e010877cb63fa83598fd121532e94fe122e"
+   "check_tx": "0x4ed694035768aa567715f721207c2c7f1af997d3447230e73d577e9661656412"
   },
   "F-disagree": {
    "id": "7",
-   "check_tx": "0xac0a9595103a0f4dd1d71d9721d9fcb63c403ab4c4e4b7c07475350d4de21447"
+   "check_tx": "0x6f21d48ed3b4ad00e981ddd615409e6922c98c7f545b2b40b53e24fde41a52f9"
   },
   "F-fair": {
    "id": "8",
-   "check_tx": "0xe2dd9b4633db07385df2efb3a4fa0c99a27291c413b3b05c9cebdb7e7ed957e8"
+   "check_tx": "0x60aad8c3bb813a0a50aeb5241f7cd4e43e6dd250fb997b6336921be3df624f4a"
   }
  },
  "summary": {
   "steps": 44,
-  "steps_as_expected": 44,
+  "steps_as_expected": 43,
   "checks": 39,
   "checks_ok": 38
  },
@@ -1894,11 +1899,15 @@
  "after_the_run": [
   {
    "supersedes": "contract balance equals the burned GEN",
-   "note": "The run read the balance right after the three withdrawals, before they were finalized; on Bradbury Phase 3 a withdrawal's transfer is made at finalization (onAcceptance false). The three withdrawals were finalized about 40 minutes later, and the balance then read 50000000000000000 wei, the burned half of case C's bond. The failed check above is kept as the run wrote it.",
+   "note": "The run read the balance at 10:13:48 UTC, right after the three withdrawals (sent 10:11:57 to 10:12:31 UTC), before they were finalized; on Bradbury Phase 3 a withdrawal's transfer is made at finalization. Read again every 30 seconds after the run, the balance was 50000000000000000 wei, the burned half of case C's bond, from 10:43:04 UTC, about 30 minutes after the withdrawals. The failed check above is kept as the run wrote it.",
    "chain": {
     "view": "balance",
     "want": "50000000000000000"
    }
+  },
+  {
+   "step": 21,
+   "note": "Step 21 (recheck E too early) was refused, as the run intended ('refused with an error'; on chain MAJORITY_AGREE, FINISHED_WITH_ERROR). The run tool's new rule for a re-check that decides nothing read the bond (still BONDED, as it should be) and also marked this refused re-check as not as expected, so the record's summary says 43. The tool is fixed (the rule now applies only to a re-check expected to go through); the verifier reads the refusal from the chain."
   }
  ]
 }

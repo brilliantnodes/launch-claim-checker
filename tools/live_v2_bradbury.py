@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Live cases for LaunchClaimCheckerV2 on GenLayer Testnet Bradbury Phase 2 (packed GenVM v0.6 build).
+"""Live cases for LaunchClaimCheckerV2 on GenLayer Testnet Bradbury (Phase 3 by default; packed GenVM v0.6 build).
 
     cd tools/bradbury3 && npm ci && cd ../..      (Bradbury Phase 3; LCC2_PHASE=2 and tools/bradbury for Phase 2)
     LCC2_KEYS=/path/to/keys DEMO_REPO=/path/to/demo-explorer python tools/live_v2_bradbury.py [record.json] [--resume]
@@ -202,7 +202,7 @@ def step(label, role, fn, args, value=0, raises=False, credited_back=False, paye
            "expected": "refused with an error" if raises else ("refused, GEN credited back" if credited_back else "accepted"),
            "result": result, "execution": execution, "validators": {"of": len(votes), "same_as_the_result": sum(1 for v in votes if v == execution), "votes": votes},
            "created": raw.get("createdTimestamp"), "seconds": int(time.time() - t0), "as_expected": ok}
-    if fn == "recheck" and ok:
+    if fn == "recheck" and ok and not raises:
         # an agreed re-check can decide nothing (a page unreadable or showing nothing that decides): the bond is still
         # BONDED, and the run sends it again while the window allows
         row["bond_after"] = read("get_check", [args[0]])["bond"]["state"]

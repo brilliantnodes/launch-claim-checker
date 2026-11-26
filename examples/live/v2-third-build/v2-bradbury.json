@@ -1,0 +1,1904 @@
+{
+ "network": "testnet-bradbury-phase-3",
+ "chain_id": 4221,
+ "build": "bradbury/build-phase3/launch_claim_checker_v2.py (GenVM v0.6)",
+ "build_sha256": "96d5a78a9686926a7892edaab1fb71c51cedcf03d9b9252ab5cb7d5d09f9ab66",
+ "address": "0xBa377D0FED0E0A40eA3978716F4495D234DF6e46",
+ "deploy_tx": "0xd2657987ee8a83769928845c15deeeb3284a1fbbbbb285906ac01c05f3ef43f9",
+ "windows_seconds": [
+  600,
+  600,
+  600,
+  1200
+ ],
+ "bond_wei": "100000000000000000",
+ "accounts": {
+  "requester": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+  "challenger1": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+  "challenger2": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23"
+ },
+ "steps": [
+  {
+   "n": 1,
+   "label": "case A check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/block-1.html",
+    "Examplecoin",
+    "NO_FOUNDER_REWARD",
+    "No founder reward"
+   ],
+   "value": "0",
+   "tx": "0x3c6865dd85057b9bd1dc87165f8e383ed684903898bcbb5b2b5123fdfc8c817f",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637131",
+   "seconds": 36,
+   "as_expected": true
+  },
+  {
+   "n": 2,
+   "label": "bond case A",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xd1955ec1f755d62b99b894da5727e4b5b7806f9507c4bb90ca2e5053f4f6b9d6",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637170",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 3,
+   "label": "challenge A by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xf870c14f73ecce783f3cba21e89946ead51aadb38f156144226ca589ca794293",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637186",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 4,
+   "label": "challenge A by challenger2",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x6051c16228306407de218a0572bad5222d29bae781774c7ded984b0dc763f7fd",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637198",
+   "seconds": 12,
+   "as_expected": true
+  },
+  {
+   "n": 5,
+   "label": "challenge A by the requester",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x78d2cc4f9441ccaff26cf2f582f44120efa84972b1e0e1732f6e1b86bf9d99b2",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637212",
+   "seconds": 11,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 6,
+   "label": "challenge A again by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xcdc9191c58a04eb03b6165d02bd16ca5889a27f9e178730c6f3114089dd406c2",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637227",
+   "seconds": 11,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 7,
+   "label": "case B check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/controlcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/controlcoin/block-1.html",
+    "Controlcoin",
+    "NO_PREMINE",
+    "No premine"
+   ],
+   "value": "0",
+   "tx": "0x8045ed973ecf2936923ee21562d6274bd1f55fbc34878415b0b3b83634d45d97",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637244",
+   "seconds": 37,
+   "as_expected": true
+  },
+  {
+   "n": 8,
+   "label": "bond case B",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "2"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x92912b072fac4da6a68c0db5a44ae945ffbf33cd7efccfad8f53e774b947639b",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637285",
+   "seconds": 10,
+   "as_expected": true
+  },
+  {
+   "n": 9,
+   "label": "challenge B with the wrong amount",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "2"
+   ],
+   "value": "99999999999999999",
+   "tx": "0x3663b99ed11cdde0eb03e1ac2fe70e0ad7873a3a65c4e1e20d6c4e173ca32b04",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637300",
+   "seconds": 17,
+   "as_expected": true,
+   "credited_back": "99999999999999999"
+  },
+  {
+   "n": 10,
+   "label": "settle B too early",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "settle",
+   "args": [
+    "2"
+   ],
+   "value": "0",
+   "tx": "0x64c36c7f434a6996f08555180bde93919a8ecc130d565bb6f5bee9a469d6c1e0",
+   "expected": "refused with an error",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_ERROR",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR"
+    ]
+   },
+   "created": "1795637320",
+   "seconds": 17,
+   "as_expected": true
+  },
+  {
+   "n": 11,
+   "label": "case C check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/lurchcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/lurchcoin/block-1.html",
+    "Lurchcoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0xffdef6da7743496e51de383407a15c60b7b01f53c011295db2657ef984714535",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637340",
+   "seconds": 35,
+   "as_expected": true
+  },
+  {
+   "n": 12,
+   "label": "bond case C",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "3"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xb0226f7e324a5b78daf8463823d3a7cfa7e6a60d5837143fd02955cb937366e3",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637380",
+   "seconds": 30,
+   "as_expected": true
+  },
+  {
+   "n": 13,
+   "label": "challenge C by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "3"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x410c1434f9309900b49377e7e2689c11626d0f426d47a5144c83a8ce61c01dec",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637415",
+   "seconds": 17,
+   "as_expected": true
+  },
+  {
+   "n": 14,
+   "label": "case D check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/skewcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/skewcoin/block-1.html",
+    "Skewcoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0xa0b8e5f7f437935ac019493907983c21712f450ca97181cc7e07a2b5b1792616",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637486",
+   "seconds": 36,
+   "as_expected": true
+  },
+  {
+   "n": 15,
+   "label": "bond case D",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "4"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xfd790e8c72222546336da6651aee4de057575c06a0c984f37d4b5c250b11cbcd",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637526",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 16,
+   "label": "challenge D by challenger2",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "challenge",
+   "args": [
+    "4"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x468b397c04de19f6bd1e797b14f3d5ed510f5cfc95465d47a4ce512bab6e5c3c",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637541",
+   "seconds": 10,
+   "as_expected": true
+  },
+  {
+   "n": 17,
+   "label": "case E check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/block-1.html",
+    "Examplecoin",
+    "NO_PREMINE",
+    ""
+   ],
+   "value": "0",
+   "tx": "0xc39bed6096460078f9112bdc77765b7dabacb91c85e8a5b71af0edbbf53e2d23",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637587",
+   "seconds": 36,
+   "as_expected": true
+  },
+  {
+   "n": 18,
+   "label": "bond case E",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "5"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xd01b224fdaaeb028ee6b11ce0de4a13f6089d4b1e47c1fc258b3dcad20cba30e",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637628",
+   "seconds": 10,
+   "as_expected": true
+  },
+  {
+   "n": 19,
+   "label": "challenge E by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "5"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xd79abfd1903de62ebfb406dac2416371a40fb2a5226443f68da1f0a0e0ecf262",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637642",
+   "seconds": 47,
+   "as_expected": true
+  },
+  {
+   "n": 20,
+   "label": "recheck E too early",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "recheck",
+   "args": [
+    "5"
+   ],
+   "value": "0",
+   "tx": "0x3ede7de1bdeed0db94695778dffe9592350b693db95eefbe281bd0fbc77c43bb",
+   "expected": "refused with an error",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_ERROR",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR"
+    ]
+   },
+   "created": "1795637690",
+   "seconds": 17,
+   "as_expected": true
+  },
+  {
+   "n": 21,
+   "label": "case F-mining check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-mining.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/pools.html",
+    "Examplecoin",
+    "DECENTRALIZED_MINING",
+    ""
+   ],
+   "value": "0",
+   "tx": "0xb8cf2eaccec65df4f9c4111f44356e010877cb63fa83598fd121532e94fe122e",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637709",
+   "seconds": 41,
+   "as_expected": true
+  },
+  {
+   "n": 22,
+   "label": "bond on a mining verdict",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "6"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x9dff69fcf13a78551c87b6b1f52f4ad1dadd2211a32d548ab84445058556257c",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637756",
+   "seconds": 12,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 23,
+   "label": "case F-disagree check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/splitcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/splitcoin/block-1.html",
+    "Splitcoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0xac0a9595103a0f4dd1d71d9721d9fcb63c403ab4c4e4b7c07475350d4de21447",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637772",
+   "seconds": 36,
+   "as_expected": true
+  },
+  {
+   "n": 24,
+   "label": "bond on explorers that disagree",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "7"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x11ecaeecfed3ae2b898edb18fd45beddb22aae000111c218b71851f740efc2e1",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637813",
+   "seconds": 10,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 25,
+   "label": "case F-fair check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/block-1.html",
+    "Examplecoin",
+    "FAIR_LAUNCH",
+    "Fair launch"
+   ],
+   "value": "0",
+   "tx": "0xe2dd9b4633db07385df2efb3a4fa0c99a27291c413b3b05c9cebdb7e7ed957e8",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637828",
+   "seconds": 34,
+   "as_expected": true
+  },
+  {
+   "n": 26,
+   "label": "bond on a FAIR_LAUNCH verdict",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "8"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xf1cb1b35269950bd712376823800581102c0ba2894da220522dd5607f830ceb3",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637868",
+   "seconds": 11,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 27,
+   "label": "challenge B after the window",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "challenge",
+   "args": [
+    "2"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xa0fe0083720715643f96c62b4478f7cfdd403d49627943fcc8a260ed9fdc3eaa",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795637893",
+   "seconds": 11,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 28,
+   "label": "recheck A",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "recheck",
+   "args": [
+    "1"
+   ],
+   "value": "0",
+   "tx": "0x4697ebf84f040091eec1271bfaad40031457ede97bddcbddd7e8dbfc30001535",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795638377",
+   "seconds": 38,
+   "as_expected": true
+  },
+  {
+   "n": 29,
+   "label": "settle B (no challenger)",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "settle",
+   "args": [
+    "2"
+   ],
+   "value": "0",
+   "tx": "0x4df0e84a9a308480f3d59e9c188158b57ce5201f5982b9f828c4facecfbdaa43",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795638492",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 30,
+   "label": "recheck C (both explorers corrected block 1)",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "recheck",
+   "args": [
+    "3"
+   ],
+   "value": "0",
+   "tx": "0x2079dc888acd7988d606e777dd49882d9ed2aa1099d2449d324f96366656fbed",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795638587",
+   "seconds": 36,
+   "as_expected": true
+  },
+  {
+   "n": 31,
+   "label": "recheck D (only Blockfield corrected block 1)",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "recheck",
+   "args": [
+    "4"
+   ],
+   "value": "0",
+   "tx": "0x9827b1532e9cbdebad593b41c6962db6f036e56bf71d584ed3e8dbe0962a775e",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795638733",
+   "seconds": 36,
+   "as_expected": true
+  },
+  {
+   "n": 32,
+   "label": "settle E (no re-check was run)",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "settle",
+   "args": [
+    "5"
+   ],
+   "value": "0",
+   "tx": "0xd29988ffa694a675b9bfac0e35d67750b5fa2bfdf8a26c8f129bdc404f5f4d59",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640636",
+   "seconds": 19,
+   "as_expected": true
+  },
+  {
+   "n": 33,
+   "label": "collect A by requester",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "collect",
+   "args": [
+    "1"
+   ],
+   "value": "0",
+   "tx": "0xe2fb56ec7058c9895dfa38cbbcca8503175df215e4091192bb081419cbcb9296",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640690",
+   "seconds": 24,
+   "as_expected": true
+  },
+  {
+   "n": 34,
+   "label": "collect A by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "collect",
+   "args": [
+    "1"
+   ],
+   "value": "0",
+   "tx": "0x74d369806dcd8bdf218b04ee536081a0738d4889c85fb66419bc2eb6bbd88313",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640720",
+   "seconds": 10,
+   "as_expected": true
+  },
+  {
+   "n": 35,
+   "label": "collect B by requester",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "collect",
+   "args": [
+    "2"
+   ],
+   "value": "0",
+   "tx": "0xc0a57a2b35e299dd2ad3a898a2da8b0a1413bac70faedc70f090cc896c776d46",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640738",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 36,
+   "label": "collect C by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "collect",
+   "args": [
+    "3"
+   ],
+   "value": "0",
+   "tx": "0x677d80badd7dc99692a95ccb8ae488a841915e6dc656c985ad356840a7c50e95",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640758",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 37,
+   "label": "collect D by requester",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "collect",
+   "args": [
+    "4"
+   ],
+   "value": "0",
+   "tx": "0xf2718c064d876cbd1f4f5ba24f18ee55030378d6ac7d623d8749bd78b22610c6",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640775",
+   "seconds": 18,
+   "as_expected": true
+  },
+  {
+   "n": 38,
+   "label": "collect D by challenger2",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "collect",
+   "args": [
+    "4"
+   ],
+   "value": "0",
+   "tx": "0x31ce1cb7f74b3a066bb8f3e9338dd0faa28ffe3b4c4444743ebcc63233fe9885",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640798",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 39,
+   "label": "collect E by requester",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "collect",
+   "args": [
+    "5"
+   ],
+   "value": "0",
+   "tx": "0x84ab38341df6eaa8c10a648b15d3eb391e1d1bf611f33747d26c508e24efb59b",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640813",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 40,
+   "label": "collect E by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "collect",
+   "args": [
+    "5"
+   ],
+   "value": "0",
+   "tx": "0x9c7e521b963320fc8e39fca0f62fe0359329200a2e2f3ec937647ffd0f3b2920",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640832",
+   "seconds": 17,
+   "as_expected": true
+  },
+  {
+   "n": 41,
+   "label": "collect A by the requester again",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "collect",
+   "args": [
+    "1"
+   ],
+   "value": "0",
+   "tx": "0x497010e9b34fdec51928201ab42552fd38e3518467b565c240a67bbe526f2856",
+   "expected": "refused with an error",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_ERROR",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR"
+    ]
+   },
+   "created": "1795640855",
+   "seconds": 15,
+   "as_expected": true
+  },
+  {
+   "n": 42,
+   "label": "withdraw requester",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "withdraw",
+   "args": [
+    0
+   ],
+   "value": "0",
+   "tx": "0x88f9b16231746d8db24e2b558d20e7691f4f7817143b392c8b6490684b34a13b",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640874",
+   "seconds": 16,
+   "as_expected": true
+  },
+  {
+   "n": 43,
+   "label": "withdraw challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "withdraw",
+   "args": [
+    0
+   ],
+   "value": "0",
+   "tx": "0xf0d9aa337a4fa1c4ca129e6ba5c94b396499171c5d5a3c58f52b6e699775c92c",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640899",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 44,
+   "label": "withdraw challenger2",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "withdraw",
+   "args": [
+    0
+   ],
+   "value": "0",
+   "tx": "0xd54442906d001747f6499a1ce1dc56712ddea0c52b6de9cfe8c0aaa49b78f657",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795640916",
+   "seconds": 16,
+   "as_expected": true
+  }
+ ],
+ "checks": [
+  {
+   "label": "contract rules: windows of [600, 600, 600, 1200] s",
+   "value": {
+    "bond_win": 600,
+    "ch_win": 600,
+    "grace": 600,
+    "rc_win": 1200
+   },
+   "want": {
+    "bond_win": 600,
+    "ch_win": 600,
+    "grace": 600,
+    "rc_win": 1200
+   },
+   "ok": true,
+   "reads": 1,
+   "at": 1795637127
+  },
+  {
+   "label": "case A: check 1 is CONTRADICTED BOTH:P1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795637168
+  },
+  {
+   "label": "case A: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795637182
+  },
+  {
+   "label": "case A: two challengers, in order",
+   "value": [
+    "0xa8f3b6dc1b472e09bcc5002a61a4fb6660212590",
+    "0x9ad52f4bf93a0d3bd1979c543ea7b97619085a23"
+   ],
+   "want": [
+    "0xa8f3b6dc1b472e09bcc5002a61a4fb6660212590",
+    "0x9ad52f4bf93a0d3bd1979c543ea7b97619085a23"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795637240
+  },
+  {
+   "label": "case B: check 2 is SUPPORTED BOTH:P2",
+   "value": [
+    "SUPPORTED",
+    "BOTH:P2",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Controlcoin"
+   ],
+   "want": [
+    "SUPPORTED",
+    "BOTH:P2",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Controlcoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795637283
+  },
+  {
+   "label": "case B: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795637295
+  },
+  {
+   "label": "case C: check 3 is CONTRADICTED BOTH:P1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Lurchcoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Lurchcoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795637378
+  },
+  {
+   "label": "case C: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795637411
+  },
+  {
+   "label": "case D: check 4 is CONTRADICTED BOTH:P1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Skewcoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Skewcoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795637524
+  },
+  {
+   "label": "case D: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795637537
+  },
+  {
+   "label": "case E: check 5 is CONTRADICTED BOTH:P1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795637626
+  },
+  {
+   "label": "case E: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795637638
+  },
+  {
+   "label": "case F-mining: check 6 is CONTRADICTED BOTH:M1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:M1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:M1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795637753
+  },
+  {
+   "label": "case F-disagree: check 7 is UNDETERMINED D1_EXPLORERS_DISAGREE",
+   "value": [
+    "UNDETERMINED",
+    "D1_EXPLORERS_DISAGREE",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Splitcoin"
+   ],
+   "want": [
+    "UNDETERMINED",
+    "D1_EXPLORERS_DISAGREE",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Splitcoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795637810
+  },
+  {
+   "label": "case F-fair: check 8 is CONTRADICTED BOTH:P1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795637864
+  },
+  {
+   "label": "case A: bond state UPHELD",
+   "value": "UPHELD",
+   "want": "UPHELD",
+   "ok": true,
+   "reads": 1,
+   "at": 1795640655
+  },
+  {
+   "label": "case B: bond state RELEASED",
+   "value": "RELEASED",
+   "want": "RELEASED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795640658
+  },
+  {
+   "label": "case C: bond state OVERTURNED",
+   "value": "OVERTURNED",
+   "want": "OVERTURNED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795640664
+  },
+  {
+   "label": "case D: bond state NOT_CONFIRMED",
+   "value": "NOT_CONFIRMED",
+   "want": "NOT_CONFIRMED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795640669
+  },
+  {
+   "label": "case E: bond state NOT_CONFIRMED",
+   "value": "NOT_CONFIRMED",
+   "want": "NOT_CONFIRMED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795640671
+  },
+  {
+   "label": "case C: the re-check found SUPPORTED BOTH:P2",
+   "value": [
+    "SUPPORTED",
+    "BOTH:P2"
+   ],
+   "want": [
+    "SUPPORTED",
+    "BOTH:P2"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795640679
+  },
+  {
+   "label": "case D: the re-check found the explorers disagree",
+   "value": "D1_EXPLORERS_DISAGREE",
+   "want": "D1_EXPLORERS_DISAGREE",
+   "ok": true,
+   "reads": 1,
+   "at": 1795640683
+  },
+  {
+   "label": "collect A by requester: credited 300000000000000000",
+   "value": 300000000000000000,
+   "want": 300000000000000000,
+   "ok": true,
+   "reads": 1,
+   "at": 1795640715
+  },
+  {
+   "label": "collect A by challenger1: credited 0",
+   "value": 0,
+   "want": 0,
+   "ok": true,
+   "reads": 1,
+   "at": 1795640734
+  },
+  {
+   "label": "collect B by requester: credited 100000000000000000",
+   "value": 100000000000000000,
+   "want": 100000000000000000,
+   "ok": true,
+   "reads": 1,
+   "at": 1795640751
+  },
+  {
+   "label": "collect C by challenger1: credited 150000000000000000",
+   "value": 150000000000000000,
+   "want": 150000000000000000,
+   "ok": true,
+   "reads": 1,
+   "at": 1795640771
+  },
+  {
+   "label": "collect D by requester: credited 100000000000000000",
+   "value": 100000000000000000,
+   "want": 100000000000000000,
+   "ok": true,
+   "reads": 1,
+   "at": 1795640794
+  },
+  {
+   "label": "collect D by challenger2: credited 100000000000000000",
+   "value": 100000000000000000,
+   "want": 100000000000000000,
+   "ok": true,
+   "reads": 1,
+   "at": 1795640810
+  },
+  {
+   "label": "collect E by requester: credited 100000000000000000",
+   "value": 100000000000000000,
+   "want": 100000000000000000,
+   "ok": true,
+   "reads": 1,
+   "at": 1795640828
+  },
+  {
+   "label": "collect E by challenger1: credited 100000000000000000",
+   "value": 100000000000000000,
+   "want": 100000000000000000,
+   "ok": true,
+   "reads": 1,
+   "at": 1795640852
+  },
+  {
+   "label": "withdraw requester: one transfer of 1000000000000000000 to itself",
+   "value": [
+    {
+     "to": "0xc91e17e470443f62b9fb00d979053cec775f1755",
+     "wei": "1000000000000000000"
+    }
+   ],
+   "want": [
+    {
+     "to": "0xc91e17e470443f62b9fb00d979053cec775f1755",
+     "wei": "1000000000000000000"
+    }
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795640891
+  },
+  {
+   "label": "withdraw requester: nothing left credited",
+   "value": 0,
+   "want": 0,
+   "ok": true,
+   "reads": 1,
+   "at": 1795640895
+  },
+  {
+   "label": "withdraw challenger1: one transfer of 449999999999999999 to itself",
+   "value": [
+    {
+     "to": "0xa8f3b6dc1b472e09bcc5002a61a4fb6660212590",
+     "wei": "449999999999999999"
+    }
+   ],
+   "want": [
+    {
+     "to": "0xa8f3b6dc1b472e09bcc5002a61a4fb6660212590",
+     "wei": "449999999999999999"
+    }
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795640910
+  },
+  {
+   "label": "withdraw challenger1: nothing left credited",
+   "value": 0,
+   "want": 0,
+   "ok": true,
+   "reads": 1,
+   "at": 1795640913
+  },
+  {
+   "label": "withdraw challenger2: one transfer of 200000000000000000 to itself",
+   "value": [
+    {
+     "to": "0x9ad52f4bf93a0d3bd1979c543ea7b97619085a23",
+     "wei": "200000000000000000"
+    }
+   ],
+   "want": [
+    {
+     "to": "0x9ad52f4bf93a0d3bd1979c543ea7b97619085a23",
+     "wei": "200000000000000000"
+    }
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795640933
+  },
+  {
+   "label": "withdraw challenger2: nothing left credited",
+   "value": 0,
+   "want": 0,
+   "ok": true,
+   "reads": 1,
+   "at": 1795640935
+  },
+  {
+   "label": "totals: nothing locked or credited; half of case C's bond burned",
+   "value": [
+    "0",
+    "0",
+    "50000000000000000"
+   ],
+   "want": [
+    "0",
+    "0",
+    "50000000000000000"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795640937
+  },
+  {
+   "label": "contract balance equals the burned GEN",
+   "value": 1699999999999999999,
+   "want": 50000000000000000,
+   "ok": false,
+   "reads": 7,
+   "at": 1795641001
+  },
+  {
+   "label": "case C: half the bond burned",
+   "value": 50000000000000000,
+   "want": 50000000000000000,
+   "ok": true,
+   "reads": 1,
+   "at": 1795641003
+  }
+ ],
+ "page_changes": [
+  {
+   "coin": "lurchcoin",
+   "commits": {
+    "launch-claim-checker": "cdf8437",
+    "demo-explorer": "42b23ff"
+   },
+   "live": {
+    "a": true,
+    "b": true
+   },
+   "at": 1795637482
+  },
+  {
+   "coin": "skewcoin",
+   "commits": {
+    "launch-claim-checker": null,
+    "demo-explorer": "5dad1b8"
+   },
+   "live": {
+    "a": null,
+    "b": true
+   },
+   "at": 1795637583
+  }
+ ],
+ "cases": {
+  "A": {
+   "id": "1",
+   "check_tx": "0x3c6865dd85057b9bd1dc87165f8e383ed684903898bcbb5b2b5123fdfc8c817f",
+   "times": {
+    "close": 1795637770,
+    "nc_from": 1795640170,
+    "rc_end": 1795639570,
+    "rc_open": 1795638370
+   }
+  },
+  "B": {
+   "id": "2",
+   "check_tx": "0x8045ed973ecf2936923ee21562d6274bd1f55fbc34878415b0b3b83634d45d97",
+   "times": {
+    "close": 1795637885,
+    "nc_from": 1795640285,
+    "rc_end": 1795639685,
+    "rc_open": 1795638485
+   }
+  },
+  "C": {
+   "id": "3",
+   "check_tx": "0xffdef6da7743496e51de383407a15c60b7b01f53c011295db2657ef984714535",
+   "times": {
+    "close": 1795637980,
+    "nc_from": 1795640380,
+    "rc_end": 1795639780,
+    "rc_open": 1795638580
+   }
+  },
+  "D": {
+   "id": "4",
+   "check_tx": "0xa0b8e5f7f437935ac019493907983c21712f450ca97181cc7e07a2b5b1792616",
+   "times": {
+    "close": 1795638126,
+    "nc_from": 1795640526,
+    "rc_end": 1795639926,
+    "rc_open": 1795638726
+   }
+  },
+  "E": {
+   "id": "5",
+   "check_tx": "0xc39bed6096460078f9112bdc77765b7dabacb91c85e8a5b71af0edbbf53e2d23",
+   "times": {
+    "close": 1795638228,
+    "nc_from": 1795640628,
+    "rc_end": 1795640028,
+    "rc_open": 1795638828
+   }
+  },
+  "F-mining": {
+   "id": "6",
+   "check_tx": "0xb8cf2eaccec65df4f9c4111f44356e010877cb63fa83598fd121532e94fe122e"
+  },
+  "F-disagree": {
+   "id": "7",
+   "check_tx": "0xac0a9595103a0f4dd1d71d9721d9fcb63c403ab4c4e4b7c07475350d4de21447"
+  },
+  "F-fair": {
+   "id": "8",
+   "check_tx": "0xe2dd9b4633db07385df2efb3a4fa0c99a27291c413b3b05c9cebdb7e7ed957e8"
+  }
+ },
+ "summary": {
+  "steps": 44,
+  "steps_as_expected": 44,
+  "checks": 39,
+  "checks_ok": 38
+ },
+ "final_states": {
+  "A": "UPHELD",
+  "B": "RELEASED",
+  "C": "OVERTURNED",
+  "D": "NOT_CONFIRMED",
+  "E": "NOT_CONFIRMED"
+ },
+ "after_the_run": [
+  {
+   "supersedes": "contract balance equals the burned GEN",
+   "note": "The run read the balance right after the three withdrawals, before they were finalized; on Bradbury Phase 3 a withdrawal's transfer is made at finalization (onAcceptance false). The three withdrawals were finalized about 40 minutes later, and the balance then read 50000000000000000 wei, the burned half of case C's bond. The failed check above is kept as the run wrote it.",
+   "chain": {
+    "view": "balance",
+    "want": "50000000000000000"
+   }
+  }
+ ]
+}

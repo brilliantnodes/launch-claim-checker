@@ -1,0 +1,544 @@
+{
+ "network": "genlayer-studio",
+ "chain_id": 61999,
+ "contract_source": "contracts/launch_claim_checker_v2.py",
+ "contract_sha256": "586ce4ba4ad041190e63080f8513d2a93c9b2d1a23fe3fc588ab4975d5ade3c9",
+ "windows_seconds": [
+  600,
+  600,
+  600,
+  600
+ ],
+ "accounts": {
+  "requester": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+  "challenger1": "0x2dE9cF445E20DeEb411C21b04dc833500eAb8AD6",
+  "challenger2": "0x3E1f7Ecc1f8Ec8a301F5bc73D58F017224BF10C9"
+ },
+ "steps": [
+  {
+   "label": "case A check",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/block-1.html",
+    "Examplecoin",
+    "NO_FOUNDER_REWARD",
+    "No founder reward"
+   ],
+   "value": "0",
+   "tx": "0x1590eac6f078f3c6ff2161b311c06563c4b805e0d9d2c77028db5d17b0592a8b",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "1",
+    "ok": true,
+    "rule": "BOTH:P1",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-26T08:47:47.942271+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "CONTRADICTED",
+    "rule": "BOTH:P1"
+   },
+   "as_expected": true
+  },
+  {
+   "label": "bond case A",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "bond",
+   "args": [
+    "1"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0xc9971972b4ac1bb35da2bdaee27bd89ee4850c3e13e1a0c521d91d756937fd9d",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "bonded": "1000000000000000000",
+    "close": 1795683520,
+    "nc_from": 1795685320,
+    "ok": true,
+    "rc_end": 1795684720,
+    "rc_open": 1795684120
+   },
+   "created_at": "2026-11-26T08:48:40.767740+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 4,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "bonded": "1000000000000000000"
+   },
+   "as_expected": true
+  },
+  {
+   "label": "challenge A by challenger1",
+   "who": "challenger1",
+   "from": "0x2dE9cF445E20DeEb411C21b04dc833500eAb8AD6",
+   "fn": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0xf840ebe5bf84c2621e0b11edacce3eaacbaf0593dc4ad48337be433347a8966a",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "challenger": 1,
+    "ok": true,
+    "recheck_from": 1795684120
+   },
+   "created_at": "2026-11-26T08:48:50.222891+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "challenger": 1
+   },
+   "as_expected": true
+  },
+  {
+   "label": "challenge A by challenger2",
+   "who": "challenger2",
+   "from": "0x3E1f7Ecc1f8Ec8a301F5bc73D58F017224BF10C9",
+   "fn": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0x086b73e2874792221b574e2903ecd8f0c5abc3bf63b183a2ddb631ef1fd1f8ba",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "challenger": 2,
+    "ok": true,
+    "recheck_from": 1795684120
+   },
+   "created_at": "2026-11-26T08:48:58.970020+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 4,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "challenger": 2
+   },
+   "as_expected": true
+  },
+  {
+   "label": "challenge A by the requester",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0xcf3332da332cb706e3ae1b29990d90a4b576f377a9067470c8a675b7a89acb42",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "error": "the requester cannot challenge its own bond",
+    "ok": false,
+    "refunded": "1000000000000000000"
+   },
+   "created_at": "2026-11-26T08:49:07.431878+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": "refused:the requester cannot",
+   "as_expected": true
+  },
+  {
+   "label": "challenge A again by challenger1",
+   "who": "challenger1",
+   "from": "0x2dE9cF445E20DeEb411C21b04dc833500eAb8AD6",
+   "fn": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0x955d77afa72c72c76693c866954daff9f78442fe3375ac1607d6ed04dfeb3721",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "error": "this address has already challenged this check",
+    "ok": false,
+    "refunded": "1000000000000000000"
+   },
+   "created_at": "2026-11-26T08:49:15.464901+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": "refused:already challenged",
+   "as_expected": true
+  },
+  {
+   "label": "case B check",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/controlcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/controlcoin/block-1.html",
+    "Controlcoin",
+    "NO_PREMINE",
+    "No premine"
+   ],
+   "value": "0",
+   "tx": "0x341df34d764a66305900f6948a8f0cbff164b305c6ee65176969d06e5420ed29",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "2",
+    "ok": true,
+    "rule": "BOTH:P2",
+    "verdict": "SUPPORTED"
+   },
+   "created_at": "2026-11-26T08:49:23.826779+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "SUPPORTED",
+    "rule": "BOTH:P2"
+   },
+   "as_expected": true
+  },
+  {
+   "label": "bond case B",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "bond",
+   "args": [
+    "2"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0x8f724c2c2330dce9560f0cd603f7251b39c0872eb1ef5d9e9714b82d69f02553",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "bonded": "1000000000000000000",
+    "close": 1795683601,
+    "nc_from": 1795685401,
+    "ok": true,
+    "rc_end": 1795684801,
+    "rc_open": 1795684201
+   },
+   "created_at": "2026-11-26T08:50:01.312199+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "bonded": "1000000000000000000"
+   },
+   "as_expected": true
+  },
+  {
+   "label": "challenge B with the wrong amount",
+   "who": "challenger1",
+   "from": "0x2dE9cF445E20DeEb411C21b04dc833500eAb8AD6",
+   "fn": "challenge",
+   "args": [
+    "2"
+   ],
+   "value": "999999999999999999",
+   "tx": "0xd99dd7af0bbdb7d15f47c2a6c0c4eeefc368e183786f9556de0a2f5380b2f69a",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "error": "a challenge deposits exactly the bond: 1000000000000000000 wei",
+    "ok": false,
+    "refunded": "999999999999999999"
+   },
+   "created_at": "2026-11-26T08:50:10.641872+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": "refused:exactly the bond",
+   "as_expected": true
+  },
+  {
+   "label": "case C check",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/wobblecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/wobblecoin/block-1.html",
+    "Wobblecoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0x26a86ca0c974427f13162d4ddef2831d7e35dac2ca9f5cf5c3c1c86d62ecd995",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "3",
+    "ok": true,
+    "rule": "BOTH:P1",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-26T08:50:20.004218+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "CONTRADICTED",
+    "rule": "BOTH:P1"
+   },
+   "as_expected": true
+  },
+  {
+   "label": "bond case C",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "bond",
+   "args": [
+    "3"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0xd25d90d7b2dc7ca89287950cd427f941680a9eac601edb5c1d57bd135b1b625e",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "bonded": "1000000000000000000",
+    "close": 1795683657,
+    "nc_from": 1795685457,
+    "ok": true,
+    "rc_end": 1795684857,
+    "rc_open": 1795684257
+   },
+   "created_at": "2026-11-26T08:50:57.549751+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "bonded": "1000000000000000000"
+   },
+   "as_expected": true
+  },
+  {
+   "label": "challenge C by challenger1",
+   "who": "challenger1",
+   "from": "0x2dE9cF445E20DeEb411C21b04dc833500eAb8AD6",
+   "fn": "challenge",
+   "args": [
+    "3"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0xdf6063c20ef87c3977f968a5e6357589885754f8c19c26fc0239164a445af36f",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "challenger": 1,
+    "ok": true,
+    "recheck_from": 1795684257
+   },
+   "created_at": "2026-11-26T08:51:05.760264+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "challenger": 1
+   },
+   "as_expected": true
+  },
+  {
+   "label": "case D check",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/nudgecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/nudgecoin/block-1.html",
+    "Nudgecoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0xeeb48952364a7b147a93ad85ef2bf638be9369933a817b44b12fb9fb21b3859c",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "4",
+    "ok": true,
+    "rule": "BOTH:P1",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-26T08:52:20.200966+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "CONTRADICTED",
+    "rule": "BOTH:P1"
+   },
+   "as_expected": true
+  },
+  {
+   "label": "bond case D",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "bond",
+   "args": [
+    "4"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0xb0c89cc52ae37213cd309bae447110707cb759ebd3eaddfd64b0bf2c88fd1410",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "error": "a BOTH:P1 verdict can be bonded only when both pages also show the block's ordinary reward (not zero) on a line of its own",
+    "ok": false,
+    "refunded": "1000000000000000000"
+   },
+   "created_at": "2026-11-26T08:52:52.180676+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "bonded": "1000000000000000000"
+   },
+   "as_expected": false
+  },
+  {
+   "label": "challenge D by challenger2",
+   "who": "challenger2",
+   "from": "0x3E1f7Ecc1f8Ec8a301F5bc73D58F017224BF10C9",
+   "fn": "challenge",
+   "args": [
+    "4"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0x6829cf5e2d8380da5db4bc05ba7bdf16f9283a0bb011f68d055206167bf43dd3",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "error": "this check has no open bond",
+    "ok": false,
+    "refunded": "1000000000000000000"
+   },
+   "created_at": "2026-11-26T08:53:00.431437+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "challenger": 1
+   },
+   "as_expected": false
+  }
+ ],
+ "checks": [],
+ "page_changes": [
+  {
+   "coin": "wobblecoin",
+   "commits": {
+    "launch-claim-checker": "122f101",
+    "demo-explorer": "2526d27"
+   },
+   "live": {
+    "a": true,
+    "b": true
+   },
+   "at": 1795683138
+  },
+  {
+   "coin": "nudgecoin",
+   "commits": {
+    "launch-claim-checker": null,
+    "demo-explorer": "71b4540"
+   },
+   "live": {
+    "a": null,
+    "b": true
+   },
+   "at": 1795683220
+  }
+ ],
+ "cases": {
+  "A": {
+   "id": "1"
+  },
+  "B": {
+   "id": "2"
+  },
+  "C": {
+   "id": "3"
+  },
+  "D": {
+   "id": "4"
+  }
+ },
+ "deploy": {
+  "tx": "0x68a46817aa5ead9ad00fe2cbf98dbd612692efa8a0144384ec1ee2fb8fef73fa",
+  "address": "0x1b58E337089C22d77E6e0Fe4B531F58a259F8dD1",
+  "status": "ACCEPTED",
+  "result": "MAJORITY_AGREE",
+  "execution": "SUCCESS",
+  "created_at": "2026-11-26T08:47:38.465129+00:00",
+  "rotations": 0,
+  "votes": {
+   "agree": 4,
+   "of": 5
+  }
+ },
+ "address": "0x1b58E337089C22d77E6e0Fe4B531F58a259F8dD1"
+}

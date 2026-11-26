@@ -9,6 +9,8 @@ Contract [`contracts/launch_claim_checker_v2.py`](../../contracts/launch_claim_c
 | 2b | The first build: every claim in the write-up, the article, the video and the page, against the code, the records and the chain | ready with changes, 2 must-fix |
 | 3a | The second build: contract, money, tests, tools and records | not ready, 1 blocker |
 | 3b | The second build: every figure, link and claim in the package, against the code, the records and the chain | ready with changes, 11 must-fix |
+| 4a | The third build: contract, money, tests, Bradbury Phase 3 port, tools and records | ready with changes, 6 must-fix |
+| 4b | The third build: every figure, link and claim in the package, against the code, the records and the chain | ready with changes, 8 must-fix |
 
 ## 1. The design, first version (23 November 2026)
 
@@ -74,4 +76,31 @@ Eleven text corrections: the README named the stopped Bradbury deployment as the
 
 Confirmed correct by the reviewer: all 46 transaction links resolved to the right case, method and network, and all were read on chain; every figure, payout and balance; the test, mutant, line and byte counts; the timing of every page correction; the live explorer pages equal the repositories; the page loads with no errors on both networks; every number in the video; nothing factually wrong in the X post or the YouTube text.
 
-After both reports the contract was fixed (commit 8b9496b), deployed again on Studio and Bradbury, and every live run was made again.
+After both reports the contract was fixed (commit 8b9496b), deployed again on Studio and on Bradbury (by then Testnet Bradbury Phase 3), and every live run except the two real-explorer checks was made again.
+
+## 4. The third build (26 November 2026)
+
+Two more reviewer sessions, run side by side on the third build (commit c91f300, with the Bradbury Phase 3 port), neither of which had seen the work: one on the contract, money, tests, the Phase 3 port, the run tools, verifiers and records (4a), one on every figure, link and claim of the package (4b). Both re-ran the verifiers against the chain (0 mismatches) and confirmed every review-3 finding fixed. Recorded here by the builder from the reviewers' reports; the reviewers' probe tests became [`tests/direct/test_checker_v2_review4.py`](../../tests/direct/test_checker_v2_review4.py), each asserting the fixed behaviour.
+
+### 4a. Contract, money, tests, tools: ready with changes
+
+| # | Finding in the third build | What the final contract and tools do |
+|---|---|---|
+| Must-fix | A `BOTH:P1` verdict on a block whose pages show no ordinary reward, or a reward of 0 (usual for a chain's first block), could be bonded but never overturned: P2, the opposite reading, needs a non-zero reward on a line of the page, so a corrected page reads as nothing and the bond ends not confirmed. A right challenger only got its deposit back. | A `BOTH:P1` verdict can be bonded only when both pages also show the block's ordinary reward, not zero, on a line of the page. The model is asked for the reward whatever the page shows; each validator checks the leader's reward line on its own copy. |
+| Must-fix | The edge of the review-3 fix was untested: allowing block 2 still passed every test. | A block-2 test and that mutant. |
+| Must-fix | The `milestone-two-explorers` branch on GitHub had stopped at a commit from before a rebase: the page tool's pushes to it were refused and ignored. | The page tool pushes `main` only; the branch is brought up to date once, at submission. |
+| Must-fix | The page tool committed whatever was staged and pushed every local commit: the swervecoin correction commit also deleted four old video files. | It commits only the corrected pages and refuses to run with local commits not on GitHub. |
+| Must-fix | The stopped Phase 3 record's note gave a wrong time, a wrong account of the commits on GitHub, and left out 0.4 GEN credited back. | Corrected in [`examples/live/v2-third-build/README.md`](../../examples/live/v2-third-build/README.md). |
+| Must-fix | MILESTONE-2 named the Phase 2 helper folder for the Phase 3 verifier. | Corrected. |
+
+Also done: the run tools send a re-check again when it agreed but decided nothing, and the Studio run, like the Bradbury one, never re-checks before the corrected pages are live; the verifiers accept such a re-check only as a note when the same call was sent again and decided; the Bradbury verifier ties a note to the value the failed check wanted; the Studio verifier compares arguments when it looks for a call sent again; the contract's note on time names the transaction's own timestamp for the re-check; the mutation notes say that the per-page block test in `_outcome` is defensive. Stated in the README rather than changed: coin names made only of field words are refused; an explorer down for the whole re-check window ends a bond not confirmed, which is cheap to cause on the short live windows.
+
+Confirmed correct by the reviewer: every review-3 finding fixed; 151 tests on GenVM v0.2, v0.6.0-rc10 and v0.6.0-rc17 and 128 of 128 mutants; every dropped mutant truly equivalent; both Bradbury builds byte for byte what the packer makes, and the Phase 3 header and runner those of GenLayer's own Phase 3 contracts; locked + credited + burned equals the balance on all four live contracts; the committed records equal the raw run files apart from labelled additions; every page correction after its bond and live before its re-check.
+
+### 4b. The package: ready with changes
+
+Eight corrections: the milestone branch showed the old build (see 4a); the Phase 3 withdrawals were finalized about 30 minutes after they were sent, not 40; the verifier's setup folder (see 4a); the README named only Studio's balance delay, not Bradbury's; the stopped record's note (see 4a); the video's overturn scene showed Flipcoin, a coin from the superseded first build; the page and the article left out that a definite reading of another block or amount ends a bond not confirmed at once; and the review counts needed this round. Smaller suggestions taken: which check failed on Bradbury, the votes on Studio, how the Studio run stopped, which earlier checks the real-explorer rules still match, the Bradbury fee note, page details (the Bond button for blocks above 1, the rules table, the W1 description, the network tooltip) and plainer article wording.
+
+Confirmed correct by the reviewer: all 51 transaction links, every one read on chain; every figure, payout and balance, and the state of all four contracts; the test, line and byte counts; the timing of every page correction; the page loads with no errors on both networks; every narration line of the video; nothing factually wrong in the X post or the YouTube text.
+
+After both reports the contract was fixed (commit d7535d5) and deployed again. The first Studio run of that build refused its first bond: page A's reward was not kept, because the model copied "50" from one line and the table row, which prints "50.00000000". The contract now takes the same value printed in another form on the copied line, for this reward and for P2 (commit 56abe9e); a probe on Studio kept the reward on both pages, and the build was deployed again. Every live run except the two real-explorer checks was then made again on that build (commit cb4261e), on Studio and on Bradbury Phase 3; the stopped runs are kept in [`examples/live/v2-review4-stopped/`](../../examples/live/v2-review4-stopped/).

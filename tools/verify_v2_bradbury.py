@@ -4,8 +4,8 @@
     cd tools/bradbury3 && npm ci && cd ../..      (records of Phase 3; tools/bradbury for Phase 2 records)
     python tools/verify_v2_bradbury.py [examples/live/v2-bradbury.json]
 
-1. bradbury/build/launch_claim_checker_v2.py is what tools/port_bradbury.py --pack
-   makes from contracts/launch_claim_checker_v2.py today.
+1. The record's build (bradbury/build-phase3/ for a Phase 3 record, bradbury/build/ for Phase 2) is what
+   tools/port_bradbury.py --pack (with --phase3 for Phase 3) makes from contracts/launch_claim_checker_v2.py today.
 2. The code carried by the recorded deployment transaction is that build,
    byte for byte, and it made the recorded contract.
 3. Every recorded transaction exists on Bradbury, went to the recorded
@@ -199,7 +199,13 @@ def main() -> int:
             bad.append(f"step {s['n']}: sender on chain {raw.get('sender')}, recorded {s['from']}")
         if str(raw.get("recipient", "")).lower() != addr.lower():
             bad.append(f"step {s['n']}: sent to {raw.get('recipient')}, not to the recorded contract")
-        if s.get("as_expected") is not True:
+        refused_as_expected = (s["expected"] == "refused with an error" and result == "MAJORITY_AGREE"
+                               and raw.get("txExecutionResultName") == "FINISHED_WITH_ERROR")
+        if s.get("as_expected") is not True and refused_as_expected and s["method"] == "recheck":
+            # the chain shows the refusal the step expected; the run tool of 26 Nov marked such a re-check as one that
+            # decided nothing (fixed in tools/live_v2_bradbury.py: the rule applies only to a re-check expected to go through)
+            print(f"  note: step {s['n']} ({s['label']}): refused as expected on chain (agreed, finished with an error); the run marked it otherwise")
+        elif s.get("as_expected") is not True:
             if s["result"] != "MAJORITY_AGREE" and (raw.get("lifecycle") or {}).get("outcome") == "undetermined" and repeated(s):
                 # no majority, so nothing was stored or decided; the record shows the same call sent again and agreed
                 print(f"  note: step {s['n']} ({s['label']}): no majority ({s['result']}), sent again and agreed later")

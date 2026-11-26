@@ -36,8 +36,8 @@ LINES = {
     "verdict": "Both show two million coins paid to the founders in block one: contradicted. If they show different things, the answer is honest: the explorers disagree.",
     "bond": "Now put money behind it. The requester bonds the verdict. Anyone who thinks it is wrong can challenge it, with the same amount.",
     "outcomes": "Then the validators read both explorers again. The same facts: upheld, and the requester takes the deposits. The opposite: overturned. Half the bond is burned, and the challengers share the rest. Anything else: everyone gets their money back.",
-    "flip": "We tested it live. Both explorers corrected Flip coin's block one. The re-check reversed the verdict, and the challenger was paid.",
-    "proof": "A hundred and fifty one tests. A hundred and twenty eight deliberate breaks, every one caught. Three rounds of independent AI review. Then live on Gen Layer Studio and the Bradbury test net.",
+    "flip": "We tested it live. Both explorers corrected Swivel coin's block one. The re-check reversed the verdict, and the challenger was paid.",
+    "proof": "A hundred and eighty three tests. A hundred and forty six deliberate breaks, every one caught. Every build reviewed by independent AI sessions. Then live on Gen Layer Studio and the Bradbury test net.",
     "end": "Try it free, at checker dot brilliant nodes dot com.",
 }
 ORDER = list(LINES)
@@ -50,10 +50,10 @@ def shots():
     pages = {
         "exa": (ROOT / "web/public/v2/examplecoin-block-1.html", "td:has-text('Founders allocation')"),
         "exb": (DEMO / "examplecoin/block-1.html", "li:has-text('founders allocation')"),
-        "fla0": (RAW / "v2/flipcoin-block-1.html", "td:has-text('Founders allocation')"),
-        "flb0": (RAW / "demo/flipcoin/block-1.html", "li:has-text('founders allocation')"),
-        "fla1": (ROOT / "web/public/v2/flipcoin-block-1.html", "em:has-text('Correction')"),
-        "flb1": (DEMO / "flipcoin/block-1.html", "p.fix"),
+        "fla0": (RAW / "v2/swivelcoin-block-1.html", "td:has-text('Founders allocation')"),
+        "flb0": (RAW / "demo/swivelcoin/block-1.html", "li:has-text('founders allocation')"),
+        "fla1": (ROOT / "web/public/v2/swivelcoin-block-1.html", "em:has-text('Correction')"),
+        "flb1": (DEMO / "swivelcoin/block-1.html", "p.fix"),
     }
     boxes = {}
     with sync_playwright() as p:
@@ -323,8 +323,8 @@ def scenes():
                        hlbox(bb0, W, .9) + f'<img class="fadein" src="{img[a1]}" style="position:absolute;left:0;top:0;width:100%;{d(t)}">' + hlbox(box[a1], W, t + .5))
     S["flip"] = page(dur, f"""
 <div class="h in" style="{d(.1)}">Tested live: <span class="amber">the explorers change</span></div>
-{flipb(90, 'fla0', 'fla1', 'checker.brilliantnodes.com/v2/flipcoin…', box['fla0'], 2.6)}
-{flipb(1190, 'flb0', 'flb1', 'brilliantnodes.github.io/…/flipcoin…', box['flb0'], 3.0)}
+{flipb(90, 'fla0', 'fla1', 'checker.brilliantnodes.com/v2/swivelcoin…', box['fla0'], 2.6)}
+{flipb(1190, 'flb0', 'flb1', 'brilliantnodes.github.io/…/swivelcoin…', box['flb0'], 3.0)}
 <div style="position:absolute;left:760px;top:380px;width:400px;height:150px;perspective:900px">
   <div class="flipcard" style="{d(5.0)}">
     <div class="face"><span class="pill r" style="font-size:36px">CONTRADICTED</span></div>
@@ -358,7 +358,7 @@ def scenes():
 .tiles{position:absolute;left:150px;right:150px;top:640px;display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
 .tile{background:rgba(14,28,58,.8);border:2px solid rgba(79,224,166,.35);border-radius:18px;padding:20px 22px;font-size:25px;font-weight:700;display:flex;gap:14px;align-items:center}
 .tile b{color:#06301f;background:#4fe0a6;border-radius:50%;width:38px;height:38px;flex:none;display:flex;align-items:center;justify-content:center;font-size:22px}""",
-        js="""const C=[[1,.3,151],[2,1.0,128],[3,2.6,47],[4,3.0,44]];window.tick=t=>{for(const [i,s,v] of C){const p=Math.max(0,Math.min(1,(t-s-.2)/1.2));document.getElementById('c'+i).textContent=Math.round(v*(1-Math.pow(1-p,3)));}if(t>=2.4)document.getElementById('c2').textContent='128/128';};""")
+        js="""const C=[[1,.3,183],[2,1.0,146],[3,2.6,45],[4,3.0,44]];window.tick=t=>{for(const [i,s,v] of C){const p=Math.max(0,Math.min(1,(t-s-.2)/1.2));document.getElementById('c'+i).textContent=Math.round(v*(1-Math.pow(1-p,3)));}if(t>=2.4)document.getElementById('c2').textContent='146/146';};""")
 
     # 9. end
     dur = durs["end"]
