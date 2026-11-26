@@ -166,3 +166,50 @@ def test_the_reward_is_asked_whatever_the_page_shows(env, mod):
     prompt = mod._prompt("NO_FOUNDER_REWARD", "Examplecoin", "x")
     assert '"reward_amount": the ordinary block reward' in prompt and 'if "no", the ordinary' not in prompt
     assert "reward_amount" not in mod._prompt("FAIR_LAUNCH", "Examplecoin", "x")
+
+
+# ---- the reward as models copy it (seen on Studio, 26 Nov 2026: the bond on Examplecoin was refused)
+
+REAL_A = """Examplescan: Examplecoin (EXM) block 1
+Height: 1 (the first block after genesis). Transactions: 1.
+Coinbase transaction outputs
+Output Amount Recipient
+0 50.00000000 EXM Miner reward to exm1qminer000000000000000000000001
+1 2,000,000.00000000 EXM Founders allocation to exm1qfounders0000000000000000000001
+Ordinary block reward: 50 EXM. Extra output in this block: 2,000,000.00000000 EXM to the founders allocation address.
+"""
+ROW = "0 50.00000000 EXM Miner reward to exm1qminer000000000000000000000001"
+TAIL = "Ordinary block reward: 50 EXM. Extra output in this block: 2,000,000.00000000 EXM to the founders allocation address."
+REAL_ALLOC = "1 2,000,000.00000000 EXM Founders allocation to exm1qfounders0000000000000000000001"
+
+
+@pytest.mark.parametrize("amount,line,printed", [
+    ("50", ROW, "50.00000000"), ("50.00000000", TAIL, "50"), ("50", TAIL, "50"), ("50.00000000", ROW, "50.00000000"),
+])
+def test_the_reward_copied_from_one_line_and_printed_otherwise_on_another_is_kept(env, mod, amount, line, printed):
+    a = J(p1a(allocation_amount="2,000,000.00000000", evidence_line=REAL_ALLOC, reward_amount=amount, reward_line=line))
+    found = mod._p1(a, L(mod, REAL_A))
+    assert found["reward_text"] == printed and found["reward_quote"] == line
+    # and the leader's form of it stands on every validator's copy
+    assert mod._same_page(found, found, L(mod, REAL_A)) is True
+    assert mod._check_page(found, "NO_FOUNDER_REWARD") == found
+
+
+def test_another_value_on_the_line_is_not_the_reward(env, mod):
+    a = J(p1a(allocation_amount="2,000,000.00000000", evidence_line=REAL_ALLOC, reward_amount="25", reward_line=TAIL))
+    assert "reward_text" not in mod._p1(a, L(mod, REAL_A))
+
+
+def test_a_number_on_a_line_that_is_not_on_the_page_is_not_the_reward(env, mod):
+    a = J(p1a(allocation_amount="2,000,000.00000000", evidence_line=REAL_ALLOC, reward_amount="50",
+              reward_line="Ordinary block reward: 50.00000000 EXM paid to the miner of this block"))
+    assert "reward_text" not in mod._p1(a, L(mod, REAL_A))
+
+
+@pytest.mark.parametrize("amount,line", [("50", ROW), ("50.00000000", TAIL)])
+def test_p2_takes_the_reward_printed_otherwise_too(env, mod, amount, line):
+    page = REAL_A.replace(REAL_ALLOC + "\n", "").replace(" Extra output in this block: 2,000,000.00000000 EXM to the founders allocation address.", " No other output in this block.")
+    line = line.replace(" Extra output in this block: 2,000,000.00000000 EXM to the founders allocation address.", " No other output in this block.")
+    a = J(p2a(reward_amount=amount, reward_line=line))
+    assert mod._p2(a, L(mod, page)) == {"cls": "SUPPORTS", "rule": "P2", "height": 1}
+    assert mod._p2(J(p2a(reward_amount="51", reward_line=line)), L(mod, page)) is None

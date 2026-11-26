@@ -539,16 +539,32 @@ def _p1(ans: dict, lines: list):
     return {**found, **_reward(ans, lines)}
 
 
+def _printed_as(line, text, lines: list):
+    """The block reward as printed on the copied line: the copied amount itself, or else the one number on that line
+    with the same value (models copy '50' from one line and '50.00000000' from another). The line must stand on this
+    validator's own copy of the page with that number on it (_quote_ok). None when the reward is not shown."""
+    want = _parse_amount(text)
+    if want is None or not isinstance(line, str):
+        return None
+    if _quote_ok(line, text, lines):
+        return text.strip()
+    for tok in _clean(line).split():
+        tok = tok.strip("(),.;:")
+        if tok and _parse_amount(tok) == want and _quote_ok(line, tok, lines):
+            return tok
+    return None
+
+
 def _reward(ans: dict, lines: list) -> dict:
     """The block's ordinary reward as a P1 page also shows it: a non-zero amount on a line of the page. Only a BOTH:P1
     verdict whose two pages both show it can be bonded: the opposite reading, P2, needs that reward, so without it a
     correction could never read as P2 and the bond could never be overturned. {} when the page does not show it."""
-    text = _amount_text(ans.get("reward_amount"))
-    if _parse_amount(text) is None or not _quote_ok(ans.get("reward_line"), text, lines):
+    text = _printed_as(ans.get("reward_line"), _amount_text(ans.get("reward_amount")), lines)
+    if text is None:
         return {}
     if _fold(ans.get("reward_line")) == _fold(ans.get("evidence_line")) and _parse_amount(text) == _parse_amount(_amount_text(ans.get("allocation_amount"))):
         return {}  # the allocation itself, copied as the reward
-    return {"reward_text": text.strip(), "reward_quote": " ".join(_clean(ans.get("reward_line")).split())}
+    return {"reward_text": text, "reward_quote": " ".join(_clean(ans.get("reward_line")).split())}
 
 
 def _p2(ans: dict, lines: list):
@@ -557,8 +573,7 @@ def _p2(ans: dict, lines: list):
         return None
     if str(ans.get("extra_allocation", "")).strip().lower() != "no":
         return None
-    text = _amount_text(ans.get("reward_amount"))
-    if _parse_amount(text) is None or not _quote_ok(ans.get("reward_line"), text, lines):
+    if _printed_as(ans.get("reward_line"), _amount_text(ans.get("reward_amount")), lines) is None:
         return None
     return {"cls": "SUPPORTS", "rule": "P2", "height": h}
 

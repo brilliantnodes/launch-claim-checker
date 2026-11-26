@@ -339,13 +339,25 @@ def _p1(ans: dict, lines: list):
  found = {'cls': 'CONTRADICTS', 'rule': 'P1', 'height': h, 'amount': amount, 'amount_text': text.strip(), 'quote': ' '.join(_clean(quote).split())}
  return {**found, **_reward(ans, lines)}
 
+def _printed_as(line, text, lines: list):
+ want = _parse_amount(text)
+ if want is None or not isinstance(line, str):
+  return None
+ if _quote_ok(line, text, lines):
+  return text.strip()
+ for tok in _clean(line).split():
+  tok = tok.strip('(),.;:')
+  if tok and _parse_amount(tok) == want and _quote_ok(line, tok, lines):
+   return tok
+ return None
+
 def _reward(ans: dict, lines: list) -> dict:
- text = _amount_text(ans.get('reward_amount'))
- if _parse_amount(text) is None or not _quote_ok(ans.get('reward_line'), text, lines):
+ text = _printed_as(ans.get('reward_line'), _amount_text(ans.get('reward_amount')), lines)
+ if text is None:
   return {}
  if _fold(ans.get('reward_line')) == _fold(ans.get('evidence_line')) and _parse_amount(text) == _parse_amount(_amount_text(ans.get('allocation_amount'))):
   return {}
- return {'reward_text': text.strip(), 'reward_quote': ' '.join(_clean(ans.get('reward_line')).split())}
+ return {'reward_text': text, 'reward_quote': ' '.join(_clean(ans.get('reward_line')).split())}
 
 def _p2(ans: dict, lines: list):
  h = _parse_count(ans.get('block_number'))
@@ -353,8 +365,7 @@ def _p2(ans: dict, lines: list):
   return None
  if str(ans.get('extra_allocation', '')).strip().lower() != 'no':
   return None
- text = _amount_text(ans.get('reward_amount'))
- if _parse_amount(text) is None or not _quote_ok(ans.get('reward_line'), text, lines):
+ if _printed_as(ans.get('reward_line'), _amount_text(ans.get('reward_amount')), lines) is None:
   return None
  return {'cls': 'SUPPORTS', 'rule': 'P2', 'height': h}
 
