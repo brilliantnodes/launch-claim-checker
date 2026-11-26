@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Mutation check for LaunchClaimCheckerV2: break the contract on purpose, one
 change at a time, and confirm that the v2 tests (tests/direct/test_checker_v2.py,
-tests/direct/test_checker_v2_review.py, tests/direct/test_checker_v2_review3.py and
-tests/direct/test_checker_v2_review4.py) catch every break.
+tests/direct/test_checker_v2_review.py, tests/direct/test_checker_v2_review3.py, tests/direct/test_checker_v2_review4.py
+and tests/direct/test_checker_v2_review5.py) catch every break.
 
     PYTHONPATH=. python tools/mutate_v2.py            # all mutants
     PYTHONPATH=. python tools/mutate_v2.py 12 40      # only mutants 12 and 40
@@ -43,12 +43,11 @@ Left out on purpose (changes that make no difference to what the contract does):
 - the bond's block test on one page instead of both: a BOTH:P1 or BOTH:P2
   verdict needs the same block on both pages (_combine), so one page's block is
   the other's;
-- the bond's P1 reward test on one page's block only is not left out; but the
-  per-page block test in _outcome ("overturn: page A's block only" below) is
-  defensive: a stored BOTH:P2 result has the same block on both pages
-  (_check_result re-runs _combine), so that mutant is caught only by a test
-  that hands _outcome a result that cannot occur, and in practice it is
-  equivalent;
+- (not dropped, but noted) the per-page block test in _outcome ("overturn:
+  page A's block only" below) is defensive: a stored BOTH:P2 result has the
+  same block on both pages (_check_result re-runs _combine), so that mutant is
+  caught only by a test that hands _outcome a result that cannot occur; in
+  practice it is equivalent;
 - a challenge on a decided bond: a decision comes after the challenge window,
   which refuses it first;
 - booleans as windows: True and False are below the 600-second floor.
@@ -212,19 +211,21 @@ MUTANTS = [
     ("bond: P1 without the reward", 'elif rec["result"]["rule"] == "BOTH:P1" and any("reward_text" not in rec["result"][p] for p in ("a", "b")):', 'elif False:'),
     ("bond: P1 reward on page A only", 'any("reward_text" not in rec["result"][p] for p in ("a", "b")):', 'any("reward_text" not in rec["result"][p] for p in ("a",)):'),
     ("P1 keeps no reward", 'return {**found, **_reward(ans, lines)}', 'return found'),
-    ("reward line not checked on the page", 'if _quote_ok(line, text, lines):\n            return text.strip(), line', 'if True:\n            return text.strip(), line'),
-    ("reward: the page's own reward line not looked for", 'for page_line in lines:\n        if "reward" in page_line:', 'for page_line in []:\n        if "reward" in page_line:'),
-    ("reward: any line of the page taken", 'for page_line in lines:\n        if "reward" in page_line:', 'for page_line in lines:\n        if True:'),
+    ("reward line not checked on the page", 'if _quote_ok(line, text, lines):\n        return text.strip(), line', 'if True:\n        return text.strip(), line'),
+    ("reward line need not say reward", 'if want is None or not isinstance(line, str) or "reward" not in _fold(line):', 'if want is None or not isinstance(line, str):'),
     ("reward: a coin name after the amount not left out", "if isinstance(text, str) and len(text.split()) == 2 and text.split()[1].isalpha():", "if False:"),
     ("reward: same value printed otherwise not taken", 'if tok and _parse_amount(tok) == want and _quote_ok(line, tok, lines):', 'if False:'),
     ("reward: another value on the line taken", 'if tok and _parse_amount(tok) == want and _quote_ok(line, tok, lines):', 'if tok and _parse_amount(tok) is not None and _quote_ok(line, tok, lines):'),
     ("reward: the other number not checked on the page", 'if tok and _parse_amount(tok) == want and _quote_ok(line, tok, lines):', 'if tok and _parse_amount(tok) == want:'),
-    ("allocation taken as the reward", 'if _fold(line) == _fold(ans.get("evidence_line")) and _parse_amount(text) == _parse_amount(_amount_text(ans.get("allocation_amount"))):', 'if False:'),
+    ("allocation's amount taken as the reward", 'if _parse_amount(text) == _parse_amount(_amount_text(ans.get("allocation_amount"))):\n        return {}', 'if False:\n        return {}'),
     ("passed-on reward not checked", 'if "reward_text" in p or "reward_quote" in p:', 'if False:'),
     ("passed-on reward of 0 allowed", 'if not isinstance(rt, str) or _parse_amount(rt) is None:', 'if not isinstance(rt, str):'),
     ("passed-on reward line not checked", 'if not isinstance(rq, str) or not QUOTE_MIN <= len(_fold(rq)) <= QUOTE_MAX or not _stands(_fold(rq), _fold(rt)):', 'if not isinstance(rq, str):'),
-    ("passed-on allocation as reward", 'if _fold(rq) == _fold(quote) and _parse_amount(rt) == amount:', 'if False:'),
-    ("leader's reward line not checked", 'reward_ok = "reward_text" not in lp or _quote_ok(lp["reward_quote"], lp["reward_text"], lines)', 'reward_ok = True'),
+    ("passed-on allocation's amount as reward", 'if _parse_amount(rt) == amount:', 'if False:'),
+    ("passed-on reward line need not say reward", 'if "reward" not in _fold(rq):', 'if False:'),
+    ("leader's reward line not checked", 'and _quote_ok(lp["reward_quote"], lp["reward_text"], lines))', 'and True)'),
+    ("leader's reward not found by the validator's own reading", 'reward_ok = "reward_text" not in lp or ("reward_text" in mp and _parse_amount(mp["reward_text"]) == _parse_amount(lp["reward_text"])', 'reward_ok = "reward_text" not in lp or (True'),
+    ("leader's reward of another value accepted", '("reward_text" in mp and _parse_amount(mp["reward_text"]) == _parse_amount(lp["reward_text"])', '("reward_text" in mp'),
     ("reward asked only on no", '"reward_amount": the ordinary block reward paid to this block', '"reward_amount": if "no", the ordinary block reward paid to this block'),
 ]
 
@@ -232,7 +233,7 @@ MUTANTS = [
 def run_one(job) -> tuple:
     i, name, path, env = job
     r = subprocess.run([sys.executable, "-m", "pytest", "tests/direct/test_checker_v2.py", "tests/direct/test_checker_v2_review.py",
-                        "tests/direct/test_checker_v2_review3.py", "tests/direct/test_checker_v2_review4.py", "-q", "-x", "-p", "no:cacheprovider"],
+                        "tests/direct/test_checker_v2_review3.py", "tests/direct/test_checker_v2_review4.py", "tests/direct/test_checker_v2_review5.py", "-q", "-x", "-p", "no:cacheprovider"],
                        cwd=ROOT, env={**env, "LCC2_CONTRACT": str(path)}, capture_output=True, text=True)
     return i, name, r.returncode != 0
 

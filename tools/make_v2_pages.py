@@ -50,12 +50,18 @@ COINS = {
     "Swivelcoin": ("SWL", "swl1q", "1,650,000.00000000", "1,650,000"),
     "Kinkcoin": ("KNK", "knk1q", "950,000.00000000", "950,000"),
     "Bobblecoin": ("BBL", "bbl1q", "2,750,000.00000000", "2,750,000"),
+    # the runs of the build after review 5: Studio Wigglecoin and Teetercoin, Bradbury Zigzagcoin and Careencoin
+    "Wigglecoin": ("WGL", "wgl1q", "1,350,000.00000000", "1,350,000"),
+    "Teetercoin": ("TTR", "ttr1q", "3,150,000.00000000", "3,150,000"),
+    "Zigzagcoin": ("ZGZ", "zgz1q", "1,050,000.00000000", "1,050,000"),
+    "Careencoin": ("CRN", "crn1q", "2,250,000.00000000", "2,250,000"),
 }
 CORRECTABLE = {"flipcoin": ("a", "b"), "driftcoin": ("b",), "turncoin": ("a", "b"), "veercoin": ("b",),
                "swaycoin": ("a", "b"), "tiltcoin": ("b",), "pivotcoin": ("a", "b"), "shiftcoin": ("b",),
                "swervecoin": ("a", "b"), "skewcoin": ("b",), "lurchcoin": ("a", "b"),
                "wobblecoin": ("a", "b"), "nudgecoin": ("b",), "twirlcoin": ("a", "b"), "joltcoin": ("b",),
-               "swivelcoin": ("a", "b"), "kinkcoin": ("a", "b"), "bobblecoin": ("b",)}
+               "swivelcoin": ("a", "b"), "kinkcoin": ("a", "b"), "bobblecoin": ("b",),
+               "wigglecoin": ("a", "b"), "teetercoin": ("b",), "zigzagcoin": ("a", "b"), "careencoin": ("b",)}
 
 
 def page_a(coin, ticker, pre, alloc, corrected=False):

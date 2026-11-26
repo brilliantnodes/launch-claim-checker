@@ -350,27 +350,19 @@ def _printed(line, text, lines: list):
  if isinstance(text, str) and len(text.split()) == 2 and text.split()[1].isalpha():
   text = text.split()[0]
  want = _parse_amount(text)
- if want is None:
+ if want is None or not isinstance(line, str) or 'reward' not in _fold(line):
   return None
- if isinstance(line, str):
-  if _quote_ok(line, text, lines):
-   return (text.strip(), line)
-  tok = _same_value_on(line, want, lines)
-  if tok:
-   return (tok, line)
- for page_line in lines:
-  if 'reward' in page_line:
-   tok = _same_value_on(page_line, want, lines)
-   if tok:
-    return (tok, page_line)
- return None
+ if _quote_ok(line, text, lines):
+  return (text.strip(), line)
+ tok = _same_value_on(line, want, lines)
+ return (tok, line) if tok else None
 
 def _reward(ans: dict, lines: list) -> dict:
  found = _printed(ans.get('reward_line'), _amount_text(ans.get('reward_amount')), lines)
  if found is None:
   return {}
  text, line = found
- if _fold(line) == _fold(ans.get('evidence_line')) and _parse_amount(text) == _parse_amount(_amount_text(ans.get('allocation_amount'))):
+ if _parse_amount(text) == _parse_amount(_amount_text(ans.get('allocation_amount'))):
   return {}
  return {'reward_text': text, 'reward_quote': ' '.join(_clean(line).split())}
 
@@ -487,8 +479,10 @@ def _check_page(p, claim_type: str) -> dict:
     raise ValueError('bad reward')
    if not isinstance(rq, str) or not QUOTE_MIN <= len(_fold(rq)) <= QUOTE_MAX or (not _stands(_fold(rq), _fold(rt))):
     raise ValueError('bad reward line')
-   if _fold(rq) == _fold(quote) and _parse_amount(rt) == amount:
-    raise ValueError('the reward is the allocation itself')
+   if 'reward' not in _fold(rq):
+    raise ValueError('the reward line does not say reward')
+   if _parse_amount(rt) == amount:
+    raise ValueError("the reward is the allocation's amount")
    out.update(reward_text=rt.strip(), reward_quote=' '.join(_clean(rq).split()))
   return out
  if rule == 'P2':
@@ -549,7 +543,7 @@ def _same_page(lp: dict, mp: dict, lines: list) -> bool:
  if lp['cls'] != mp['cls'] or lp.get('rule') != mp.get('rule'):
   return False
  if lp.get('rule') == 'P1':
-  reward_ok = 'reward_text' not in lp or _quote_ok(lp['reward_quote'], lp['reward_text'], lines)
+  reward_ok = 'reward_text' not in lp or ('reward_text' in mp and _parse_amount(mp['reward_text']) == _parse_amount(lp['reward_text']) and _quote_ok(lp['reward_quote'], lp['reward_text'], lines))
   return lp['height'] == mp['height'] and lp['amount'] == mp['amount'] and _quote_ok(lp['quote'], lp['amount_text'], lines) and reward_ok
  if lp.get('rule') == 'P2':
   return lp['height'] == mp['height']
@@ -788,7 +782,7 @@ class LaunchClaimCheckerV2(gl.contract.Contract):
   elif rec['claim_type'] not in BONDABLE_CLAIMS or rec['result']['rule'] not in OPPOSITE or any((int(rec['result'][p].get('height', 2)) > 1 for p in ('a', 'b'))):
    problem = 'only a BOTH:P1 or BOTH:P2 verdict on block 0 or 1, on NO_PREMINE or NO_FOUNDER_REWARD, can be bonded'
   elif rec['result']['rule'] == 'BOTH:P1' and any(('reward_text' not in rec['result'][p] for p in ('a', 'b'))):
-   problem = "a BOTH:P1 verdict can be bonded only when both pages also show the block's ordinary reward (not zero) on a line of its own"
+   problem = "a BOTH:P1 verdict can be bonded only when both pages also show the block's ordinary reward (not zero) on a line that says reward"
   elif bd['state'] != 'NONE':
    problem = 'this check is already bonded'
   elif value < MIN_BOND:
@@ -1000,4 +994,4 @@ class LaunchClaimCheckerV2(gl.contract.Contract):
 
  @gl.public.view
  def get_rules(self) -> dict:
-  return {'claim_types': list(CLAIM_TYPES), 'windows_seconds': self._w(), 'window_floor_seconds': WIN_FLOOR, 'min_bond_wei': _s(MIN_BOND), 'bondable': ['BOTH:P1', 'BOTH:P2'], 'bondable_claims': list(BONDABLE_CLAIMS), 'overturned': 'half the bond (rounded down) is burned; each challenger collects its deposit and an equal share of the rest', 'upheld': 'the same rule again; for P1 the same block and amount, for P2 the same block', 'max_height': MAX_HEIGHT, 'min_blocks': MIN_BLOCKS, 'm1': '2 x top > total', 'm2': '100 x largest <= 33 x total', 'max_rows': MAX_ROWS, 'anchor_lines': ANCHOR_LINES, 'page_chars': PAGE_CHARS, 'stop_words': list(STOP_WORDS), 'generic_words': list(GENERIC_WORDS), 'second_level': list(SECOND_LEVEL), 'catch_all_words': list(AGGREGATE_WORDS), 'fair_launch': 'contradicted by P1 or M1; never supported'}
+  return {'claim_types': list(CLAIM_TYPES), 'windows_seconds': self._w(), 'window_floor_seconds': WIN_FLOOR, 'min_bond_wei': _s(MIN_BOND), 'bondable': ['BOTH:P1', 'BOTH:P2'], 'bondable_claims': list(BONDABLE_CLAIMS), 'bondable_blocks': "0 or 1; a BOTH:P1 verdict only when both pages also show the block's ordinary reward, not zero and not the allocation's amount, found by each validator's own reading", 'overturned': 'half the bond (rounded down) is burned; each challenger collects its deposit and an equal share of the rest', 'upheld': 'the same rule again; for P1 the same block and amount, for P2 the same block', 'max_height': MAX_HEIGHT, 'min_blocks': MIN_BLOCKS, 'm1': '2 x top > total', 'm2': '100 x largest <= 33 x total', 'max_rows': MAX_ROWS, 'anchor_lines': ANCHOR_LINES, 'page_chars': PAGE_CHARS, 'stop_words': list(STOP_WORDS), 'generic_words': list(GENERIC_WORDS), 'second_level': list(SECOND_LEVEL), 'catch_all_words': list(AGGREGATE_WORDS), 'fair_launch': 'contradicted by P1 or M1; never supported'}

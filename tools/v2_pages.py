@@ -59,7 +59,7 @@ def correct(coin: str, run: str, demo: Path, checker: Path = ROOT, wait=None) ->
         msg = f"Fictional explorer data correction for {coin} ({run} of Launch Claim Checker v2){SIGN}"
         commits = {}
         for repo, paths, branches, side in ((checker, ["web/public/v2", "docs/v2"], ["main"], "a"),
-                                            (demo, ["."], ["main"], "b")):
+                                            (demo, [coin], ["main"], "b")):  # the coin's own pages only
             if side not in CORRECTABLE[coin]:
                 commits[repo.name] = None  # this explorer does not change for this coin
                 continue
