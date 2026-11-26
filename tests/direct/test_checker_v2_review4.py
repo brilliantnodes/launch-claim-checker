@@ -70,8 +70,18 @@ def test_p1_verdict_with_the_reward_on_one_page_only_cannot_be_bonded(env):
     assert "ordinary reward" in _refused(env)
 
 
-def test_a_reward_line_that_is_not_on_the_page_is_not_recorded(env):
+def test_a_reward_line_that_is_not_on_the_page_is_replaced_by_the_pages_own(env):
+    """The model's line is not on the page; the page's own line that says "reward" and prints that value is kept."""
     out = check(env, aa=p1a(reward_line="Miner reward 50.00000000 EXM to exm1qsomeoneelse"))
+    assert out["rule"] == "BOTH:P1"
+    a = env.c.get_check("1")["result"]["a"]
+    assert a["reward_text"] == "50.00000000" and a["reward_quote"] == A_REWARD.casefold()
+    assert bond(env)["ok"] is True
+    balanced(env)
+
+
+def test_a_reward_that_no_line_of_the_page_prints_is_not_recorded(env):
+    out = check(env, aa=p1a(reward_amount="75", reward_line="Miner reward 75 EXM to exm1qsomeoneelse"))
     assert out["rule"] == "BOTH:P1"
     assert "reward_text" not in env.c.get_check("1")["result"]["a"]
     assert "ordinary reward" in _refused(env)
@@ -200,10 +210,36 @@ def test_another_value_on_the_line_is_not_the_reward(env, mod):
     assert "reward_text" not in mod._p1(a, L(mod, REAL_A))
 
 
-def test_a_number_on_a_line_that_is_not_on_the_page_is_not_the_reward(env, mod):
+def test_a_line_that_is_not_on_the_page_gives_way_to_the_pages_reward_line(env, mod):
     a = J(p1a(allocation_amount="2,000,000.00000000", evidence_line=REAL_ALLOC, reward_amount="50",
               reward_line="Ordinary block reward: 50.00000000 EXM paid to the miner of this block"))
+    found = mod._p1(a, L(mod, REAL_A))
+    assert found["reward_text"] == "50.00000000" and found["reward_quote"] == ROW.casefold()  # the first such line
+
+
+def test_only_a_line_that_says_reward_is_looked_for(env, mod):
+    page = REAL_A.replace("Miner reward", "Miner payout").replace("Ordinary block reward", "Ordinary block payout")
+    a = J(p1a(allocation_amount="2,000,000.00000000", evidence_line=REAL_ALLOC, reward_amount="50", reward_line="nothing like it on the page"))
+    assert "reward_text" not in mod._p1(a, L(mod, page))
+    # the model's own line still counts when it is on the page
+    a = J(p1a(allocation_amount="2,000,000.00000000", evidence_line=REAL_ALLOC, reward_amount="50", reward_line=ROW.replace("Miner reward", "Miner payout")))
+    assert mod._p1(a, L(mod, page))["reward_text"] == "50.00000000"
+
+
+@pytest.mark.parametrize("amount", ["50 EXM", "50.00000000 EXM"])
+def test_a_coin_name_after_the_reward_is_left_out(env, mod, amount):
+    a = J(p1a(allocation_amount="2,000,000.00000000", evidence_line=REAL_ALLOC, reward_amount=amount, reward_line=ROW))
+    assert mod._p1(a, L(mod, REAL_A))["reward_text"] == "50.00000000"
+    a = J(p1a(allocation_amount="2,000,000.00000000", evidence_line=REAL_ALLOC, reward_amount="50 EXM 2", reward_line=ROW))
     assert "reward_text" not in mod._p1(a, L(mod, REAL_A))
+
+
+def test_the_page_line_found_by_code_is_agreed_by_validators(env, mod):
+    a = J(p1a(allocation_amount="2,000,000.00000000", evidence_line=REAL_ALLOC, reward_amount="50", reward_line=""))
+    found = mod._p1(a, L(mod, REAL_A))
+    assert found["reward_quote"] == ROW.casefold() and found["reward_text"] == "50.00000000"
+    assert mod._same_page(found, found, L(mod, REAL_A)) is True
+    assert mod._check_page(found, "NO_FOUNDER_REWARD") == found
 
 
 @pytest.mark.parametrize("amount,line", [("50", ROW), ("50.00000000", TAIL)])

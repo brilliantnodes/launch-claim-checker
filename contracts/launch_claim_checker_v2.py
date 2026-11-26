@@ -539,15 +539,9 @@ def _p1(ans: dict, lines: list):
     return {**found, **_reward(ans, lines)}
 
 
-def _printed_as(line, text, lines: list):
-    """The block reward as printed on the copied line: the copied amount itself, or else the one number on that line
-    with the same value (models copy '50' from one line and '50.00000000' from another). The line must stand on this
-    validator's own copy of the page with that number on it (_quote_ok). None when the reward is not shown."""
-    want = _parse_amount(text)
-    if want is None or not isinstance(line, str):
-        return None
-    if _quote_ok(line, text, lines):
-        return text.strip()
+def _same_value_on(line: str, want: str, lines: list):
+    """The number on this line with the value `want` ('50' and '50.00000000' are one value), if the line stands on
+    this validator's own copy of the page with that number on it (_quote_ok)."""
     for tok in _clean(line).split():
         tok = tok.strip("(),.;:")
         if tok and _parse_amount(tok) == want and _quote_ok(line, tok, lines):
@@ -555,16 +549,42 @@ def _printed_as(line, text, lines: list):
     return None
 
 
+def _printed(line, text, lines: list):
+    """The block reward as the page prints it: (the number as printed, the line), or None when it is not shown.
+    The amount is the model's (a trailing coin name, as in '50 EXM', is left out); the line is the model's copy when
+    it stands on this validator's own copy of the page with that amount on it, in the copied form or in another form
+    of the same value (models copy '50' from one line and the table row that prints '50.00000000'). Otherwise the
+    first line of the page that says "reward" and prints that value."""
+    if isinstance(text, str) and len(text.split()) == 2 and text.split()[1].isalpha():
+        text = text.split()[0]
+    want = _parse_amount(text)
+    if want is None:
+        return None
+    if isinstance(line, str):
+        if _quote_ok(line, text, lines):
+            return text.strip(), line
+        tok = _same_value_on(line, want, lines)
+        if tok:
+            return tok, line
+    for page_line in lines:
+        if "reward" in page_line:
+            tok = _same_value_on(page_line, want, lines)
+            if tok:
+                return tok, page_line
+    return None
+
+
 def _reward(ans: dict, lines: list) -> dict:
     """The block's ordinary reward as a P1 page also shows it: a non-zero amount on a line of the page. Only a BOTH:P1
     verdict whose two pages both show it can be bonded: the opposite reading, P2, needs that reward, so without it a
     correction could never read as P2 and the bond could never be overturned. {} when the page does not show it."""
-    text = _printed_as(ans.get("reward_line"), _amount_text(ans.get("reward_amount")), lines)
-    if text is None:
+    found = _printed(ans.get("reward_line"), _amount_text(ans.get("reward_amount")), lines)
+    if found is None:
         return {}
-    if _fold(ans.get("reward_line")) == _fold(ans.get("evidence_line")) and _parse_amount(text) == _parse_amount(_amount_text(ans.get("allocation_amount"))):
+    text, line = found
+    if _fold(line) == _fold(ans.get("evidence_line")) and _parse_amount(text) == _parse_amount(_amount_text(ans.get("allocation_amount"))):
         return {}  # the allocation itself, copied as the reward
-    return {"reward_text": text, "reward_quote": " ".join(_clean(ans.get("reward_line")).split())}
+    return {"reward_text": text, "reward_quote": " ".join(_clean(line).split())}
 
 
 def _p2(ans: dict, lines: list):
@@ -573,7 +593,7 @@ def _p2(ans: dict, lines: list):
         return None
     if str(ans.get("extra_allocation", "")).strip().lower() != "no":
         return None
-    if _printed_as(ans.get("reward_line"), _amount_text(ans.get("reward_amount")), lines) is None:
+    if _printed(ans.get("reward_line"), _amount_text(ans.get("reward_amount")), lines) is None:
         return None
     return {"cls": "SUPPORTS", "rule": "P2", "height": h}
 
@@ -801,7 +821,7 @@ def _prompt(claim_type: str, coin: str, page: str) -> str:
         keys += ["block_number", "extra_allocation", "allocation_amount", "evidence_line"]
         if claim_type != "FAIR_LAUNCH":
             fields += [
-                '- "reward_amount": the ordinary block reward paid to this block\'s miner exactly as printed, digits and separators only; "" if the page does not print it.',
+                '- "reward_amount": the ordinary block reward paid to this block\'s miner exactly as printed on the line you copy as reward_line, digits and separators only, without the coin\'s name; "" if the page does not print it.',
                 '- "reward_line": the one whole line of the page that shows that ordinary reward, copied exactly, at most 200 characters; "" if the page does not print it.',
             ]
             keys += ["reward_amount", "reward_line"]

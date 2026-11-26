@@ -339,25 +339,40 @@ def _p1(ans: dict, lines: list):
  found = {'cls': 'CONTRADICTS', 'rule': 'P1', 'height': h, 'amount': amount, 'amount_text': text.strip(), 'quote': ' '.join(_clean(quote).split())}
  return {**found, **_reward(ans, lines)}
 
-def _printed_as(line, text, lines: list):
- want = _parse_amount(text)
- if want is None or not isinstance(line, str):
-  return None
- if _quote_ok(line, text, lines):
-  return text.strip()
+def _same_value_on(line: str, want: str, lines: list):
  for tok in _clean(line).split():
   tok = tok.strip('(),.;:')
   if tok and _parse_amount(tok) == want and _quote_ok(line, tok, lines):
    return tok
  return None
 
+def _printed(line, text, lines: list):
+ if isinstance(text, str) and len(text.split()) == 2 and text.split()[1].isalpha():
+  text = text.split()[0]
+ want = _parse_amount(text)
+ if want is None:
+  return None
+ if isinstance(line, str):
+  if _quote_ok(line, text, lines):
+   return (text.strip(), line)
+  tok = _same_value_on(line, want, lines)
+  if tok:
+   return (tok, line)
+ for page_line in lines:
+  if 'reward' in page_line:
+   tok = _same_value_on(page_line, want, lines)
+   if tok:
+    return (tok, page_line)
+ return None
+
 def _reward(ans: dict, lines: list) -> dict:
- text = _printed_as(ans.get('reward_line'), _amount_text(ans.get('reward_amount')), lines)
- if text is None:
+ found = _printed(ans.get('reward_line'), _amount_text(ans.get('reward_amount')), lines)
+ if found is None:
   return {}
- if _fold(ans.get('reward_line')) == _fold(ans.get('evidence_line')) and _parse_amount(text) == _parse_amount(_amount_text(ans.get('allocation_amount'))):
+ text, line = found
+ if _fold(line) == _fold(ans.get('evidence_line')) and _parse_amount(text) == _parse_amount(_amount_text(ans.get('allocation_amount'))):
   return {}
- return {'reward_text': text, 'reward_quote': ' '.join(_clean(ans.get('reward_line')).split())}
+ return {'reward_text': text, 'reward_quote': ' '.join(_clean(line).split())}
 
 def _p2(ans: dict, lines: list):
  h = _parse_count(ans.get('block_number'))
@@ -365,7 +380,7 @@ def _p2(ans: dict, lines: list):
   return None
  if str(ans.get('extra_allocation', '')).strip().lower() != 'no':
   return None
- if _printed_as(ans.get('reward_line'), _amount_text(ans.get('reward_amount')), lines) is None:
+ if _printed(ans.get('reward_line'), _amount_text(ans.get('reward_amount')), lines) is None:
   return None
  return {'cls': 'SUPPORTS', 'rule': 'P2', 'height': h}
 
@@ -558,7 +573,7 @@ def _prompt(claim_type: str, coin: str, page: str) -> str:
   fields += ['- "block_number": the number (height) of the one block this page shows, digits only, as printed; "" if the page does not show exactly one block.', '- "extra_allocation": "yes" if this block itself creates new coins that go to anyone in addition to the ordinary block reward paid to its miner (for example to founders, developers, a treasury or a premine); "no" if the page shows this block\'s outputs and the only newly created coins are the ordinary block reward; "not_shown" otherwise.', '- "allocation_amount": if "yes", that extra amount exactly as printed (the first one if several), digits and separators only, without the coin\'s name; otherwise "".', '- "evidence_line": if "yes", the one whole line of the page that shows that amount, copied exactly, at most 200 characters; otherwise "".']
   keys += ['block_number', 'extra_allocation', 'allocation_amount', 'evidence_line']
   if claim_type != 'FAIR_LAUNCH':
-   fields += ['- "reward_amount": the ordinary block reward paid to this block\'s miner exactly as printed, digits and separators only; "" if the page does not print it.', '- "reward_line": the one whole line of the page that shows that ordinary reward, copied exactly, at most 200 characters; "" if the page does not print it.']
+   fields += ['- "reward_amount": the ordinary block reward paid to this block\'s miner exactly as printed on the line you copy as reward_line, digits and separators only, without the coin\'s name; "" if the page does not print it.', '- "reward_line": the one whole line of the page that shows that ordinary reward, copied exactly, at most 200 characters; "" if the page does not print it.']
    keys += ['reward_amount', 'reward_line']
  if claim_type in ('DECENTRALIZED_MINING', 'FAIR_LAUNCH'):
   fields += ['- "top_miner_name": the name or address of the single miner or pool with the most blocks in the page\'s table of blocks per miner, exactly as printed; "" if there is no such table.', '- "top_miner_blocks": that miner\'s number of blocks as printed, digits only, as a string; "" if there is no such table. Never compute it from a percentage.', '- "blocks_inspected": the total number of blocks the table covers as printed, digits only, as a string; "" if not printed. Never add up rows yourself.']

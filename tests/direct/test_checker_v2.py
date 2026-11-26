@@ -337,7 +337,7 @@ def test_a_fabricated_line_or_amount_is_not_evidence(env):
     assert check(env, aa=p1a(evidence_line="Founders allocation 9,000,000.00000000 EXM to exm1qfounders01", allocation_amount="9,000,000.00000000"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"
     assert check(env, aa=p1a(block_number="7"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"  # block 7 is not printed
     assert check(env, aa=p1a(allocation_amount="2000000.125"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"
-    assert check(env, "P2", aa=p2a(reward_line="Miner reward 50.00000000 EXM to someone"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"
+    assert check(env, "P2", aa=p2a(reward_amount="75", reward_line="Miner reward 75 EXM to someone"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"
     b2 = A_P2.replace("Block 1", "Block 2").replace("Height: 1", "Height: 2")
     assert check(env, "P2", pa=b2, aa=p2a(block_number="2"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"  # P2 needs block 0 or 1
 
@@ -776,7 +776,7 @@ def test_p2_unit(env, mod):
     lines = L(mod, A_P2)
     assert mod._p2(J(p2a()), lines) == {"cls": "SUPPORTS", "rule": "P2", "height": 1}
     assert mod._p2(J(p2a(extra_allocation="not_shown")), lines) is None
-    assert mod._p2(J(p2a(reward_line="Miner reward 50.00000000 EXM to exm1qother")), lines) is None
+    assert mod._p2(J(p2a(reward_amount="75", reward_line="Miner reward 75 EXM to exm1qother")), lines) is None
 
 
 def test_m1_unit(env, mod):
