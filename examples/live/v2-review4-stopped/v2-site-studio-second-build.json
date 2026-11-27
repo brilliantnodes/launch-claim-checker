@@ -1,0 +1,21 @@
+{
+ "page": "https://checker.brilliantnodes.com/two-explorers.html",
+ "network": "GenLayer Studio (studionet)",
+ "started_utc": "2026-11-26T08:51:21Z",
+ "steps": [
+  {
+   "n": 1,
+   "click": "Example 'Examplecoin, no founder reward', then 'Check as Requester'",
+   "page_says": "Accepted. Check 1: CONTRADICTED (BOTH:P1).",
+   "tx": "0x1fc4b0e3c61214df68f9469c2031c8bdc0678a9552ed8264d98f3fb71d372c41"
+  }
+ ],
+ "page_errors": [],
+ "contract": "0x4CE7DBAdE67a234caC50a61480cC08558B598D81",
+ "windows_line": "On this contract: 10 min to bond after a check, 10 min to challenge, then 10 min of grace, 10 min to re-check and 10 min more before a challenged bond can be settled as not confirmed. Minimum bond 0.01 GEN.",
+ "accounts": {
+  "requester": "0xe0E1b6FaE5aC681B2472bD125c5771429b3c22a6",
+  "challenger1": "0x120D96035B532971C13497aF2bF3b4128F81EC46",
+  "challenger2": "0x448896E1A7A5A48856c06c33bA438a42e8EE72F3"
+ }
+}

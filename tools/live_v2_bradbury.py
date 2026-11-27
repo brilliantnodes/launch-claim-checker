@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Live cases for LaunchClaimCheckerV2 on GenLayer Testnet Bradbury Phase 2 (packed GenVM v0.6 build).
+"""Live cases for LaunchClaimCheckerV2 on GenLayer Testnet Bradbury (Phase 3 by default; packed GenVM v0.6 build).
 
-    cd tools/bradbury && npm ci && cd ../..
+    cd tools/bradbury3 && npm ci && cd ../..      (Bradbury Phase 3; LCC2_PHASE=2 and tools/bradbury for Phase 2)
     LCC2_KEYS=/path/to/keys DEMO_REPO=/path/to/demo-explorer python tools/live_v2_bradbury.py [record.json] [--resume]
 
 Three testnet wallets whose keys stay in files outside the repository, never
@@ -39,13 +39,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import v2_pages  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
-JS = ROOT / "tools" / "bradbury"
+PHASE = os.environ.get("LCC2_PHASE", "3")  # Bradbury Phase 3 replaced Phase 2 on 24 Nov 2026
+JS = ROOT / "tools" / ("bradbury3" if PHASE == "3" else "bradbury")
 KEYS = Path(os.environ.get("LCC2_KEYS", str(Path.home() / ".lcc2-keys")))
 DEMO_REPO = Path(os.environ.get("DEMO_REPO", str(ROOT.parent / "demo-explorer")))
 RESUME = "--resume" in sys.argv
 _args = [a for a in sys.argv[1:] if not a.startswith("--")]
 OUT = Path(_args[0]) if _args else ROOT / "examples" / "live" / "v2-bradbury.json"
-BUILD = ROOT / "bradbury" / "build" / "launch_claim_checker_v2.py"
+BUILD = ROOT / "bradbury" / ("build-phase3" if PHASE == "3" else "build") / "launch_claim_checker_v2.py"
 ADDRESS = os.environ["LCC2_BRADBURY"]  # the deployment this run uses (no default: each run names its own)
 WINDOWS = [int(x) for x in os.environ.get("LCC2_WINDOWS", "600,600,600,600").split(",")]
 COIN_C, COIN_D = os.environ.get("LCC2_COINS", "turncoin,veercoin").split(",")
@@ -68,7 +69,7 @@ for r in ROLES[1:]:
         KEY[r].chmod(0o600)
 ADDR = {r: create_account(KEY[r].read_text().strip()).address for r in ROLES}
 
-rec = {"network": "testnet-bradbury-phase-2", "chain_id": 4221, "build": "bradbury/build/launch_claim_checker_v2.py (GenVM v0.6)",
+rec = {"network": f"testnet-bradbury-phase-{PHASE}", "chain_id": 4221, "build": f"{BUILD.relative_to(ROOT)} (GenVM v0.6)",
        "build_sha256": hashlib.sha256(BUILD.read_bytes()).hexdigest(), "address": ADDRESS, "deploy_tx": DEPLOY_TX,
        "windows_seconds": WINDOWS, "bond_wei": str(BOND), "accounts": ADDR, "steps": [], "checks": [], "page_changes": [], "cases": {}}
 if RESUME:
@@ -201,6 +202,13 @@ def step(label, role, fn, args, value=0, raises=False, credited_back=False, paye
            "expected": "refused with an error" if raises else ("refused, GEN credited back" if credited_back else "accepted"),
            "result": result, "execution": execution, "validators": {"of": len(votes), "same_as_the_result": sum(1 for v in votes if v == execution), "votes": votes},
            "created": raw.get("createdTimestamp"), "seconds": int(time.time() - t0), "as_expected": ok}
+    if fn == "recheck" and ok and not raises:
+        # an agreed re-check can decide nothing (a page unreadable or showing nothing that decides): the bond is still
+        # BONDED, and the run sends it again while the window allows
+        row["bond_after"] = read("get_check", [args[0]])["bond"]["state"]
+        if row["bond_after"] == "BONDED":
+            row["decided"] = False
+            row["as_expected"] = ok = False
     if credited_back and ok:
         reads = 0
         while True:
@@ -268,6 +276,11 @@ def times(case):
 
 
 OUTCOMES = []  # (case, time key, offset, label, role, fn, kwargs), each run as soon as it is due
+
+
+def undecided(row):
+    """A re-check step that decided nothing: no majority, or agreed and the bond still BONDED."""
+    return row["result"] != "MAJORITY_AGREE" or row.get("decided") is False
 _busy = [False]
 
 
@@ -279,6 +292,10 @@ def due():
         for case, key, off, label, role, fn, kw in OUTCOMES:
             if f"bond case {case}" not in DONE:
                 continue
+            coin = {"C": COIN_C, "D": COIN_D}.get(case)
+            if fn == "recheck" and coin and not any(p["coin"] == coin and all(v in (True, None) for v in p["live"].values())
+                                                    for p in rec["page_changes"]):
+                continue  # never re-check C or D before their corrected pages are live on both explorers
             t = rec["cases"][case].get("times") or times(case)
             if label in DONE and DONE[label]["tx"] is None:
                 # the node refused the send itself (nothing reached the chain): send it again
@@ -286,8 +303,9 @@ def due():
                 if label in DONE:
                     continue
             elif label in DONE:
-                # a re-check nobody agreed on decided nothing: once more while the window leaves time for it
-                if fn != "recheck" or DONE[label]["result"] == "MAJORITY_AGREE" or label.endswith(" (again)"):
+                # a re-check that decided nothing (nobody agreed, or agreed on a reading that decides nothing): once
+                # more while the window leaves time for it
+                if fn != "recheck" or not undecided(DONE[label]) or label.endswith(" (again)"):
                     continue
                 label += " (again)"
                 if label in DONE or time.time() > int(t["rc_end"]) - 420:
@@ -374,7 +392,7 @@ step("bond on a FAIR_LAUNCH verdict", "requester", "bond", [rec["cases"]["F-fair
 def again_due(o):
     """A re-check that decided nothing, with time left in its window for one more."""
     lab = o[3] + " (again)"
-    return (o[5] == "recheck" and o[3] in DONE and DONE[o[3]]["result"] != "MAJORITY_AGREE" and lab not in DONE
+    return (o[5] == "recheck" and o[3] in DONE and undecided(DONE[o[3]]) and lab not in DONE
             and time.time() <= int(rec["cases"][o[0]]["times"]["rc_end"]) - 420)
 
 

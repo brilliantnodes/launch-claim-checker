@@ -83,13 +83,13 @@ def ans(**kw) -> str:
 
 
 def p1a(**over):
-    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000.00000000", evidence_line=A_LINE, reward_amount="", reward_line="", top_miner_name="", top_miner_blocks="", blocks_inspected="")
+    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000.00000000", evidence_line=A_LINE, reward_amount="50.00000000", reward_line=A_REWARD, top_miner_name="", top_miner_blocks="", blocks_inspected="")
     d.update(over)
     return ans(**d)
 
 
 def p1b(**over):
-    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000", evidence_line=B_LINE, reward_amount="", reward_line="", top_miner_name="", top_miner_blocks="", blocks_inspected="")
+    d = dict(block_number="1", extra_allocation="yes", allocation_amount="2,000,000", evidence_line=B_LINE, reward_amount="50", reward_line=B_REWARD, top_miner_name="", top_miner_blocks="", blocks_inspected="")
     d.update(over)
     return ans(**d)
 
@@ -254,7 +254,8 @@ def test_both_explorers_show_the_founder_allocation_contradicted(env):
     assert out == {"ok": True, "id": "1", "verdict": "CONTRADICTED", "rule": "BOTH:P1"}
     c = env.c.get_check("1")
     r = c["result"]
-    assert r["a"] == {"cls": "CONTRADICTS", "rule": "P1", "height": 1, "amount": "2000000", "amount_text": "2,000,000.00000000", "quote": A_LINE}
+    assert r["a"] == {"cls": "CONTRADICTS", "rule": "P1", "height": 1, "amount": "2000000", "amount_text": "2,000,000.00000000", "quote": A_LINE,
+                      "reward_text": "50.00000000", "reward_quote": A_REWARD}
     assert r["b"]["amount"] == "2000000" and r["b"]["quote"] == B_LINE
     assert c["domains"] == ["examplescan.example", "blockfield.example"] and c["bond"]["state"] == "NONE"
     assert c["requester"] == env.req and env.c.get_by_address(env.req) == ["1"] and env.c.get_count() == 1
@@ -336,7 +337,7 @@ def test_a_fabricated_line_or_amount_is_not_evidence(env):
     assert check(env, aa=p1a(evidence_line="Founders allocation 9,000,000.00000000 EXM to exm1qfounders01", allocation_amount="9,000,000.00000000"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"
     assert check(env, aa=p1a(block_number="7"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"  # block 7 is not printed
     assert check(env, aa=p1a(allocation_amount="2000000.125"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"
-    assert check(env, "P2", aa=p2a(reward_line="Miner reward 50.00000000 EXM to someone"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"
+    assert check(env, "P2", aa=p2a(reward_amount="75", reward_line="Miner reward 75 EXM to someone"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"
     b2 = A_P2.replace("Block 1", "Block 2").replace("Height: 1", "Height: 2")
     assert check(env, "P2", pa=b2, aa=p2a(block_number="2"))["rule"] == "D2_NOT_SHOWN_BY_BOTH"  # P2 needs block 0 or 1
 
@@ -775,7 +776,7 @@ def test_p2_unit(env, mod):
     lines = L(mod, A_P2)
     assert mod._p2(J(p2a()), lines) == {"cls": "SUPPORTS", "rule": "P2", "height": 1}
     assert mod._p2(J(p2a(extra_allocation="not_shown")), lines) is None
-    assert mod._p2(J(p2a(reward_line="Miner reward 50.00000000 EXM to exm1qother")), lines) is None
+    assert mod._p2(J(p2a(reward_amount="75", reward_line="Miner reward 75 EXM to exm1qother")), lines) is None
 
 
 def test_m1_unit(env, mod):

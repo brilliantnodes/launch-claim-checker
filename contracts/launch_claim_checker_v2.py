@@ -10,8 +10,9 @@ different domains, with a bonded challenge.
        P1  a block from 0 to 100 creates coins beyond the block reward: the
            block number printed, the amount exact and standing on the copied
            line of this validator's own copy.        -> contradicts
-       P2  block 0 or 1 shows only the ordinary reward: its reward line, with
-           its amount, stands on this validator's own copy.   -> supports
+       P2  block 0 or 1 shows only the ordinary reward: its reward line, which
+           says "reward", stands on this validator's own copy with that amount
+           (not zero) on it.                                  -> supports
        M1  one named miner holds more than half of at least 50 blocks: the
            name and its count on one line, the total printed, catch-all rows
            refused.                                   -> contradicts
@@ -44,11 +45,17 @@ different domains, with a bonded challenge.
      nothing: the window stays open. No decided re-check by RC_WIN + GRACE:
      settle makes it NOT CONFIRMED. No challenger: settle RELEASES the bond
      from GRACE after the window closes. Only a verdict on block 0 or 1 can be
-     bonded, because only there can the opposite reading (P2) exist.
+     bonded, because only there can the opposite reading (P2) exist, and a
+     BOTH:P1 verdict only when both pages also show the block's ordinary
+     reward (not zero, not the allocation's amount) on a line that says
+     "reward": P2 needs that reward, so without it no correction of the pages
+     could ever read as P2.
 
 What validators agree on: the verdict and rule exactly; per page the class
 and rule; for P1 the block and amount exactly, the leader's line standing on
-each validator's own copy; for P2 the block; for M1 the miner by name (the
+each validator's own copy, and the leader's ordinary reward, if it gives one,
+found by each validator's own reading too (same value, the leader's line on
+its copy); for P2 the block; for M1 the miner by name (the
 same miner on both explorers). Each validator's own counts decide its own
 reading; no count or share is passed on or stored. An UNDETERMINED result is
 passed on and stored in short form: the reason and each page's class and
@@ -60,9 +67,9 @@ credited back. Every payout is a credit taken with withdraw(). totals() is
 what the contract accounts for (locked + credited + burned); GEN sent with a call that takes none, or with
 a call that fails before the contract runs, is outside it.
 
-Time: whether bond and challenge were sent in time is judged on the
-transaction's own timestamp; settle and recheck use the check's clock (the
-latest timestamp the check has seen; it never runs backwards).
+Time: whether bond, challenge and recheck were sent in time is judged on the
+transaction's own timestamp; settle uses the check's clock (the latest
+timestamp the check has seen; it never runs backwards).
 
 Stated plainly: a verdict says what the two pages showed, not the truth about
 a coin. The requester picks both pages; one operator can run two domains; the
@@ -531,7 +538,47 @@ def _p1(ans: dict, lines: list):
     quote = ans.get("evidence_line")
     if amount is None or not _quote_ok(quote, text, lines):
         return None
-    return {"cls": "CONTRADICTS", "rule": "P1", "height": h, "amount": amount, "amount_text": text.strip(), "quote": " ".join(_clean(quote).split())}
+    found = {"cls": "CONTRADICTS", "rule": "P1", "height": h, "amount": amount, "amount_text": text.strip(), "quote": " ".join(_clean(quote).split())}
+    return {**found, **_reward(ans, lines)}
+
+
+def _same_value_on(line: str, want: str, lines: list):
+    """The number on this line with the value `want` ('50' and '50.00000000' are one value), if the line stands on
+    this validator's own copy of the page with that number on it (_quote_ok)."""
+    for tok in _clean(line).split():
+        tok = tok.strip("(),.;:")
+        if tok and _parse_amount(tok) == want and _quote_ok(line, tok, lines):
+            return tok
+    return None
+
+
+def _printed(line, text, lines: list):
+    """The block reward as the page prints it: (the number as printed, the line), or None when it is not shown.
+    The amount is the model's (a trailing coin name, as in '50 EXM', is left out); the line is the model's copy, which
+    must say "reward" and stand on this validator's own copy of the page with that amount on it, in the copied form or
+    in another form of the same value (models copy '50' from one line and the table row that prints '50.00000000')."""
+    if isinstance(text, str) and len(text.split()) == 2 and text.split()[1].isalpha():
+        text = text.split()[0]
+    want = _parse_amount(text)
+    if want is None or not isinstance(line, str) or "reward" not in _fold(line):
+        return None
+    if _quote_ok(line, text, lines):
+        return text.strip(), line
+    tok = _same_value_on(line, want, lines)
+    return (tok, line) if tok else None
+
+
+def _reward(ans: dict, lines: list) -> dict:
+    """The block's ordinary reward as a P1 page also shows it: a non-zero amount on a line of the page. Only a BOTH:P1
+    verdict whose two pages both show it can be bonded: the opposite reading, P2, needs that reward, so without it a
+    correction could never read as P2 and the bond could never be overturned. {} when the page does not show it."""
+    found = _printed(ans.get("reward_line"), _amount_text(ans.get("reward_amount")), lines)
+    if found is None:
+        return {}
+    text, line = found
+    if _parse_amount(text) == _parse_amount(_amount_text(ans.get("allocation_amount"))):
+        return {}  # the allocation's amount is never taken as the ordinary reward, whatever the line
+    return {"reward_text": text, "reward_quote": " ".join(_clean(line).split())}
 
 
 def _p2(ans: dict, lines: list):
@@ -540,8 +587,7 @@ def _p2(ans: dict, lines: list):
         return None
     if str(ans.get("extra_allocation", "")).strip().lower() != "no":
         return None
-    text = _amount_text(ans.get("reward_amount"))
-    if _parse_amount(text) is None or not _quote_ok(ans.get("reward_line"), text, lines):
+    if _printed(ans.get("reward_line"), _amount_text(ans.get("reward_amount")), lines) is None:
         return None
     return {"cls": "SUPPORTS", "rule": "P2", "height": h}
 
@@ -653,7 +699,19 @@ def _check_page(p, claim_type: str) -> dict:
             raise ValueError("bad amount")
         if not isinstance(quote, str) or not QUOTE_MIN <= len(_fold(quote)) <= QUOTE_MAX or not _stands(_fold(quote), _fold(text)):
             raise ValueError("bad quote")
-        return {"cls": cls, "rule": rule, "height": h, "amount": amount, "amount_text": text.strip(), "quote": " ".join(_clean(quote).split())}
+        out = {"cls": cls, "rule": rule, "height": h, "amount": amount, "amount_text": text.strip(), "quote": " ".join(_clean(quote).split())}
+        if "reward_text" in p or "reward_quote" in p:
+            rt, rq = p.get("reward_text"), p.get("reward_quote")
+            if not isinstance(rt, str) or _parse_amount(rt) is None:
+                raise ValueError("bad reward")
+            if not isinstance(rq, str) or not QUOTE_MIN <= len(_fold(rq)) <= QUOTE_MAX or not _stands(_fold(rq), _fold(rt)):
+                raise ValueError("bad reward line")
+            if "reward" not in _fold(rq):
+                raise ValueError("the reward line does not say reward")
+            if _parse_amount(rt) == amount:
+                raise ValueError("the reward is the allocation's amount")
+            out.update(reward_text=rt.strip(), reward_quote=" ".join(_clean(rq).split()))
+        return out
     if rule == "P2":
         h = p.get("height")
         if isinstance(h, bool) or h not in (0, 1):
@@ -722,7 +780,11 @@ def _same_page(lp: dict, mp: dict, lines: list) -> bool:
     if lp["cls"] != mp["cls"] or lp.get("rule") != mp.get("rule"):
         return False
     if lp.get("rule") == "P1":
-        return lp["height"] == mp["height"] and lp["amount"] == mp["amount"] and _quote_ok(lp["quote"], lp["amount_text"], lines)
+        # the leader's reward counts only when this validator's own reading found the same reward, and the leader's
+        # line stands on this validator's copy: one leader's reading never makes a verdict bondable on its own
+        reward_ok = "reward_text" not in lp or ("reward_text" in mp and _parse_amount(mp["reward_text"]) == _parse_amount(lp["reward_text"])
+                                                and _quote_ok(lp["reward_quote"], lp["reward_text"], lines))
+        return lp["height"] == mp["height"] and lp["amount"] == mp["amount"] and _quote_ok(lp["quote"], lp["amount_text"], lines) and reward_ok
     if lp.get("rule") == "P2":
         return lp["height"] == mp["height"]
     if lp.get("rule") == "M1":
@@ -758,8 +820,8 @@ def _prompt(claim_type: str, coin: str, page: str) -> str:
         keys += ["block_number", "extra_allocation", "allocation_amount", "evidence_line"]
         if claim_type != "FAIR_LAUNCH":
             fields += [
-                '- "reward_amount": if "no", the ordinary block reward paid in this block exactly as printed, digits and separators only; otherwise "".',
-                '- "reward_line": if "no", the one whole line of the page that shows that reward, copied exactly, at most 200 characters; otherwise "".',
+                '- "reward_amount": the ordinary block reward paid to this block\'s miner exactly as printed on the line you copy as reward_line, digits and separators only, without the coin\'s name; "" if the page does not print it.',
+                '- "reward_line": the one whole line of the page that shows that ordinary reward, copied exactly, at most 200 characters; "" if the page does not print it.',
             ]
             keys += ["reward_amount", "reward_line"]
     if claim_type in ("DECENTRALIZED_MINING", "FAIR_LAUNCH"):
@@ -1025,6 +1087,10 @@ class LaunchClaimCheckerV2(gl.Contract):
               or any(int(rec["result"][p].get("height", 2)) > 1 for p in ("a", "b"))):
             # P2, the opposite reading, exists only for block 0 or 1: a verdict on a later block could never be overturned
             problem = "only a BOTH:P1 or BOTH:P2 verdict on block 0 or 1, on NO_PREMINE or NO_FOUNDER_REWARD, can be bonded"
+        elif rec["result"]["rule"] == "BOTH:P1" and any("reward_text" not in rec["result"][p] for p in ("a", "b")):
+            # P2 needs the block's ordinary reward (not zero) on a line of the page: a P1 verdict on a block whose pages
+            # do not both show one could never be overturned
+            problem = "a BOTH:P1 verdict can be bonded only when both pages also show the block's ordinary reward (not zero) on a line that says reward"
         elif bd["state"] != "NONE":
             problem = "this check is already bonded"
         elif value < MIN_BOND:
@@ -1253,6 +1319,7 @@ class LaunchClaimCheckerV2(gl.Contract):
         return {
             "claim_types": list(CLAIM_TYPES), "windows_seconds": self._w(), "window_floor_seconds": WIN_FLOOR,
             "min_bond_wei": _s(MIN_BOND), "bondable": ["BOTH:P1", "BOTH:P2"], "bondable_claims": list(BONDABLE_CLAIMS),
+            "bondable_blocks": "0 or 1; a BOTH:P1 verdict only when both pages also show the block's ordinary reward, not zero and not the allocation's amount, found by each validator's own reading",
             "overturned": "half the bond (rounded down) is burned; each challenger collects its deposit and an equal share of the rest",
             "upheld": "the same rule again; for P1 the same block and amount, for P2 the same block", "max_height": MAX_HEIGHT,
             "min_blocks": MIN_BLOCKS, "m1": "2 x top > total", "m2": "100 x largest <= 33 x total", "max_rows": MAX_ROWS,

@@ -46,12 +46,12 @@
 <p>But an explorer is just a website. It can be wrong, out of date, or run by the same people who made the promise. A check that rests on one website inherits all of that. In our earlier article we listed this as the first open question: how can a check rely on evidence that no single party controls?</p>
 
 <h2>Two explorers must agree</h2>
-<p>The new version of our Launch Claim Checker reads the promise on <strong>two block explorers on different domains</strong>. Several independent machines (validators on the GenLayer network) each open both pages themselves. On each page a language model copies the relevant facts into a fixed form, and plain code checks every copied value against that machine's own copy of the page: the block number must be printed, the amount must stand on the copied line exactly, and rows labelled "unknown" or "others" do not count as a miner.</p>
+<p>The new version of our Launch Claim Checker reads the promise on <strong>two block explorers on different domains</strong>. Several validators (machines on the GenLayer network) each open both pages themselves. On each page a language model copies the relevant facts into a fixed form, and plain code checks every copied value against that machine's own copy of the page: the block number must be printed, the amount must stand on the copied line exactly, and rows labelled "unknown" or "others" do not count as a miner.</p>
 <p>The two pages are then compared by fixed rules:</p>
 <ul>
 <li>Both show block 1 paying an extra allocation, for the same amount: the promise is <strong>contradicted</strong>.</li>
 <li>Both show block 1 paying only the normal miner reward: the promise is <strong>supported</strong>.</li>
-<li>One shows an allocation and the other does not: the answer is <strong>"the explorers disagree"</strong>. That is a useful result in its own right: someone is wrong, and nobody should rely on either page alone.</li>
+<li>One shows an allocation and the other shows that block paying only the normal reward: the answer is <strong>"the explorers disagree"</strong>. That is a useful result in its own right: someone is wrong, and nobody should rely on either page alone.</li>
 </ul>
 <p>The machines must agree with each other before anything is recorded. A verdict describes what the two pages showed when they were read; it is not a judgement about the coin.</p>
 
@@ -60,21 +60,21 @@
 <p>After the challenge period, the machines <strong>read both explorers again</strong>, under the same rules:</p>
 <ul>
 <li>The same facts again: the bond is <strong>upheld</strong>, and the person who bonded it takes the challengers' deposits.</li>
-<li>The opposite verdict: it is <strong>overturned</strong>. Half the bond is burned; the challengers get their deposits back and share the other half. Burning half means that someone who bonds a false verdict and then challenges it from other addresses of their own still loses at least half the bond.</li>
-<li>Anything else, for example the explorers now disagree, or one of them shows an error page: <strong>not confirmed</strong>, and everyone gets their own money back.</li>
+<li>The opposite verdict about the same block: it is <strong>overturned</strong>. Half the bond is burned (kept by the contract for good, so nobody gets that half); the challengers get their deposits back and share the other half. Burning half means that someone who bonds a false verdict and then challenges it from other addresses of their own still loses at least half the bond.</li>
+<li>The explorers now show opposite facts, or both clearly show something about another block or another amount, or nobody gets a clear second reading in time: <strong>not confirmed</strong>, and everyone gets their own money back. If an explorer is down or shows an error page, that reading decides nothing and can be tried again.</li>
 </ul>
-<p>Only verdicts on "no premine" and "no founder reward" about a coin's earliest blocks can be bonded, because those blocks never change. Mining shares move from block to block, and a "fair launch" promise can be shown false but never shown true, so verdicts about them are recorded but cannot carry money.</p>
+<p>Only verdicts on "no premine" and "no founder reward" about a coin's block 0 or 1 can be bonded: only there can the opposite reading (a block paying nothing but the normal reward) be checked. For a verdict that the block pays an extra allocation, both pages must also show the block's normal reward, not a reward of zero, and each machine must find that reward itself: otherwise a corrected page could never be read the other way, and the person who bonded could never lose. Mining shares move from block to block, and a "fair launch" promise can be shown false but never shown true, so verdicts about them are recorded but cannot carry money.</p>
 
 <h2>What we tested</h2>
 <p>We built two fictional explorers with different layouts on two different domains, and ran the same stories on two GenLayer test networks:</p>
 <ul>
-<li>A false promise, bonded and challenged by two people: the second reading agreed, and the bond was upheld.</li>
+<li>A false promise, bonded and challenged from two test accounts: the second reading agreed, and the bond was upheld.</li>
 <li>A true promise nobody challenged: the bond was released.</li>
-<li>Both explorers "corrected" a coin's block 1 after the bond: the second reading reversed the verdict, half the bond was burned, and the challenger collected its deposit and the other half.</li>
+<li>Both explorers "corrected" a coin's block 1 after the bond (both pages also showed the block's normal reward, which this needs): the second reading reversed the verdict, half the bond was burned, and the challenger collected its deposit and the other half.</li>
 <li>Only one explorer corrected it: the explorers now disagreed, and everyone got their money back.</li>
 <li>Wrong amounts, late challenges and attempts to bond a mining or a "fair launch" verdict were all refused, and the money was returned.</li>
 </ul>
-<p>On the first network all 45 transactions came out as expected. On the second, 44 of 45 did; the other, a mining check, found no agreement among the machines and agreed when sent again. Each run ended with every token accounted for: nothing locked, nothing owed, and the burned half in the contract. The contract passes 131 automated tests of its own, 119 of 119 deliberate breaks of its code were caught, and two independent reviews found problems that were fixed before these runs.</p>
+<p>On GenLayer Studio, all 45 transactions went through as expected. On Bradbury, GenLayer's public testnet, all 44 did, with all five machines agreeing every time. Each run ended with every token accounted for: nothing locked, nothing owed, and the burned half in the contract (on Bradbury once the withdrawals were finalized). The contract passes 197 automated tests of its own, and 148 of 148 deliberate breaks of its code were caught. Separate AI sessions reviewed it in five rounds; their findings were fixed, the last round's after the runs of the build before this one, and the final changes were not reviewed again by another session.</p>
 
 <h2>Limitations</h2>
 <p>Two websites run by the same party are not two witnesses, and the contract cannot tell who runs a domain. The rules rely on a model's reading of each page, checked by code, which is not a mathematical proof. They do not see coins created in a chain's starting state rather than paid in a block. A second reading sees the pages as they are at that moment, so a page that has changed decides the outcome. An explorer that is down or shows an error decides nothing, so whoever controls one of the two explorers can keep a second reading from deciding; the bond then ends with everyone's money returned. Our tests used pages we wrote. Two attempts on real explorers, block 1 of Litecoin and of Bitcoin, each on two well-known explorers, could not be read by the validators, so nothing was recorded.</p>

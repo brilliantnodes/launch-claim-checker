@@ -1,0 +1,695 @@
+{
+ "network": "testnet-bradbury-phase-3",
+ "chain_id": 4221,
+ "build": "bradbury/build-phase3/launch_claim_checker_v2.py (GenVM v0.6)",
+ "build_sha256": "96d5a78a9686926a7892edaab1fb71c51cedcf03d9b9252ab5cb7d5d09f9ab66",
+ "address": "0x99B5E0ce1942574A37B0125C185939295cC91672",
+ "deploy_tx": "0x5a2da191e165318d92c57690800efe5c5f1c6424b08306934abd07c49c469005",
+ "windows_seconds": [
+  600,
+  600,
+  600,
+  1200
+ ],
+ "bond_wei": "100000000000000000",
+ "accounts": {
+  "requester": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+  "challenger1": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+  "challenger2": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23"
+ },
+ "steps": [
+  {
+   "n": 1,
+   "label": "case A check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/block-1.html",
+    "Examplecoin",
+    "NO_FOUNDER_REWARD",
+    "No founder reward"
+   ],
+   "value": "0",
+   "tx": "0x6e7a7df5e6910ce246bb3dad5daf7da31473311d61ca1a580398173395b2c02e",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635430",
+   "seconds": 38,
+   "as_expected": true
+  },
+  {
+   "n": 2,
+   "label": "bond case A",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x8c15b9cf12eb0f9250c107454d54e5c742d362074384d4e306ca12320fdc3e46",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635472",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 3,
+   "label": "challenge A by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xe38c2b3bc6a97ed84f5ccc4dee584b8a0bfb923a2adb4ae2ce738aa88ce351a4",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635487",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 4,
+   "label": "challenge A by challenger2",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x99a181eabb1e5982a55cacee5dd7d6b023b81a65e3cdaa692f95f3166f2fa2d1",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635499",
+   "seconds": 18,
+   "as_expected": true
+  },
+  {
+   "n": 5,
+   "label": "challenge A by the requester",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x9aa7a7b9d432b4b5143d02f08fbdbe5b6aa2beabd4026e5a31fb26ac8f1fea16",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635520",
+   "seconds": 30,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 6,
+   "label": "challenge A again by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xc8f6836666479a20b58b218b3cd1285afaf27f4ec309de5f61af60b4c338af03",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635554",
+   "seconds": 11,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 7,
+   "label": "case B check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/controlcoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/controlcoin/block-1.html",
+    "Controlcoin",
+    "NO_PREMINE",
+    "No premine"
+   ],
+   "value": "0",
+   "tx": "0x6b3377c152d580fe19778591123dd4ce35a00f46e5f050eb623735da8bb4a34b",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635576",
+   "seconds": 36,
+   "as_expected": true
+  },
+  {
+   "n": 8,
+   "label": "bond case B",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "2"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x9a63bdb217bdc93651e1f6ff2329f99232506bc5ce1d072ea5ce2d3d4d641753",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635616",
+   "seconds": 17,
+   "as_expected": true
+  },
+  {
+   "n": 9,
+   "label": "challenge B with the wrong amount",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "2"
+   ],
+   "value": "99999999999999999",
+   "tx": "0xf334071ac469a41ac174e39b6449713e44bd3f29378931b7a14a88ebb5ab4206",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635641",
+   "seconds": 11,
+   "as_expected": true,
+   "credited_back": "99999999999999999"
+  },
+  {
+   "n": 10,
+   "label": "settle B too early",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "settle",
+   "args": [
+    "2"
+   ],
+   "value": "0",
+   "tx": "0xfdfe9bfad088d8a2ec5d6c25b6d24e392beade66e37e5e4a03671a988490f38a",
+   "expected": "refused with an error",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_ERROR",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR",
+     "FINISHED_WITH_ERROR"
+    ]
+   },
+   "created": "1795635655",
+   "seconds": 11,
+   "as_expected": true
+  },
+  {
+   "n": 11,
+   "label": "case C check",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/swervecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/swervecoin/block-1.html",
+    "Swervecoin",
+    "NO_FOUNDER_REWARD",
+    ""
+   ],
+   "value": "0",
+   "tx": "0x1a951dad257668add9fd0b7090a85944cd1a28b69358b7c6de228859beff1715",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635668",
+   "seconds": 36,
+   "as_expected": true
+  },
+  {
+   "n": 12,
+   "label": "bond case C",
+   "who": "requester",
+   "from": "0xc91E17e470443f62b9fb00D979053CeC775f1755",
+   "method": "bond",
+   "args": [
+    "3"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xeae24890633f273f49aaf9f6b0968e233798b8486f233359c453bc9b192fa67d",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635709",
+   "seconds": 17,
+   "as_expected": true
+  },
+  {
+   "n": 13,
+   "label": "challenge C by challenger1",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "challenge",
+   "args": [
+    "3"
+   ],
+   "value": "100000000000000000",
+   "tx": "0x7a8bf5cf021c485cc941c595d27aa41693daf2162464bbfad5c99ab00dfbd7c7",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795635730",
+   "seconds": 23,
+   "as_expected": true
+  },
+  {
+   "n": 14,
+   "label": "challenge B after the window",
+   "who": "challenger2",
+   "from": "0x9ad52F4bF93a0d3bD1979C543EA7b97619085A23",
+   "method": "challenge",
+   "args": [
+    "2"
+   ],
+   "value": "100000000000000000",
+   "tx": "0xb0c86467af1cc61e73df420f02b7ec590a13b098542586e2f4410c4abc5494e5",
+   "expected": "refused, GEN credited back",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795636250",
+   "seconds": 11,
+   "as_expected": true,
+   "credited_back": "100000000000000000"
+  },
+  {
+   "n": 15,
+   "label": "recheck A",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "recheck",
+   "args": [
+    "1"
+   ],
+   "value": "0",
+   "tx": "0x8697c7520ac9bf4c382dd46ee5eb1c6b52269423668f70fa609e9477d605dded",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795636689",
+   "seconds": 38,
+   "as_expected": true
+  },
+  {
+   "n": 16,
+   "label": "settle B (no challenger)",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "settle",
+   "args": [
+    "2"
+   ],
+   "value": "0",
+   "tx": "0x9e152cb89a1b32ccf18527c9ddfa08fbdd67151da52345b26dc7e40109203d61",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795636850",
+   "seconds": 10,
+   "as_expected": true
+  },
+  {
+   "n": 17,
+   "label": "recheck C (both explorers corrected block 1)",
+   "who": "challenger1",
+   "from": "0xA8F3b6dC1b472E09BCC5002a61a4fb6660212590",
+   "method": "recheck",
+   "args": [
+    "3"
+   ],
+   "value": "0",
+   "tx": "0xc8c9c70af5cca6d45ce523c10c5085a3f4d32417f6a530f30b3bf8f451ed9eea",
+   "expected": "accepted",
+   "result": "MAJORITY_AGREE",
+   "execution": "FINISHED_WITH_RETURN",
+   "validators": {
+    "of": 5,
+    "same_as_the_result": 5,
+    "votes": [
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN",
+     "FINISHED_WITH_RETURN"
+    ]
+   },
+   "created": "1795636923",
+   "seconds": 38,
+   "as_expected": true
+  }
+ ],
+ "checks": [
+  {
+   "label": "contract rules: windows of [600, 600, 600, 1200] s",
+   "value": {
+    "bond_win": 600,
+    "ch_win": 600,
+    "grace": 600,
+    "rc_win": 1200
+   },
+   "want": {
+    "bond_win": 600,
+    "ch_win": 600,
+    "grace": 600,
+    "rc_win": 1200
+   },
+   "ok": true,
+   "reads": 1,
+   "at": 1795635426
+  },
+  {
+   "label": "case A: check 1 is CONTRADICTED BOTH:P1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Examplecoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795635470
+  },
+  {
+   "label": "case A: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795635483
+  },
+  {
+   "label": "case A: two challengers, in order",
+   "value": [
+    "0xa8f3b6dc1b472e09bcc5002a61a4fb6660212590",
+    "0x9ad52f4bf93a0d3bd1979c543ea7b97619085a23"
+   ],
+   "want": [
+    "0xa8f3b6dc1b472e09bcc5002a61a4fb6660212590",
+    "0x9ad52f4bf93a0d3bd1979c543ea7b97619085a23"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795635572
+  },
+  {
+   "label": "case B: check 2 is SUPPORTED BOTH:P2",
+   "value": [
+    "SUPPORTED",
+    "BOTH:P2",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Controlcoin"
+   ],
+   "want": [
+    "SUPPORTED",
+    "BOTH:P2",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Controlcoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795635614
+  },
+  {
+   "label": "case B: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795635635
+  },
+  {
+   "label": "case C: check 3 is CONTRADICTED BOTH:P1",
+   "value": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Swervecoin"
+   ],
+   "want": [
+    "CONTRADICTED",
+    "BOTH:P1",
+    "0xc91e17e470443f62b9fb00d979053cec775f1755",
+    "Swervecoin"
+   ],
+   "ok": true,
+   "reads": 1,
+   "at": 1795635707
+  },
+  {
+   "label": "case C: bonded",
+   "value": "BONDED",
+   "want": "BONDED",
+   "ok": true,
+   "reads": 1,
+   "at": 1795635727
+  }
+ ],
+ "page_changes": [
+  {
+   "coin": "swervecoin",
+   "commits": {
+    "launch-claim-checker": "3fdad6e",
+    "demo-explorer": "1718cfd"
+   },
+   "live": {
+    "a": true,
+    "b": true
+   },
+   "at": 1795637034
+  }
+ ],
+ "cases": {
+  "A": {
+   "id": "1",
+   "check_tx": "0x6e7a7df5e6910ce246bb3dad5daf7da31473311d61ca1a580398173395b2c02e",
+   "times": {
+    "close": 1795636072,
+    "nc_from": 1795638472,
+    "rc_end": 1795637872,
+    "rc_open": 1795636672
+   }
+  },
+  "B": {
+   "id": "2",
+   "check_tx": "0x6b3377c152d580fe19778591123dd4ce35a00f46e5f050eb623735da8bb4a34b",
+   "times": {
+    "close": 1795636216,
+    "nc_from": 1795638616,
+    "rc_end": 1795638016,
+    "rc_open": 1795636816
+   }
+  },
+  "C": {
+   "id": "3",
+   "check_tx": "0x1a951dad257668add9fd0b7090a85944cd1a28b69358b7c6de228859beff1715",
+   "times": {
+    "close": 1795636309,
+    "nc_from": 1795638709,
+    "rc_end": 1795638109,
+    "rc_open": 1795636909
+   }
+  }
+ },
+ "stopped": {
+  "at_utc": "2026-11-25T20:08Z",
+  "why": "Stopped by Brilliant Nodes after step 17. Swervecoin's correction (case C) was committed at 19:53 UTC, but its push to the checker repository's main branch was rejected: another Brilliant Nodes session had pushed a footer change to main at 19:21 UTC, and the page tool retried the same push without bringing it up to date. Explorer A's corrected page therefore did not go live, and the run, waiting for it, sent case C's re-check when its window opened. The validators read explorer A uncorrected and explorer B corrected: D1_EXPLORERS_DISAGREE, a decided NOT_CONFIRMED. The contract did what it should; the overturn could not be shown on this deployment.",
+  "what_was_done": "The commits were rebased onto main and pushed; the page tool now rebases and retries when main has moved and stops the run if a correction cannot be published, and the run never re-checks C or D before both corrected pages are live. A new deployment (0xBa377D0FED0E0A40eA3978716F4495D234DF6e46) and a new coin for case C (Lurchcoin): examples/live/v2-bradbury.json. The correction commit 3fdad6e named in page_changes was rebased onto main as e178d8f, which is the one on GitHub.",
+  "left_on_this_deployment": "Case A was upheld and case B released, neither collected; case C ended NOT_CONFIRMED and was not collected. Case D's check was being sent when the run was stopped: the contract holds it as check 4, and it is not in this record. Case E and the unbondable checks were never started. The test GEN of A, B and C stays in the contract."
+ }
+}

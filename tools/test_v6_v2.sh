@@ -14,5 +14,5 @@ trap 'rm -rf "$TMP"' EXIT
 (cd "$ROOT" && git ls-files -co --exclude-standard -- contracts tests tools bradbury gltest.config.yaml | tar -cf - -T -) | tar -xf - -C "$TMP"
 cp "$TMP/tests/conftest_v6.py" "$TMP/tests/direct/conftest.py"
 cd "$TMP"
-GENVM_VERSION="${GENVM_VERSION:-v0.6.0-rc10}" LCC2_CONTRACT=bradbury/build/launch_claim_checker_v2.py PYTHONPATH=. \
-  "$VENV/bin/python" -m pytest tests/direct/test_checker_v2.py tests/direct/test_checker_v2_review.py tests/direct/test_checker_v2_review3.py -q -p no:cacheprovider
+GENVM_VERSION="${GENVM_VERSION:-v0.6.0-rc10}" LCC2_CONTRACT="${LCC2_BUILD:-bradbury/build/launch_claim_checker_v2.py}" PYTHONPATH=. \
+  "$VENV/bin/python" -m pytest tests/direct/test_checker_v2.py tests/direct/test_checker_v2_review.py tests/direct/test_checker_v2_review3.py tests/direct/test_checker_v2_review4.py tests/direct/test_checker_v2_review5.py -q -p no:cacheprovider

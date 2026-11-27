@@ -155,14 +155,44 @@ OUTCOMES = []  # (case, time key, offset, label, who, fn, value, expect), run as
 _busy = [False]
 
 
+def undecided(e):
+    """A re-check step that decided nothing: not agreed, or agreed on a reading that decides nothing."""
+    return e.get("result") != "MAJORITY_AGREE" or (e.get("returned") or {}).get("decided") is False
+
+
+def pages_live(case):
+    """C and D are re-checked only once their corrected pages are live on both explorers."""
+    coin = {"C": COIN_C, "D": COIN_D}.get(case)
+    if coin is None:
+        return True
+    for p in rec["page_changes"]:
+        if p["coin"] == coin:
+            if not all(v in (True, None) for v in p["live"].values()):
+                raise SystemExit(f"the corrected pages for {coin} did not go live: {p}")
+            return True
+    return False
+
+
+def again_due(o):
+    """A re-check that decided nothing, with time left in its window for one more."""
+    case, _k, _o, label, _w, fn, _v, _e = o
+    return (fn == "recheck" and label in DONE and undecided(DONE[label]) and label + " (again)" not in DONE
+            and time.time() <= times(case)["rc_end"] - 120)
+
+
 def due():
     if _busy[0]:
         return
     _busy[0] = True
     try:
-        for case, key, off, label, who, fn, value, expect in OUTCOMES:
-            if label in DONE or bond_entry(case) is None:
+        for o in OUTCOMES:
+            case, key, off, label, who, fn, value, expect = o
+            if bond_entry(case) is None or (fn == "recheck" and not pages_live(case)):
                 continue
+            if label in DONE:
+                if not again_due(o):
+                    continue
+                label += " (again)"
             if time.time() >= times(case)[key] + off:
                 step(label, who, fn, [rec["cases"][case]["id"]], value, expect)
     finally:
@@ -229,7 +259,7 @@ check_with_retry("F-planted", [A_MINE, B_PLANTED, "Examplecoin", "DECENTRALIZED_
 
 # ------------------------------------------------------------------ outcomes
 
-while any(o[3] not in DONE for o in OUTCOMES):
+while any(o[3] not in DONE or again_due(o) for o in OUTCOMES):
     due()
     left = [times(o[0])[o[1]] + o[2] - time.time() for o in OUTCOMES if o[3] not in DONE]
     if left:

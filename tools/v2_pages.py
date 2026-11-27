@@ -3,6 +3,10 @@
 Used by tools/live_v2_money.py (Studio) and tools/live_v2_bradbury.py (Bradbury). The pages are made by
 tools/make_v2_pages.py; which coins are already corrected is read from the page files themselves (so one run
 never undoes another run's correction), and a file lock keeps two runs from committing at the same time.
+
+A correction commit holds the corrected pages only (whatever else is staged stays out of it), and it is refused
+when the repository has local commits that are not on GitHub yet: pushing would publish them with it. Only main
+is pushed; the milestone branch is brought up to date once, when the milestone is submitted.
 """
 import fcntl
 import shutil
@@ -54,21 +58,33 @@ def correct(coin: str, run: str, demo: Path, checker: Path = ROOT, wait=None) ->
         shutil.copytree(checker / "web" / "public" / "v2", checker / "docs" / "v2", dirs_exist_ok=True)
         msg = f"Fictional explorer data correction for {coin} ({run} of Launch Claim Checker v2){SIGN}"
         commits = {}
-        for repo, paths, branches, side in ((checker, ["web/public/v2", "docs/v2"], ["main", "milestone-two-explorers"], "a"),
-                                            (demo, ["."], ["main"], "b")):
+        for repo, paths, branches, side in ((checker, ["web/public/v2", "docs/v2"], ["main"], "a"),
+                                            (demo, [coin], ["main"], "b")):  # the coin's own pages only
             if side not in CORRECTABLE[coin]:
                 commits[repo.name] = None  # this explorer does not change for this coin
                 continue
+            subprocess.run(["git", "-C", str(repo), "fetch", "-q", "origin", "main"], check=True, capture_output=True)
+            ahead = subprocess.run(["git", "-C", str(repo), "rev-list", "--count", "origin/main..HEAD"], capture_output=True, text=True, check=True)
+            if ahead.stdout.strip() != "0":
+                raise RuntimeError(f"{repo.name}: {ahead.stdout.strip()} local commit(s) not on GitHub; push them before the run")
             subprocess.run(["git", "-C", str(repo), "add", *paths], check=True)
             r = subprocess.run(["git", "-C", str(repo), "-c", "user.name=Brilliant Nodes", "-c", "user.email=noreply@brilliantnodes.com",
-                                "commit", "-q", "-m", msg], capture_output=True, text=True)
+                                "commit", "-q", "-m", msg, "--", *paths], capture_output=True, text=True)
             if r.returncode == 0:
                 for b in branches:
-                    for _ in range(3):
+                    pushed = False
+                    for attempt in range(3):
                         if subprocess.run(["git", "-C", str(repo), "-c", "push.negotiate=true", "push", "-q", "origin", f"HEAD:{b}"],
                                           capture_output=True).returncode == 0:
+                            pushed = True
                             break
+                        if b == "main":
+                            # someone else pushed to main meanwhile (it happened on 25 Nov): put this commit on top and retry
+                            subprocess.run(["git", "-C", str(repo), "pull", "-q", "--rebase", "--autostash", "origin", "main"], capture_output=True)
                         time.sleep(5)
+                    if not pushed and b == "main":
+                        # a correction that is not published must stop the run: a re-check would read the old page
+                        raise RuntimeError(f"{repo.name}: the correction for {coin} could not be pushed to main")
             commits[repo.name] = subprocess.run(["git", "-C", str(repo), "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
     state = {}
     for side, url, mark in (("a", A_URL, MARK_A), ("b", B_URL, MARK_B)):

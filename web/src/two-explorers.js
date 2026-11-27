@@ -33,7 +33,7 @@ const link = (href, text) => {
   return a;
 };
 const RPC = studionet.rpcUrls.default.http[0];
-const reader = BRADBURY ? v2.createClient({ chain: v2chains.testnetBradbury, endpoint: NET.rpc }) : createClient({ chain: studionet });
+const reader = BRADBURY ? v2.createClient({ chain: v2chains.testnetBradbury, endpoint: NET.checkerV2Rpc || NET.rpc }) : createClient({ chain: studionet });
 
 function plain(v) {
   if (v instanceof Map) return Object.fromEntries([...v.entries()].map(([k, x]) => [k, plain(x)]));
@@ -42,7 +42,23 @@ function plain(v) {
   if (v && typeof v === "object") return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, plain(x)]));
   return v;
 }
-const read = async (functionName, args = []) => plain(await reader.readContract({ address: ADDRESS, functionName, args }));
+// Reads go one at a time, and a "rate limit" answer (the Bradbury Phase 3 public node limits gen_call) is asked again.
+let readQueue = Promise.resolve();
+const readOnce = async (functionName, args) => {
+  for (let i = 0; ; i++) {
+    try {
+      return plain(await reader.readContract({ address: ADDRESS, functionName, args }));
+    } catch (e) {
+      if (i >= 5 || !/rate limit/i.test(String(e?.message || e))) throw e;
+      await new Promise((r) => setTimeout(r, 1500 * (i + 1)));
+    }
+  }
+};
+const read = (functionName, args = []) => {
+  const p = readQueue.then(() => readOnce(functionName, args));
+  readQueue = p.catch(() => {});
+  return p;
+};
 const short = (e) => String((e && (e.shortMessage || e.message)) || e).slice(0, 300);
 const shortAddr = (a) => (a ? `${a.slice(0, 6)}…${a.slice(-4)}` : "");
 const same = (a, b) => !!a && !!b && String(a).toLowerCase() === String(b).toLowerCase();
@@ -277,7 +293,7 @@ const RULE_TEXT = {
   "BOTH:M1": "on both explorers the same miner has more than half of the blocks",
   "BOTH:M2": "on both explorers the largest miner has a third of the blocks or less",
   D1_EXPLORERS_DISAGREE: "the two explorers do not show the same thing",
-  W1_WRONG_PAGE: "a page is not the page the claim needs (another block, or the coin is not named)",
+  W1_WRONG_PAGE: "a page does not name the coin near the top",
   D2_NOT_SHOWN_BY_BOTH: "the rule needs both explorers to show it; one does not",
   U1_NOT_ENOUGH_EVIDENCE: "the pages do not show enough to decide",
 };
@@ -340,7 +356,9 @@ function checkCard(c, challengers) {
   if (BRADBURY) return card;
 
   const box = el("div", "acts"), now = nowS();
-  const bondable = (rules?.bondable || ["BOTH:P1", "BOTH:P2"]).includes(r.rule) && (rules?.bondable_claims || ["NO_PREMINE", "NO_FOUNDER_REWARD"]).includes(c.claim_type);
+  // as the contract: block 0 or 1 on both pages, and a BOTH:P1 verdict only when both pages also show the block's ordinary reward
+  const bondable = (rules?.bondable || ["BOTH:P1", "BOTH:P2"]).includes(r.rule) && (rules?.bondable_claims || ["NO_PREMINE", "NO_FOUNDER_REWARD"]).includes(c.claim_type)
+    && [r.a, r.b].every((p) => Number(p?.height ?? 2) <= 1) && (r.rule !== "BOTH:P1" || [r.a, r.b].every((p) => p?.reward_text));
   const mine = roles.requester && same(roles.requester.address, c.requester);
   const bondWin = Number(rules?.windows_seconds?.bond_win || 600);
   const min = BigInt(rules?.min_bond_wei || "10000000000000000");
@@ -393,7 +411,7 @@ async function loadList() {
     const list = await read("get_latest", [10, nowS()]);
     const challengers = await Promise.all(list.map((c) => (c.bond.state !== "NONE" ? read("get_challengers", [c.id]).catch(() => []) : [])));
     $("list").replaceChildren(...list.map((c, i) => checkCard(c, challengers[i])));
-    $("list-state").textContent = list.length ? `The ${list.length} latest checks. Times are shown in UTC.` : "No checks yet.";
+    $("list-state").textContent = list.length ? (list.length === 1 ? "The latest check. Times are shown in UTC." : `The ${list.length} latest checks. Times are shown in UTC.`) : "No checks yet.";
   } catch (e) {
     $("list-state").textContent = `Could not read the contract: ${short(e)}`;
   }
@@ -407,11 +425,11 @@ async function loadRules() {
     const w = rules.windows_seconds, m = (s) => `${Math.round(s / 60)} min`;
     $("windows-line").textContent = `On this contract: ${m(w.bond_win)} to bond after a check, ${m(w.ch_win)} to challenge, then ${m(w.grace)} of grace, ${m(w.rc_win)} to re-check and ${m(w.grace)} more before a challenged bond can be settled as not confirmed. Minimum bond ${gen(rules.min_bond_wei)}.`;
     const rows = [
-      ["Bondable verdicts", rules.bondable.join(", ")],
+      ["Bondable verdicts", `${rules.bondable.join(", ")} on block 0 or 1; BOTH:P1 only when both pages also show the block's ordinary reward (not zero)`],
       ["Claims", rules.claim_types.join(", ")],
       ["Bondable claims", (rules.bondable_claims || []).join(", ")],
       ["Upheld", `${rules.upheld || "the same fact again"}: the requester gets the bond back plus every challenger's deposit`],
-      ["Overturned", rules.overturned || "half the bond is burned; each challenger gets its deposit back and an equal share of the rest"],
+      ["Overturned", `the opposite rule about the same block on both explorers: ${rules.overturned || "half the bond is burned; each challenger gets its deposit back and an equal share of the rest"}`],
       ["Not confirmed", "everyone gets back what they put in"],
       ["Released", "no challenger: the requester gets the bond back"],
       ["P1, extra allocation", `an output in blocks 0 to ${rules.max_height} beyond the block reward, printed on the page`],
@@ -421,7 +439,7 @@ async function loadRules() {
     ];
     $("rules").replaceChildren(...rows.map(([k, v]) => { const tr = el("tr"); tr.append(el("th", null, k), el("td", null, v)); return tr; }));
     const t = await read("totals");
-    $("totals").textContent = `${t.checks} checks so far. Locked in bonds and challenges: ${gen(t.locked)}. Credited, waiting to be withdrawn: ${gen(t.credited)}. Burned: ${gen(t.burned || "0")}.`;
+    $("totals").textContent = `${t.checks} ${Number(t.checks) === 1 ? "check" : "checks"} so far. Locked in bonds and challenges: ${gen(t.locked)}. Credited, waiting to be withdrawn: ${gen(t.credited)}. Burned: ${gen(t.burned || "0")}.`;
   } catch (e) {
     $("totals").textContent = `Could not read the rules: ${short(e)}`;
   }
@@ -440,7 +458,7 @@ function netSwitch() {
     } else {
       const a = el("a", null, n.label);
       a.href = `?net=${n.key}`;
-      a.title = `Switch to ${n.name}`;
+      a.title = n.key === "bradbury" ? "Switch to GenLayer Testnet Bradbury (version 2 is on Phase 3)" : `Switch to ${n.name}`;
       net.append(a);
     }
   });
@@ -452,7 +470,7 @@ function netSwitch() {
     const b = $("net-banner");
     b.hidden = false;
     b.replaceChildren(
-      el("strong", null, "Testnet Bradbury Phase 2. "),
+      el("strong", null, "Testnet Bradbury Phase 3. "),
       el("span", null, "GenLayer's public testnet, where validators use real models and real web access. This view shows the checks and bonds decided there. It only reads, so it needs no wallet. "),
       Object.assign(el("a", null, "Try it free on Studio"), { href: "?net=studio" }),
     );

@@ -1,0 +1,165 @@
+{
+ "network": "genlayer-studio",
+ "chain_id": 61999,
+ "contract_source": "contracts/launch_claim_checker_v2.py",
+ "contract_sha256": "ad7bc21e3926fa576f5cd1651d3f5d59141ee968f6057d35663b478e23337380",
+ "windows_seconds": [
+  600,
+  600,
+  600,
+  600
+ ],
+ "accounts": {
+  "requester": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+  "challenger1": "0x2dE9cF445E20DeEb411C21b04dc833500eAb8AD6",
+  "challenger2": "0x3E1f7Ecc1f8Ec8a301F5bc73D58F017224BF10C9"
+ },
+ "steps": [
+  {
+   "label": "case A check",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "check_claim",
+   "args": [
+    "https://checker.brilliantnodes.com/v2/examplecoin-block-1.html",
+    "https://brilliantnodes.github.io/demo-explorer/examplecoin/block-1.html",
+    "Examplecoin",
+    "NO_FOUNDER_REWARD",
+    "No founder reward"
+   ],
+   "value": "0",
+   "tx": "0xe6762b7ec96fda698d3f51ef0c2a858f18620b437d5d9976c2274522a514de55",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "id": "1",
+    "ok": true,
+    "rule": "BOTH:P1",
+    "verdict": "CONTRADICTED"
+   },
+   "created_at": "2026-11-26T08:37:42.207436+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "verdict": "CONTRADICTED",
+    "rule": "BOTH:P1"
+   },
+   "as_expected": true
+  },
+  {
+   "label": "bond case A",
+   "who": "requester",
+   "from": "0x1C936Df77E946eCd1C6EE3d5eC7aB5373E909798",
+   "fn": "bond",
+   "args": [
+    "1"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0x7d31ad0a6ca663aa760dff1c5e3f4e2c2abad2de0afec0b22b4c4046dd4f65f3",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "error": "a BOTH:P1 verdict can be bonded only when both pages also show the block's ordinary reward (not zero) on a line of its own",
+    "ok": false,
+    "refunded": "1000000000000000000"
+   },
+   "created_at": "2026-11-26T08:38:20.864085+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "bonded": "1000000000000000000"
+   },
+   "as_expected": false
+  },
+  {
+   "label": "challenge A by challenger1",
+   "who": "challenger1",
+   "from": "0x2dE9cF445E20DeEb411C21b04dc833500eAb8AD6",
+   "fn": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0xfaffc4fbf8fc762cea3aea86b9ed4671f2cec00148fcf3657245ec25aac96f0e",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "error": "this check has no open bond",
+    "ok": false,
+    "refunded": "1000000000000000000"
+   },
+   "created_at": "2026-11-26T08:38:34.896176+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 3,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "challenger": 1
+   },
+   "as_expected": false
+  },
+  {
+   "label": "challenge A by challenger2",
+   "who": "challenger2",
+   "from": "0x3E1f7Ecc1f8Ec8a301F5bc73D58F017224BF10C9",
+   "fn": "challenge",
+   "args": [
+    "1"
+   ],
+   "value": "1000000000000000000",
+   "tx": "0x9bb63a01753f28c7c6b45528a27458fc38471dfb93a94a77551d168a60e6ce3b",
+   "status": "ACCEPTED",
+   "result": "MAJORITY_AGREE",
+   "execution": "SUCCESS",
+   "returned": {
+    "error": "this check has no open bond",
+    "ok": false,
+    "refunded": "1000000000000000000"
+   },
+   "created_at": "2026-11-26T08:38:43.895068+00:00",
+   "rotations": 0,
+   "votes": {
+    "agree": 4,
+    "of": 5
+   },
+   "expected": {
+    "ok": true,
+    "challenger": 2
+   },
+   "as_expected": false
+  }
+ ],
+ "checks": [],
+ "page_changes": [],
+ "cases": {
+  "A": {
+   "id": "1"
+  }
+ },
+ "deploy": {
+  "tx": "0x24ba1fa73b8a892a3264a1424f1bbdc93271affcd0fed6536886554ecb25f747",
+  "address": "0x0caB55BE266F4DCDb3EbeAD4cD2C558d2F8126ce",
+  "status": "ACCEPTED",
+  "result": "MAJORITY_AGREE",
+  "execution": "SUCCESS",
+  "created_at": "2026-11-26T08:37:32.179290+00:00",
+  "rotations": 0,
+  "votes": {
+   "agree": 3,
+   "of": 5
+  }
+ },
+ "address": "0x0caB55BE266F4DCDb3EbeAD4cD2C558d2F8126ce"
+}

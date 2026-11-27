@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Check the Bradbury live-run record of LaunchClaimCheckerV2 against the chain. Reads only.
 
-    cd tools/bradbury && npm ci && cd ../..
+    cd tools/bradbury3 && npm ci && cd ../..      (records of Phase 3; tools/bradbury for Phase 2 records)
     python tools/verify_v2_bradbury.py [examples/live/v2-bradbury.json]
 
-1. bradbury/build/launch_claim_checker_v2.py is what tools/port_bradbury.py --pack
-   makes from contracts/launch_claim_checker_v2.py today.
+1. The record's build (bradbury/build-phase3/ for a Phase 3 record, bradbury/build/ for Phase 2) is what
+   tools/port_bradbury.py --pack (with --phase3 for Phase 3) makes from contracts/launch_claim_checker_v2.py today.
 2. The code carried by the recorded deployment transaction is that build,
    byte for byte, and it made the recorded contract.
 3. Every recorded transaction exists on Bradbury, went to the recorded
@@ -37,7 +37,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-JS = ROOT / "tools" / "bradbury"
+JS = ROOT / "tools" / "bradbury3"  # set from the record in main(): Phase 2 records use tools/bradbury
 NOTHING_STORED = ("UNDETERMINED", "LEADER_TIMEOUT", "VALIDATORS_TIMEOUT", "CANCELED")
 NO_DECISION = ("UNDETERMINED", "MAJORITY_DISAGREE", "NO_MAJORITY")  # the validators did not agree: nothing stored
 VOTE = {0: "NOT_VOTED", 1: "FINISHED_WITH_RETURN", 2: "FINISHED_WITH_ERROR", 3: "TIMEOUT", 4: "NONDET_DISAGREE", 5: "DETERMINISTIC_VIOLATION"}
@@ -146,13 +146,18 @@ def main() -> int:
     addr, bad = rec["address"], []
 
     # 1. the build is the source, ported and packed
-    build = (ROOT / "bradbury" / "build" / "launch_claim_checker_v2.py").read_bytes()
+    phase3 = rec.get("network") == "testnet-bradbury-phase-3"
+    global JS
+    JS = ROOT / "tools" / ("bradbury3" if phase3 else "bradbury")
+    build_path = ROOT / "bradbury" / ("build-phase3" if phase3 else "build") / "launch_claim_checker_v2.py"
+    build = build_path.read_bytes()
     with tempfile.TemporaryDirectory() as tmp:
         out = Path(tmp) / "build.py"
-        subprocess.run([sys.executable, str(ROOT / "tools" / "port_bradbury.py"), str(ROOT / "contracts" / "launch_claim_checker_v2.py"), str(out), "--pack"],
+        subprocess.run([sys.executable, str(ROOT / "tools" / "port_bradbury.py"), str(ROOT / "contracts" / "launch_claim_checker_v2.py"), str(out), "--pack"]
+                       + (["--phase3"] if phase3 else []),
                        check=True, capture_output=True)
         if out.read_bytes() != build:
-            bad.append("bradbury/build/launch_claim_checker_v2.py is not what port_bradbury.py --pack makes from the source")
+            bad.append(f"{build_path.relative_to(ROOT)} is not what port_bradbury.py makes from the source")
     if hashlib.sha256(build).hexdigest() != rec.get("build_sha256"):
         bad.append("the build does not have the sha256 recorded for the run")
 
@@ -194,10 +199,19 @@ def main() -> int:
             bad.append(f"step {s['n']}: sender on chain {raw.get('sender')}, recorded {s['from']}")
         if str(raw.get("recipient", "")).lower() != addr.lower():
             bad.append(f"step {s['n']}: sent to {raw.get('recipient')}, not to the recorded contract")
-        if s.get("as_expected") is not True:
+        refused_as_expected = (s["expected"] == "refused with an error" and result == "MAJORITY_AGREE"
+                               and raw.get("txExecutionResultName") == "FINISHED_WITH_ERROR")
+        if s.get("as_expected") is not True and refused_as_expected and s["method"] == "recheck":
+            # the chain shows the refusal the step expected; the run tool of 26 Nov marked such a re-check as one that
+            # decided nothing (fixed in tools/live_v2_bradbury.py: the rule applies only to a re-check expected to go through)
+            print(f"  note: step {s['n']} ({s['label']}): refused as expected on chain (agreed, finished with an error); the run marked it otherwise")
+        elif s.get("as_expected") is not True:
             if s["result"] != "MAJORITY_AGREE" and (raw.get("lifecycle") or {}).get("outcome") == "undetermined" and repeated(s):
                 # no majority, so nothing was stored or decided; the record shows the same call sent again and agreed
                 print(f"  note: step {s['n']} ({s['label']}): no majority ({s['result']}), sent again and agreed later")
+            elif s["method"] == "recheck" and s["result"] == "MAJORITY_AGREE" and s.get("decided") is False and repeated(s):
+                # agreed on a reading that decides nothing (the bond stayed BONDED); the same re-check sent again decided
+                print(f"  note: step {s['n']} ({s['label']}): agreed, decided nothing (bond still {s.get('bond_after')}); sent again and decided later")
             else:
                 bad.append(f"step {s['n']} ({s['label']}): the record itself says not as expected")
         if s["method"] == "withdraw" and s["execution"] == "FINISHED_WITH_RETURN":
@@ -240,10 +254,13 @@ def main() -> int:
         if note and note.get("chain"):
             # an excuse only stands on a value read again from the chain now
             ch = note["chain"]
-            v = node("read", addr, ch["view"], json.dumps(ch.get("args", [])))["result"]
+            if ch["view"] == "balance":  # the contract's own balance, not a contract view
+                v = node("balance", addr)["result"]
+            else:
+                v = node("read", addr, ch["view"], json.dumps(ch.get("args", [])))["result"]
             for k in ch.get("path", []):
                 v = v.get(k) if isinstance(v, dict) else None
-            if str(v) == str(ch["want"]):
+            if str(v) == str(ch["want"]) and str(ch["want"]) == str(chk.get("want")):  # the value the failed check wanted
                 print(f"  note: the run's check '{chk['label']}' failed (it read {chk.get('value')!r}); {note['note']} Read from the chain now: {v}")
                 continue
             bad.append(f"record check failed: {chk['label']}; the chain now gives {v!r}, the note says {ch['want']!r}")
