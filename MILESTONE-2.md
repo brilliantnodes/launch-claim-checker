@@ -12,7 +12,7 @@
 Launch Claim Checker was accepted as a Project in its first version: a contract that says what two pages show about a launch claim. The first milestone added claim bounties (a second contract, [`MILESTONE.md`](MILESTONE.md)). This milestone is version 2 of the checker itself: **a launch claim is read on two block explorers on different domains, a verdict stands only when both show the same thing, and money can be put behind a verdict and challenged.**
 
 - **Previous milestone:** branch [`milestone-claim-bounties`](https://github.com/brilliantnodes/launch-claim-checker/tree/milestone-claim-bounties) (commit `8b6ab43`)
-- **This milestone:** branch [`milestone-two-explorers`](https://github.com/brilliantnodes/launch-claim-checker/tree/milestone-two-explorers), a snapshot of `main` as submitted
+- **This milestone:** branch [`milestone-two-explorers`](https://github.com/brilliantnodes/launch-claim-checker/tree/milestone-two-explorers), its files the same as `main`'s as submitted (brought up to date with a merge, so its history also keeps two commits from before a rebase)
 - **Everything that changed:** [compare `milestone-claim-bounties...milestone-two-explorers`](https://github.com/brilliantnodes/launch-claim-checker/compare/milestone-claim-bounties...milestone-two-explorers). Besides version 2 it holds the fictional explorer pages, the page, the article, the video tools, the reviews and the records of earlier builds; the accepted checker and the bounties contract are unchanged, byte for byte.
 - **Video (92 seconds, with voice-over):** https://checker.brilliantnodes.com/two-explorers-demo-v7.mp4
 - **Article:** https://checker.brilliantnodes.com/article-two-explorers.html
